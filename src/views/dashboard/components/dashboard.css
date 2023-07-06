@@ -1,0 +1,47 @@
+.card-container{
+    display: grid;
+    grid-template-columns: repeat(4 1fr);
+    
+}
+
+
+.container{
+    background: #9a3131 !important;;
+}
+
+
+.css-1kf0hy1-MuiContainer-root{
+    max-width: 1300px;
+}
+.box {
+    display: flex;
+    justify-content: space-evenly;
+
+}
+.react-tabs__tab-list {
+    border-bottom: none !important;
+    margin: 0 0 10px;
+    padding: 0;
+}
+.react-tabs__tab {
+    display: inline-block;
+    border: none !important;
+    border-bottom: none;
+    bottom: -1px;
+    position: relative;
+    list-style: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    background: #fff;
+    margin-right: 5px;
+    margin-top: 12px;
+}
+.react-tabs__tab--selected {
+    background: #5d87ff!important;;
+    border-color: #5d87ff!important;;
+    color: white!important;;
+    border-radius: 5px 5px !important;
+    
+}
+
+

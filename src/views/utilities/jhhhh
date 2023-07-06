@@ -1,0 +1,14 @@
+
+  
+    doc.line(15, 215, 60, 215);
+
+    doc.text(`Family FM Representation`,15,220)
+
+
+    doc.addImage( data.sign,'PNG',10,190,50,25);
+
+
+
+    doc.text(`Gross : $${pdfdata5}`,120,60)
+doc.text(`ABST : $${pdfdata5}`,120,60)
+doc.text(`Total : $${pdfdata5}`,120,60)
