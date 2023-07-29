@@ -32,6 +32,7 @@ import {
  
 } from '@material-ui/core';
 import Pdf from 'src/views/utilities/Pdf';
+import ConfirmationModal from 'src/views/utilities/ConformationModal';
 
 
 
@@ -45,6 +46,11 @@ function Contract() {
   const [Delete, setDelete] = useState();
   const[mypdf,setmypdf]= useState([])
   const[mainloader,setmainloader] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [itemId, setItemId] = useState(null);
+  const [itemIdToDelete, setItemIdToDelete] = useState(null);
+  
+  const [sortOrder, setSortOrder] = useState('asc');
   const[totalrow,settotalrow]=useState('')
 
   useEffect(() => {
@@ -55,7 +61,7 @@ function Contract() {
 
     axios
       .post(
-        'http://3.142.245.136:8080/api/public/contractlist',
+        'http://localhost:8080/api/public/contractlist',
         {
           page:currentPage,
           limit:itemsPerPage,
@@ -73,6 +79,13 @@ function Contract() {
        
         console.log(response, 'sds');
       }).catch((error)=>{
+
+        if(error.response.status==500){
+          navigate("/login", { replace:true});
+          localStorage.removeItem('token');
+
+
+        }
         console.log(error)
         toast.error(error.response.data.message);
         setmainloader(false);
@@ -123,7 +136,7 @@ function Contract() {
 
   const onDelete = (id) => {
     axios
-      .post(`http://3.142.245.136:8080/api/public/delete/${id}`)
+      .post(`http://localhost:8080/api/public/delete/${id}`)
       .then((response) => {
         console.log(response.data);
         if(response.code!==200){
@@ -144,6 +157,72 @@ function Contract() {
         }
       });
   };
+
+
+
+
+  const [sortColumn, setSortColumn] = useState('name');
+
+
+  const handleSort = (column) => {
+    if (column === sortColumn) {
+      const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+      setSortOrder(newSortOrder);
+    } else {
+      setSortColumn(column);
+      setSortOrder('asc');
+    }
+  };
+  const sortedData = filteredData.sort((a, b) => {
+    
+
+    console.log(filteredData,'s45dsx')
+    const columnA =a.name.toLowerCase();
+    const columnB = b.name.toLowerCase();
+   
+
+    if (columnA < columnB) {
+      return sortOrder === 'asc' ? -1 : 1;
+    }
+    if (columnA > columnB) {
+      return sortOrder === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+
+  const handleDeleteClick = (id) => {
+    setItemIdToDelete(id);
+    setShowConfirmation(true);
+  };
+  
+  const handleConfirm = () => {
+    if (itemIdToDelete) {
+      axios
+        .post(`http://localhost:8080/api/public/delete/${itemIdToDelete}`)
+  
+        .then((response) => {
+          console.log(response.data);
+          if (response.code !== 200) {
+            setDelete(!Delete);
+            // Perform any necessary actions on delete failure
+          }
+          toast.success(response.data.message);
+        })
+        .catch((error) => {
+          // Handle error if API request fails
+        });
+      console.log("Item deleted!");
+      setShowConfirmation(false);
+    }
+  };
+  
+  const handleCancel = () => {
+    console.log("Deletion canceled.");
+    setShowConfirmation(false);
+  };
+
+
+
 
   return (
     <>
@@ -177,7 +256,21 @@ function Contract() {
               <tr className="head-row">
               
                 <th>ID</th>
-                <th>Name</th>
+                <th
+  className="header-cell"
+  onClick={() => handleSort('first_name')}
+>
+  <div className="header-content">
+    <span>Name</span>
+    {sortColumn === 'first_name' && (
+      <Icon
+        icon={sortOrder === 'asc' ? 'carbon:arrow-up' : 'carbon:arrow-down'}
+        className="sort-icon"
+      />
+    )}
+  </div>
+</th>
+
                 <th>Email</th>
                 <th>Phone No.</th>
                 <th>Event</th>
@@ -216,7 +309,7 @@ function Contract() {
                          
                       </td>
                       <td>
-                      <Icon style={{color:'red', fontSize: '19px', cursor:'pointer'}} icon="fluent:delete-32-regular" onClick={() => onDelete(item.id)} />
+                      <Icon style={{color:'red', fontSize: '19px', cursor:'pointer'}} icon="fluent:delete-32-regular" onClick={() => handleDeleteClick(item.id)} />
                       
                       </td>
               
@@ -240,6 +333,14 @@ function Contract() {
         />
         </Card>
       </Container>
+      {showConfirmation && (
+        <ConfirmationModal
+          message="Are you sure you want to delete this Contract?"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          itemId={itemId}
+        />
+      )}
     </>
   );
 

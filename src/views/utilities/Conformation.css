@@ -1,0 +1,46 @@
+.confirmation-modal {
+  /* Center the modal horizontally and vertically */
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050; /* Set the z-index value as needed */
+
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+  max-width: 300px;
+  text-align: center;
+}
+
+.confirmation-modal p {
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.confirmation-modal .buttons {
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.confirmation-modal .confirm-button {
+  background-color: #27ae60;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirmation-modal .cancel-button {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}

@@ -21,6 +21,51 @@
     /* height: 100vh; */
 }
 
+.create-invo {
+/* display: block; */
+    /* width:10%;
+    position: absolute;
+    right: 289px;
+    top: 153px; */
+    /* background-color: blue; */
+    font-size: 14px;
+
+}
+
+
+.create-invo-1{
+  font-size: 14px;
+  position: absolute;
+  right: 778px;
+  top: 131px;
+  background-color: red;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+    border-radius: 4px;
+
+
+
+}
+.create-invo-12{
+  font-size: 14px;
+  position: absolute;
+  right: 996px;
+  top: 131px;
+  background-color: red;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+    border-radius: 4px;
+
+
+
+}
+
+
+
 
 .invoice-add-con{
      display:flex; 
@@ -58,12 +103,12 @@
     display: flex;
     height: 180px;
     width: 100%;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     text-align: center;
     /* margin-top: 250px; */
     font-weight: 500;
     font-size: 18px;
-    margin-bottom: 80px;
+    margin-bottom: 40px;
     text-align: center;
 }
 
@@ -529,6 +574,10 @@ margin-left: 12px;
     padding: 5px;
     border-radius: 5px;
     background-color: white;
+    position: absolute;
+    top: 132px;
+    right: 888px;
+
 }
 
 

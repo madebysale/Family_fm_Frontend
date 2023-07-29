@@ -9,80 +9,117 @@ import { Table } from 'react-bootstrap';
 import { AiOutlineLogout } from 'react-icons/ai';
 import mylogo from '../icons/fm_logo.png';
 import './Invoice.css';
+import ConfirmationModal from './ConformationModal';
+import Share from './Share';
+import { RWebShare } from 'react-web-share';
+
+import { shortener } from 'c-url-shortener';
 
 const Viewdetail = () => {
   const navigate = useNavigate();
   const params = useParams();
+  // const history = useHistory();
 
   const [dataapi, setDataapi] = useState([]);
   const [contract, setcontract] = useState([]);
   const [invoicedata, setinvoicedata] = useState([]);
-  const[discountlist,setdiscountlist] = useState([])
-  const[mindate,setmindate] = useState([])
-  const[maxdate,setmaxdate] = useState([])
-  const[orderamount,setorderamount] = useState([])
-  const[disorderamount,setdisorderamount] = useState([])
-  const[monthly,setmonthly] = useState([])
- 
+  const [signaturelist, setsignaturetlist] = useState([]);
+  const [mindate, setmindate] = useState([]);
+  const [maxdate, setmaxdate] = useState([]);
+  const [orderamount, setorderamount] = useState([]);
+  const [disorderamount, setdisorderamount] = useState([]);
+  const [monthly, setmonthly] = useState([]);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [itemId, setItemId] = useState(null);
 
- 
+  const startMonth = moment(mindate).format('MMMM, YYYY');
+  const endMonth = moment(maxdate).format('MMMM, YYYY');
 
-   
+  // console.log(startMonth)
+  // console.log(endMonth)
 
-
-
-//  var imagepath = "http://3.142.245.136:3000/static/media/fm_logo.8ab00a202cf2f9daeaa1.png";
-//  /New folder/vidzfmproject/uploads
+  //  var imagepath = "http://localhost:3000/static/media/fm_logo.8ab00a202cf2f9daeaa1.png";
+  //  /New folder/vidzfmproject/uploads
 
   useEffect(() => {
     axios
-      .post('http://3.142.245.136:8080/api/public/agreementlist', {
-        id: params.id,
-      }
-      ,
+      .post(
+        'http://localhost:8080/api/public/agreementlist',
         {
-          headers: {'x-token': localStorage.getItem('token') },
-        }
+          id: params.id,
+        },
+        {
+          headers: { 'x-token': localStorage.getItem('token') },
+        },
       )
 
       .then((response) => {
- 
-        
         setDataapi(response.data.data.details);
 
         setinvoicedata(response.data.data.itemlist);
-         setdiscountlist(response.data.data.signaturelist);
-         console.log(response.data.data.minStartDate,'dd')
-         setmaxdate(response.data.data.maxEndDate);
-         setmindate(response.data.data.minStartDate);
-         setorderamount(response.data.data.orderamount)
-         setdisorderamount(response.data.data.disorderamount)
-         setmonthly(response.data.data.monthlyshedule)
-
-
-
-        
+        setsignaturetlist(response.data.data.signaturelist);
+        console.log(response.data.data, 'dd');
+        setmaxdate(response.data.data.maxEndDate);
+        setmindate(response.data.data.minStartDate);
+        setorderamount(response.data.data.orderamount);
+        setdisorderamount(response.data.data.disorderamount);
+        setmonthly(response.data.data.monthlyshedule);
       });
   }, [params.id]);
 
   ////////////////////////////////////////////////////////////////////////////
 
+  const handleDeleteClick = (id) => {
+    setItemId(id);
+    setShowConfirmation(true);
+  };
+
+  const handleConfirm = () => {
+    axios
+      .post(`http://localhost:8080/api/public/makecontract/${itemId}`, {
+        // Provide the relevant data related to the item here
+      })
+      .then((response) => {
+        console.log(response.data.status, 'dddsx');
+        if (response.status === 200) {
+          toast.success(response.data.message);
+          // After successful confirmation, navigate to the new route
+          // ('/dashboard/contract');
+          navigate('/dashboard/contract', { replace: true });
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.status);
+          console.log(error.response.data);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log(error.message);
+        }
+      })
+      .finally(() => {
+        setShowConfirmation(false);
+      });
+  };
+
+  const handleCancel = () => {
+    console.log('Deletion canceled.');
+    setShowConfirmation(false);
+  };
+
   const onmakecontract = (id) => {
     axios
-      .post(`http://3.142.245.136:8080/api/public/makecontract/${id}`,
-    
-
-      )
+      .post(`http://localhost:8080/api/public/makecontract/${id}`)
       .then((response) => {
-        console.log(response.data.status,'dddsx');
+        console.log(response.data.status, 'dddsx');
         if (response.status == 200) {
           toast.success(response.data.message);
-        }
-      
-        else{
+        } else {
           toast.error(err.data.message);
         }
-        
       })
       .catch((error) => {
         if (error.response) {
@@ -96,21 +133,121 @@ const Viewdetail = () => {
       });
   };
 
+  const clickupcreatetask = (id) => {
+    console.log(id, 'function');
+    axios
+      .post(`http://localhost:8080/api/public/createclickuptask/${id}`)
+      .then((response) => {
+        console.log(response.data.status, 'dddsx');
+        if (response.status == 200) {
+          toast.success(response.data.message);
+        } else {
+          toast.error(err.data.message);
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.status);
+          console.log(error.response.data);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log(error.message);
+        }
+      });
+  };
+
+  const clickupgettask = () => {
+    axios
+      .post(`http://localhost:8080/api/public/getclickuptask`)
+      .then((response) => {
+        console.log(response.data.status, 'dddsx');
+        if (response.status == 200) {
+          toast.success(response.data.message);
+        } else {
+          toast.error(err.data.message);
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.status);
+          console.log(error.response.data);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log(error.message);
+        }
+      });
+  };
+
+  //   shortener("http://localhost/Vibz_FM/Arun%20tihaiya_VIBZ-236155-167.pdf").then((shortUrl) => {
+  //     console.log(shortUrl,'52');
+  // });
+
   ////////////////////////////////////////////////////////////////
 
   return (
     <div className="main-container">
       {dataapi.map((type) => {
-        var startDate = new Date(type.st_date);
+        var startDate = new Date(type.id);
         var endDate = new Date(type.ed_date);
+
+        const currentDate = moment(type.createdAt);
+        const futureDate = currentDate.add(30, 'days');
+
+        // setResultDate(futureDate.format('YYYY-MM-DD'));
+
         return (
           <>
             <div>
-              <Link to="/dashboard/contract">
-                <button className="btn create-invo" onClick={() => onmakecontract(type.id)}>
-                  Make Contract
+              {/* Your other JSX content */}
+              <button className="btn create-invo" onClick={() => handleDeleteClick(type.id)}>
+                Make Contract
+              </button>
+              {showConfirmation && (
+                <ConfirmationModal
+                  message="Are you sure you want to Convert this Quotation to Contract?"
+                  onConfirm={handleConfirm}
+                  onCancel={handleCancel}
+                />
+              )}
+            </div>
+            <div>
+              <div style={{ marginTop: '10px' }}>
+                <div>
+                  <RWebShare
+                    data={{
+                      text: 'html>Like humans, flamingos make friends for life',
+                      url: `http://localhost/Vibz_FM/Arun%20tihaiya_VIBZ-236155-167.pdf`,
+                      title: 'Qoutation pdf',
+                    }}
+                    onClick={() => console.log('shared successfully!')}
+                  >
+                    <button className="create-invo-1">Share 🔗</button>
+                  </RWebShare>
+                </div>
+              </div>
+              {/* <div>
+            
+                <button className="btn create-invo"onClick={()=>clickupgettask()} >
+                  Sync with exsting opportunity
                 </button>
-              </Link>
+          
+            </div>   */}
+              {/* <div>
+           
+                <button className="btn create-invo" >
+                  share
+                </button>
+         
+            </div> */}
+              {/* <div>
+           
+                <button className="btn create-invo" onClick={() => onmakecontract(type.id)}>
+                  Download
+                </button>
+         
+            </div> */}
             </div>
             {/* <div className="btn create-invo"><Link to='/dashboard/agreement'>Create Agreement +</Link></div>   */}
             <div className="row mt-5">
@@ -137,19 +274,27 @@ const Viewdetail = () => {
 
             <div className="invoice-heading">
               <div>Advertising Investment Quotations</div>
-
-              <Pdf props={{ handleFunction: dataapi ,handleFunction2:invoicedata , maxfunction:maxdate,minfunction: mindate ,orderfunction:orderamount ,disorderfunction:monthly}} />
+              <Pdf
+                props={{
+                  handleFunction: dataapi,
+                  handleFunction2: invoicedata,
+                  maxfunction: maxdate,
+                  minfunction: mindate,
+                  orderfunction: orderamount,
+                  disorderfunction: monthly,
+                }}
+              />
             </div>
 
-            <div className="row" style={{ borderBottom: '2px solid black' }}>
+            <div className="row" style={{ borderBottom: '2px solid black', paddingBottom: '10px' }}>
               <div className="col">
-                {/* <p>
-                    {" "}
-                    Contract Dates:-
-                    <span style={{ marginLeft: "12px", textAlign: "center" }}>
-                      {moment(type.contract_date).utc().format(" Do MMMM, YYYY")}
-                    </span>
-                  </p> */}
+                <p>
+                  {' '}
+                  Quotations date:-
+                  <span style={{ marginLeft: '12px' }}>
+                    {moment(type.createdAt).utc().format(' Do MMMM, YYYY')}
+                  </span>
+                </p>
                 <p>
                   {' '}
                   Advertiser:-
@@ -161,12 +306,12 @@ const Viewdetail = () => {
                 </p>
 
                 <p>
-                {' '}
+                  {' '}
                   Start date:-
-                <span style={{ marginLeft: '40px' }}>
-                {moment(mindate).format(' Do MMMM, YYYY')}
-                    </span>
-                     </p>
+                  <span style={{ marginLeft: '40px' }}>
+                    {moment(mindate).format(' Do MMMM, YYYY')}
+                  </span>
+                </p>
 
                 {/* <p>
                     Product Protect:-
@@ -193,15 +338,18 @@ const Viewdetail = () => {
                     {moment(maxdate).utc().format(' Do MMMM, YYYY')}
                   </span>
                 </p>
+
+                <p>
+                  {' '}
+                  Expiry Date:-
+                  <span style={{ marginLeft: '12px' }}>
+                    {moment(futureDate).utc().format(' Do MMMM, YYYY')}
+                  </span>
+                </p>
               </div>
             </div>
 
-
-
             <div className="mt-3" style={{ borderBottom: '2px solid black' }}>
-
-
-
               <Table className="">
                 <thead className="text-center">
                   <th></th>
@@ -211,7 +359,6 @@ const Viewdetail = () => {
                     {' '}
                     SPOTS OR PROGRSMMERS BY DAY{' '}
                   </th>
-                  
                 </thead>
                 <thead>
                   <tr>
@@ -226,123 +373,123 @@ const Viewdetail = () => {
                     <th>Sat</th>
                     <th>Sun</th>
                     <th>Total</th>
-                     <th>length</th>
+                    <th>length</th>
                     <th>INSTRUCTIONS</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                
-                {
-            invoicedata.map((item) => {
-                      return (
-                        <>
-                  
-                          <tr className="tr-invoice">
-                            <td>
-                              {moment(item.start_date).utc().format(' Do MMMM') +
-                                '-' +
-                                moment(item.end_date).utc().format(' Do MMMM')}
-                            </td>
-                            <td>
-                              {moment(item.starttime).format('h:mma') +
-                                '-' +
-                                moment(item.endtime).format('h:mma')}
-                            </td>
+                  {invoicedata.map((item) => {
+                    return (
+                      <>
+                        <tr className="tr-invoice">
+                          <td>
+                            {moment(item.start_date).utc().format(' Do MMMM') +
+                              '-' +
+                              moment(item.end_date).utc().format(' Do MMMM')}
+                          </td>
+                          <td>
+                            {moment(item.starttime).format('h:mma') +
+                              '-' +
+                              moment(item.endtime).format('h:mma')}
+                          </td>
 
-                            <td>{item.monday}</td>
-                            <td>{item.tuesday}</td>
-                            <td>{item.wednesday}</td>
-                            <td>{item.thursday}</td>
-                            <td>{item.friday}</td>
-                            <td>{item.saturday}</td>
-                            <td>{item.sunday}</td>
+                          <td>{item.monday}</td>
+                          <td>{item.tuesday}</td>
+                          <td>{item.wednesday}</td>
+                          <td>{item.thursday}</td>
+                          <td>{item.friday}</td>
+                          <td>{item.saturday}</td>
+                          <td>{item.sunday}</td>
 
-                            <td>{item.total}</td>
-                            <td>:30</td>
+                          <td>{item.total}</td>
+                          <td>:30</td>
 
-                           
-                            <td>{item.product_type}</td>
-                          </tr>
-                        </>
-                          );
-})
-}
+                          <td>{item.product_type}</td>
+                        </tr>
+                      </>
+                    );
+                  })}
                 </tbody>
               </Table>
             </div>
 
-            <div className='table-container'>
-              <Table className='responsive-table' >
-                <thead className='' >
-                  <tr className='mytable'>
-                    {/* <th># HR PER WK </th> */}
-                    <th># OF WKS </th>
-                   
-                    <th >TOTAL COST OF PACKAGE</th>
-                    <th>TRADE</th>
-                    <th>% ABST </th>
-                    <th>TOTAL</th>
-                
-                  </tr>
-                  </thead>
-                  <tbody className='second-table-body'>
+            <div className="table-container">
+              <Table className="responsive-table">
+                {dataapi.map((item) => {
+                  console.log(item.grandtotal, 'sdds');
+                  return (
+                    <>
+                      <thead className="">
+                        <tr className="mytable">
+                          {/* <th># HR PER WK </th> */}
 
-                  {
-            dataapi.map((item) => {
-              console.log(item.grandtotal,'sdds')
-                      return (
-                        <>
-                  <tr  >
-                    {/* <td>{item.weekhr}</td> */}
-                    <td> 2 </td>
-                   
-                    <td>${item.cost}</td>
-                    <td>${item.trade}</td>
-                   <td>%{(item.discountabst)}</td>
-                 <td>${item.grandtotal}</td>
-                  
-                  </tr>
+                          <th>TOTAL COST OF PACKAGE</th>
+                          <th>{item.discountdropdown}</th>
+                          {/* <th>% ABST </th> */}
+                          <th>ABST</th>
+                          <th>TOTAL</th>
+                        </tr>
+                      </thead>
+                      <tbody className="second-table-body">
+                        <tr>
+                          {/* <td>{item.weekhr}</td> */}
 
-                  </>
-                      )})}
-
-                </tbody>
+                          <td>${item.cost}</td>
+                          <td>${item.trade}</td>
+                          {/* <td>%{(item.discountabst)}</td> */}
+                          <td>
+                            ${(((item.cost - item.trade) * item.discountabst) / 100).toFixed(2)}
+                          </td>
+                          <td>${item.grandtotal}</td>
+                        </tr>
+                      </tbody>
+                    </>
+                  );
+                })}
               </Table>
             </div>
-                
-            <div style={{borderBottom:'2px solid black' ,paddingBottom:"5px"}}>  <p style={{marginTop:'8px' ,}}>Calender Month Projected Billing [Net+Tax]:</p>
-             <div style={{display:'grid', gridTemplateColumns:'auto auto auto auto' ,marginTop:'30px', textAlign:"center", gridGap:"10px"}}>
-            
-              <div>
-              <div >Jan: ${monthly.jan} +ABST</div>
-              <div>Feb: ${monthly.feb} +ABST</div>
-              <div>Mar: ${monthly.mar} +ABST</div>
-              </div>
-              <div >
-              <div>April: ${monthly.april} +ABST</div>
-              <div>May: ${monthly.may} +ABST</div>
-              <div>June: ${monthly.june} +ABST</div>
-              </div>
-              <div >
-              <div>July: ${monthly.july} +ABST</div>
-              <div>Aug: ${monthly.aug} +ABST</div>
-              <div>Sept: ${monthly.sept} +ABST</div>
-              </div>
-              <div >
-              <div>Oct: ${monthly.oct} +ABST</div>
-              <div>Nov: ${monthly.nov} +ABST</div>
-              <div>Dec: ${monthly.dec} +ABST</div>
-              </div>
-            
-             
 
-             </div>
-                    
-             </div>  
-             {/* )})} */}
+            {startMonth === endMonth ? (
+              ''
+            ) : (
+              <div style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>
+                {' '}
+                <p style={{ marginTop: '8px' }}> Month Projected Billing [ABST Inclusive]:</p>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto auto auto auto',
+                    marginTop: '30px',
+                    textAlign: 'center',
+                    gridGap: '10px',
+                  }}
+                >
+                  <div>
+                    <div>Jan: ${monthly.jan}</div>
+                    <div>Feb: ${monthly.feb}</div>
+                    <div>Mar: ${monthly.mar}</div>
+                  </div>
+                  <div>
+                    <div>April: ${monthly.april}</div>
+                    <div>May: ${monthly.may}</div>
+                    <div>June: ${monthly.june}</div>
+                  </div>
+                  <div>
+                    <div>July: ${monthly.july}</div>
+                    <div>Aug: ${monthly.aug}</div>
+                    <div>Sept: ${monthly.sept}</div>
+                  </div>
+                  <div>
+                    <div>Oct: ${monthly.oct}</div>
+                    <div>Nov: ${monthly.nov}</div>
+                    <div>Dec: ${monthly.dec}</div>
+                  </div>
+                </div>
+              </div>
+            )}
 
-
+            {/* )})} */}
 
             {/* <div className=" total-amount" > <p>Ordered Amount:- ${type.cost_total}</p>
                     <p style={{borderBottom:'1px solid black',paddingBottom:'8px'}}>+ABST 2: 15%</p>
@@ -359,15 +506,15 @@ const Viewdetail = () => {
                   <p>{type.paymentdue}</p>
                 </div>
 
-                <div style={{ marginBottom: '10px', textAlign: 'right' }}>
+                {/* <div style={{ marginBottom: '10px', textAlign: 'right' }}>
                   <p>Please make all cheques payable to Family Fm Ltd</p>
                   <p style={{ textDecoration: 'underline', paddingBottom: '1px' }}>
                     Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.
                   </p>
-                </div>
+                </div> */}
               </div>
 
-              <div className="mt-5">
+              {/* <div className="mt-5">
                 <div style={{ textAlign: 'left', fontSize: '20px', fontWeight: '500' }}>
                   {' '}
                   Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract{' '}
@@ -457,43 +604,27 @@ const Viewdetail = () => {
                   not comply, he/she will be charged the full amount for spots, mention etc Saved
                   image png Client Signature
                 </p>
-              </div>
+              </div> */}
 
               <div className="writing-field">
                 <div>
-                {
-                        discountlist.map((res)=>{
-                          return(
-                            <>
-                            <img className="img-sign"src={res.signature} alt={res.name}/>
-                           
-                            </>
-                          )
-                        })
-                      }
+                  <img
+                    className="img-sign"
+                    src={`http://localhost/Vibz_FM/uploads/${type.signature}`}
+                    alt={'signature'}
+                  />
 
                   <div className="sing-1">Family FM Representative </div>
                 </div>
-                <div>
-                 
-               
-                            <img className="img-sign"src={type.sign} alt="example" />
-                    
-                       
-                        
-                        <div className="sing-1">Client</div>
-                      
-                   
-                 
-                </div>
+                <div></div>
               </div>
 
-              <div style={{ marginBottom: '10px', textAlign: 'right' }}>
+              {/* <div style={{ marginBottom: '10px', textAlign: 'right' }}>
                 <p>Please make all cheques payable to Family Fm Ltd</p>
                 <p style={{ textDecoration: 'underline', paddingBottom: '1px' }}>
                   Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.
                 </p>
-              </div>
+              </div> */}
             </div>
           </>
         );

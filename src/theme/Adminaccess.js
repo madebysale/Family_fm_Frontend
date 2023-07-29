@@ -25,6 +25,11 @@ import { Input } from 'antd';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { BooleanSchema } from 'yup';
 
+
+
+
+// const VISIBLE_FIELDS = ['First Name', 'last Name', 'country', 'dateCreated', 'isAdmin'];
+
 function Adminaccess() {
   // const params = useParams();
   const navigate = useNavigate();
@@ -37,11 +42,27 @@ function Adminaccess() {
 
   // const getdata=()=>{
 
+ 
+
+  // const { Data } = useDemoData({
+  //   dataSet: 'Employee',
+  //   visibleFields: VISIBLE_FIELDS,
+
+
+
+
+  //   rowLength: 100,})
+
+
+
+
+
+
   const imageurl = "https://contract.familyfm.ltd/static/media/fm_logo.8ab00a202cf2f9daeaa1.png"
 
   const [status, setStatus] = useState(false);
 
-  const path ="http://3.142.245.136/Vibz_FM/uploads/"
+  const path ="http://localhost/Vibz_FM/uploads/"
   
 
 
@@ -65,7 +86,7 @@ function Adminaccess() {
     setTimeout(() => setmainloader(false), 2000);
 
     axios
-      .post('http://3.142.245.136:8080/api/public/adminaccess')
+      .post('http://localhost:8080/api/public/adminaccess')
 
       .then((response) => {
         setData(response.data.data);
@@ -102,9 +123,9 @@ function Adminaccess() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleToggle = (id) => {
-    axios.post(`http://3.142.245.136:8080/api/public/salesrepverified/${id}`).then((response) => {
-      console.log(response.data.data.id,'11111111');
-      setStatus(response.data.id === false ? true : false);
+    axios.post(`http://localhost:8080/api/public/salesrepverified/${id}`).then((response) => {
+      console.log(response.data.id,'11111111');
+      setStatus(response.data.data.id === false ? true : false);
 
       getdata();
       toast.success(response.data.message);
@@ -113,7 +134,7 @@ function Adminaccess() {
 
 
   const getdata=()=>{
-    axios.post("http://3.142.245.136:8080/api/public/adminaccess" )
+    axios.post("http://localhost:8080/api/public/adminaccess" )
   
     .then((response) => {
       setData(response.data.data);
@@ -127,7 +148,7 @@ function Adminaccess() {
   return (
     <>
       <Container maxWidth="xl dashhead">
-        {/* <h3 className="mb-3 heading-nw">Sales Representative List</h3> */}
+      
 
         <Card className="mb-5 px-3 py-3">
           <div className="mt-3 logout">
@@ -200,7 +221,7 @@ function Adminaccess() {
                               className={item.status === true ? 'Active': 'Inactive'}
                               onClick={() => handleToggle(item.id)}
                             >
-                              {item.status === true ? 'Active' : 'Inactive'}
+                              {item.status == true ? 'Active' : 'Inactive'}
                             </button>
                           </td>
                         </tr>

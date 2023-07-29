@@ -27,7 +27,7 @@ const[itemlist,Setitemlist] = useState([])
     useEffect(() => {
         
         axios
-          .post("http://3.142.245.136:8080/api/public/agreementlist",
+          .post("http://localhost:8080/api/public/agreementlist",
           {
             id: params.id
           })

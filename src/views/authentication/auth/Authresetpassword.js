@@ -64,7 +64,7 @@ const Authresetpassword = () => {
         onSubmit={(values) => {
             setLoading(true)
         axios
-        .post("http://3.142.245.136:8080/api/public/resetpassword", {
+        .post("http://localhost:8080/api/public/resetpassword", {
          
           email: values.email,
           password: values.password,

@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Modal, Form ,Button} from 'react-bootstrap';
+import { Modal, Form, Button } from 'react-bootstrap';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import 'react-phone-number-input/style.css';
+import './Form.css';
+
+import PhoneInput, {
+  isValidPhoneNumber,
+  formatPhoneNumberIntl,
+  isPossiblePhoneNumber,
+} from 'react-phone-number-input';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
   email: Yup.string().email('Invalid email').required('Email is required'),
-  mobile: Yup.string()
-    .matches(/^[0-9]{10}$/, 'Invalid phone number')
-    .required('Required'),
   address: Yup.string().required('Address is required'),
   company_name: Yup.string().required('Company Name is required'),
 });
 
-
-
-const Customerpopup = ({showModal, closeModal, handleAddCustomer }) => {
+const Customerpopup = ({ showModal, closeModal, handleAddCustomer }) => {
   const [customerData, setCustomerData] = useState({
     name: '',
     email: '',
@@ -24,7 +27,11 @@ const Customerpopup = ({showModal, closeModal, handleAddCustomer }) => {
     address: '',
     company_name: '',
   });
- 
+
+  const [phone, setPhone] = useState('');
+  const [valid, setValid] = useState(true);
+  const [value, setValue] = useState();
+  const [error, setError] = useState();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -34,30 +41,43 @@ const Customerpopup = ({showModal, closeModal, handleAddCustomer }) => {
     }));
   };
 
+  const handlePhoneChange = (value) => {
+    setPhone(value);
+    setValid(validatePhoneNumber(value));
+  };
+
+  const validatePhoneNumber = (value) => {
+    if (!value) {
+      return 'Phone number is required';
+    }
+    if (!isPossiblePhoneNumber(value)) {
+      return 'Invalid phone number';
+    }
+    return undefined;
+  };
+
+  const handleSubmit = (values, { resetForm }) => {
+    const customer = {
+      ...values,
+      mobile: phone,
+    };
+    handleAddCustomer(customer ,resetForm);
+  
+  };
 
 
 
   return (
     <div className="mt-3 img-con-ad">
-      {/* <div className="btn create-invo"  onClick={showModal} >
-        Add Customer +
-      </div> */}
-
       <Modal show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>Add Customer</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
-            initialValues={{
-              name: '',
-              email: '',
-              mobile: '',
-              address: '',
-              company_name: '',
-            }}
+            initialValues={customerData}
             validationSchema={validationSchema}
-            onSubmit={handleAddCustomer}
+            onSubmit={handleSubmit}
           >
             {({ handleSubmit, touched, errors }) => (
               <Form onSubmit={handleSubmit}>
@@ -93,18 +113,30 @@ const Customerpopup = ({showModal, closeModal, handleAddCustomer }) => {
                 </Form.Group>
                 <Form.Group controlId="mobile">
                   <Form.Label>Mobile</Form.Label>
-                  <Field
-                    type="text"
-                    name="mobile"
-                    className={`form-control ${
-                      touched.mobile && errors.mobile ? 'is-invalid' : ''
-                    }`}
+                  <PhoneInput
+               
+                  className='input-phn'
+                    international
+                    defaultCountry="US"
+                    placeholder="Enter phone number"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    error={valid ? null : 'Invalid phone number'}
+                    inputprops={{
+                      autoFocus: true,
+                    
+                    }}
                   />
-                  <ErrorMessage
-                    name="mobile"
-                    component="div"
-                    className="invalid-feedback"
-                  />
+                  {/* ... Other JSX ... */}
+                  {phone && (
+                    <>
+                  
+                      {/* <p>
+                        Is Possible: {isPossiblePhoneNumber(phone) ? 'true' : 'false'}
+                      </p> */}
+                      <p style={{color:"red",fontSize:"12px"}}>{isValidPhoneNumber(phone) ? '' : 'invalid phone number'}</p>
+                    </>
+                  )}
                 </Form.Group>
                 <Form.Group controlId="address">
                   <Form.Label>Address</Form.Label>
@@ -127,9 +159,7 @@ const Customerpopup = ({showModal, closeModal, handleAddCustomer }) => {
                     type="text"
                     name="company_name"
                     className={`form-control ${
-                      touched.company_name && errors.company_name
-                        ? 'is-invalid'
-                        : ''
+                      touched.company_name && errors.company_name ? 'is-invalid' : ''
                     }`}
                   />
                   <ErrorMessage
@@ -139,7 +169,7 @@ const Customerpopup = ({showModal, closeModal, handleAddCustomer }) => {
                   />
                 </Form.Group>
                 <Modal.Footer>
-                  <Button variant="secondary"  onClick={closeModal}>
+                  <Button variant="secondary" onClick={closeModal}>
                     Cancel
                   </Button>
                   <Button variant="primary" type="submit">

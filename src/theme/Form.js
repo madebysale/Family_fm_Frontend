@@ -3,6 +3,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import SignatureCanvas from 'react-signature-canvas';
+import parsePhoneNumberFromString from 'libphonenumber-js';
+
 
 import { AiOutlineLogout } from 'react-icons/ai';
 
@@ -38,35 +40,31 @@ import Customerpopup from './Customerpopup';
 
 const { RangePicker } = DatePicker;
 // const {  Space, TimePicker  }
-const validationSchema = Yup.object({
-  // Contract_date: Yup.date().required("Required"),
-  // sales_rep: Yup.string().required('Required'),
-});
 const validationSchemaforDisabled = Yup.object({
-  // Contract_date: Yup.date().required("Required"),
-  // sales_rep: Yup.string().required('Required'),
+
+
+  
+
+  termsAndConditions: Yup.bool().oneOf([true], 'accept the t&C'),
+});
+const validationSchema= Yup.object({
+ 
 
   Advertiser: Yup.string().required('Required'),
 
   name: Yup.string().required('Required'),
 
-  event: Yup.string().required('Required'),
   address: Yup.string().required('Required'),
   company_name: Yup.string().required('Required'),
 
-  phone: Yup.string()
-    .matches(/^[0-9]{10}$/, 'Invalid phone number')
-    .required('Required'),
-  mobile: Yup.string()
-    .matches(/^[0-9]{10}$/, 'Invalid phone number')
-    .required('Required'),
 
-  email: Yup.string().email('Invalid email address').required('Required'),
+  
 
   start_date: Yup.date(),
   end_date: Yup.date().min(Yup.ref('start_date'), "end date can't be before start date"),
 
-  termsAndConditions: Yup.bool().oneOf([true], 'accept the t&C'),
+
+
 
 });
 
@@ -113,12 +111,12 @@ const Foam = () => {
 
   const [selectedOption, setSelectedOption] = useState('');
   const [sales_repMessage, setsales_repMessage] = useState(false);
-  const [myname, setmyname] = useState(null);
+  const [myname, setmyname] = useState('');
   const [mysalesrep, setmysalesrep] = useState(null);
-  const [myevent, setmyevent] = useState(null);
-  const [myadvertiser, setmyadvertiser] = useState(null);
-  const [myemail, setmyemail] = useState(null);
-  const [myphone, setmyphone] = useState(null);
+  const [myevent, setmyevent] = useState('');
+  const [myadvertiser, setmyadvertiser] = useState('');
+  const [myemail, setmyemail] = useState('');
+  const [myphone, setmyphone] = useState('');
   const [isDisabled, setIsDisabled] = useState(true);
   const [showform, setShowform] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
@@ -128,10 +126,11 @@ const Foam = () => {
   const [abst, setabst] = useState('');
   const [grandtotal, setgrandtotal] = useState('');
   const [abstdiscount, setabstdiscount] = useState(0);
+  const[dateerror,setdateerror]=useState(false)
 
   const [weekhr, setweekhr] = useState('');
   const [tradeerr, settradeerr] = useState('');
-  const [customerid, setcustomerid] = useState('');
+  const [mycustomerid, setmycustomerid] = useState('');
   // const [monthDiff, setMonthDiff] = useState(null);
   const [myjan, setmyjan] = useState('');
   const [myfeb, setmyfeb] = useState('');
@@ -153,6 +152,14 @@ const Foam = () => {
   const [showModal, setShowModal] = useState(false);
 
   const[custname,setcustname]=useState('')
+  const[custemail,setcustemail]=useState('')
+  const[custmobile,setcustmobile]=useState('')
+  const[custadvetiser,setcustadvetiser]=useState('')
+  const[tandc,settandc]=useState('')
+  const[mydropdown,setmydropdown]= useState('Trade')
+  const[nameerror,setnameerror] = useState(false)
+  const[eventerror,seteventerror] = useState(false)
+
 
   // const [inputValues, setInputValues] = useState({
   //   sales_rep:"",
@@ -205,8 +212,24 @@ const Foam = () => {
   // console.log(total, 'total');
   const total01 = fields.reduce((accumulator, item) => accumulator + (parseFloat(item.jan) || 0), 0);
   // console.log(total01, 'january');
- 
- 
+
+
+
+
+  const query = new URLSearchParams({
+    custom_task_ids: 'true',
+    team_id: '9002104625'
+  }).toString();
+
+
+
+
+  const handledropdown =(event)=>{
+    setmydropdown(event.target.value)
+  }
+
+
+console.log(mydropdown,'dsdfdfs')
 
   const openModal = () => {
     setShowModal(true);
@@ -215,21 +238,32 @@ const Foam = () => {
 
   const closeModal = () => {
     setShowModal(false);
-    // console.log('sdsdsfd')
+  
   };
 
-  const handleAddCustomer = (values, { resetForm }) => {
+  const handleAddCustomer = (customer, resetForm ) => {
     // Perform actions to add customer using values
-    // console.log(values);
+    const phoneNumber = parsePhoneNumberFromString(customer.mobile);
+
+    console.log(customer.mobile,'dssdsds520');
+    console.log(customer,'dssdsds520');
+    if (!phoneNumber || !phoneNumber.isValid()) {
+      // Handle invalid phone number
+      console.log('Invalid phone number:', customer.mobile);
+      return;
+    }
+  
+    const formattedPhoneNumber = phoneNumber.formatInternational();
+  
 
     axios.post(
-      'http://3.142.245.136:8080/api/public/createcustomer',
+      'http://localhost:8080/api/public/createcustomer',
          {
-          name:values.name,
-          email:values.email,
-          mobile:values.mobile,
-          address:values.address,
-          company_name:values.company_name
+          name:customer.name,
+          email:customer.email,
+          mobile:formattedPhoneNumber,
+          address:customer.address,
+          company_name:customer.company_name
          },
 
 
@@ -249,11 +283,13 @@ const Foam = () => {
 
      
        if (resp.data.code === 200) {
-    
-        console.log(resp.data.name,'sbc2')
-       
-     
-      
+         setmycustomerid(resp.data.data.id)
+        setmyname(resp.data.data.name)
+        setmyphone(resp.data.data.mobile)
+        setmyemail(resp.data.data.email)
+        setmyadvertiser(resp.data.data.company_name)
+        
+        console.log(resp.data.data.mobile,'data')
         toast.success(resp.data.message, {
           position: toast.POSITION.TOP_CENTER,
         });
@@ -273,6 +309,8 @@ const Foam = () => {
     });
 
     resetForm();
+
+
     closeModal()
   };
 
@@ -287,7 +325,7 @@ const Foam = () => {
       }
 
       await axios
-        .post('http://3.142.245.136:8080/api/public/checkcustomer', condition, {
+        .post('http://localhost:8080/api/public/checkcustomer', condition, {
           headers: { 'x-token': localStorage.getItem('token') },
         })
 
@@ -302,8 +340,10 @@ const Foam = () => {
           // setmyadvertiser(response.data[0].advertiser);
           setmyemail(response.data.email);
           setmyphone(response.data.mobile);
+          setmyadvertiser(response.data.company_name);
           setIsDisabled(true);
-          setcustomerid(response.data.id);
+          setmycustomerid(response.data.id);
+          console.log(response.data.id,'1235');
         })
         .catch((error) => {
           // Handle error
@@ -318,7 +358,7 @@ const Foam = () => {
     const fetchOptions = async () => {
       try {
         const response = await axios.post(
-          'http://3.142.245.136:8080/api/public/salesdropdown',
+          'http://localhost:8080/api/public/salesdropdown',
           {},
           {
             headers: { 'x-token': localStorage.getItem('token') },
@@ -445,6 +485,11 @@ const Foam = () => {
 
     setusertype(event.target.value);
   };
+  // const handlemyradiochange = (event) => {
+  //   setShowInput(event.target.value === 'myaddcust');
+
+  //   // setusertype(event.target.value);
+  // };
 
   const signRef = useRef();
   const handleClear = () => {
@@ -702,13 +747,10 @@ const Foam = () => {
 
     // console.log(startDate, 'start123');
     // console.log(endDate, 'end');
-    // console.log(startDate,'startdate132')
+        // console.log(startDate,'startdate132')
     if (startDate < endDate) {
-
-     
-      let date = moment(startDate).startOf('month');
-
-      while (date < moment(endDate).endOf('month')) {
+       let date = moment(startDate).startOf('month');
+       while (date < moment(endDate).endOf('month')) {
         // console.log(date,"while.......")
         betweenMonths.push(date.format('MM'));
         montharray.push(date.format('YYYY-MM'));
@@ -722,9 +764,9 @@ const Foam = () => {
     values[i]['feb']= 0.00
     values[i]['mar']= 0.00
 
-    values[i]['april']= 0.00
+    values[i]['april']=0.00
     values[i]['may']= 0.00
-    values[i]['sept']= 0.00
+    values[i]['sept']=0.00
     values[i]['oct']= 0.00
     values[i]['nov']= 0.00
     values[i]['dec']= 0.00
@@ -783,7 +825,7 @@ const Foam = () => {
             Number(values[i]['friday']) * weekdayFriCounter1 +
             Number(values[i]['saturday']) * weekdaySatCounter1 +
             Number(values[i]['sunday']) * weekdaySunCounter1) *
-          fields[i].rate;
+          fields[i].rate
       } else if (j == betweenMonths.length - 1) {
         let eendDate = moment(endDate).startOf('month');
 
@@ -936,153 +978,7 @@ const Foam = () => {
       }
     }
 
-    // let eendDate = moment(startDate).endOf('month');
-    // let myendDate = eendDate.format('YYYY-MM-DD');
-
-    // let weekdayMonCounter1 = 0;
-    // let 2 = 0;
-    // let weekdayWedCounter1 = 0;
-    // let weekdayThuCounter1 = 0;
-    // let weekdayFriCounter1 = 0;
-    // let weekdaySatCounter1 = 0;
-    // let weekdaySunCounter1 = 0;
-
-    // let currentDate = moment(startDate); // Create a separate variable to iterate over the dates
-    // // let enddingdate = moment(myendDate)
-
-    // console.log(startDate, "startDate12");
-    // console.log(myendDate, "endDate12");
-
-    // while (currentDate <= enddingdate) {
-    //   if (currentDate.format('ddd') === 'Mon') {
-    //     weekdayMonCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Tue') {
-    //     weekdayTueCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Wed') {
-    //     weekdayWedCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Thu') {
-    //     weekdayThuCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Fri') {
-    //     weekdayFriCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Sat') {
-    //     weekdaySatCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Sun') {
-    //     weekdaySunCounter1++;
-    //   }
-
-    //   currentDate.add(1, 'day');
-    // }
-
-    // console.log('Monday:', weekdayMonCounter1);
-    // console.log('Tuesday:', weekdayTueCounter1);
-    // console.log('Wednesday:', weekdayWedCounter1);
-    // console.log('Thursday:', weekdayThuCounter1);
-    // console.log('Friday:', weekdayFriCounter1);
-    // console.log('Saturday:', weekdaySatCounter1);
-    // console.log('Sunday:', weekdaySunCounter1);
-    // console.log('Sund1sa51ay:', currentDate.format('ddd'));
-
-    /////////////////////////////////////////////////////////////////
-
-    // let mystartDate1 = moment(enddate).startOf('month');
-    // let mystartdating = mystartDate1.format('YYYY-MM-DD');
-
-    // let weekdayMonCounter2 = 0;
-    // let weekdayTueCounter2 = 0;
-    // let weekdayWedCounter2 = 0;
-    // let weekdayThuCounter2 = 0;
-    // let weekdayFriCounter2 = 0;
-    // let weekdaySatCounter2 = 0;
-    // let weekdaySunCounter2 = 0;
-
-    // let currentDate1 = moment(mystartdating); // Create a separate variable to iterate over the dates
-    // let enddingdate = moment(stardate)
-
-    // console.log(startDate, "startDate12");
-    // console.log(myendDate, "endDate12");
-
-    // while (currentDate1 <= enddingdate) {
-    //   if (currentDate1.format('ddd') === 'Mon') {
-    //     weekdayMonCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Tue') {
-    //     weekdayTueCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Wed') {
-    //     weekdayWedCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Thu') {
-    //     weekdayThuCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Fri') {
-    //     weekdayFriCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Sat') {
-    //     weekdaySatCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Sun') {
-    //     weekdaySunCounter2++;
-    //   }
-
-    //   currentDate.add(1, 'day');
-    // }
-
-    // console.log('Monday:', weekdayMonCounter2);
-    // console.log('Tuesday:', weekdayTueCounter2);
-    // console.log('Wednesday:', weekdayWedCounter2);
-    // console.log('Thursday:', weekdayThuCounter2);
-    // console.log('Friday:', weekdayFriCounter2);
-    // console.log('Saturday:', weekdaySatCounter2);
-    // console.log('Sunday:', weekdaySunCounter2);
-    // console.log('Sund1sa51ay:', currentDate.format('ddd'));
-
-    /////////////////////////////////////////////////////////////////////
-
-    // let currentDate = start.clone();
-    // let myenddate =end.clone()
-    // let monthData = [];
-    // console.log(currentDate.startOf('month')._i,'start')
-    // // console.log(currentDate.endOf('month'),'end')
-
-    // while (currentDate <= myenddate) {
-    //   const year = currentDate.year();
-    //   const month = currentDate.month();
-    //   const myday = currentDate.daysInMonth();
-
-    //   console.log(myday,'myday')
-
-    //   const startDateOfMonth = currentDate.startOf('month');
-    //   const endDateOfMonth = currentDate.endOf('month');
-
-    //  const endingstartDateofMonth = myenddate.startOf('month');
-    //  const endingDateofMonth = myenddate.endOf('month');
-
-    //   const daysInMonth = endDateOfMonth.diff(startDateOfMonth, 'days') + 1;
-
-    //   console.log(startDateOfMonth,'startDateOfMonth');
-    //   console.log(endDateOfMonth,'endDateOfMonth')
-    //   console.log(daysInMonth,'daysInMonth')
-    //   console.log(endingstartDateofMonth,'enddate')
-    //   console.log(endingDateofMonth,'enddate12')
-
-    //   let weekdayCounts = {
-    //     Monday: 0,
-    //     Tuesday: 0,
-    //     Wednesday: 0,
-    //     Thursday: 0,
-    //     Friday: 0,
-    //     Saturday: 0,
-    //     Sunday: 0,
-    //   };
-
-    //   for (let day = 0; day < daysInMonth; day++) {
-    //     const currentDay = startDateOfMonth.clone().add(day, 'days');
-    //     const weekday = currentDay.format('dddd');
-    //     weekdayCounts[weekday]++;
-    //   }
-
-    //   monthData.push({ year, month, weekdayCounts });
-
-    //   currentDate.add(1, 'month');
-
-    // }
-
-    // console.log('Month-wise data:', monthData);
-
+  
     values[i]['total'] =
       Number(values[i]['monday']) +
       Number(values[i]['tuesday']) +
@@ -1484,55 +1380,55 @@ const Foam = () => {
             Number(values[i]['sunday']) * weekdaySunCounter1) *
           fields[i].rate;
 
-        // console.log(totalcost, 'middletotalcost');
+        console.log(totalcost, 'middletotalcost');
       }
       var myresult = Number(betweenMonths[j]);
-      // console.log(betweenMonths[j], 'ds');
+      console.log(betweenMonths[j], 'ds');
       switch (myresult) {
         case 1:
           values[i]['jan']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
           break;
         case 2:
           values[i]['feb']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
           break;
         case 3:
           values[i]['mar']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
 
           break;
         case 4:
           values[i]['april']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
           break;
         case 5:
           values[i]['may']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
           break;
         case 6:
           values[i]['june']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
           break;
         case 7:
           values[i]['july']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
           break;
         case 8:
           values[i]['aug']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
           break;
         case 9:
           values[i]['sept']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
           break;
         case 10:
           values[i]['oct']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
           break;
         case 11:
           values[i]['nov']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost)
           break;
         case 12:
           values[i]['dec']=Number(totalcost)
@@ -1540,157 +1436,11 @@ const Foam = () => {
           break;
 
         default:
-          // console.log('none value selected');
+          console.log('none value selected');
       }
     }
 
-    // let eendDate = moment(startDate).endOf('month');
-    // let myendDate = eendDate.format('YYYY-MM-DD');
-
-    // let weekdayMonCounter1 = 0;
-    // let 2 = 0;
-    // let weekdayWedCounter1 = 0;
-    // let weekdayThuCounter1 = 0;
-    // let weekdayFriCounter1 = 0;
-    // let weekdaySatCounter1 = 0;
-    // let weekdaySunCounter1 = 0;
-
-    // let currentDate = moment(startDate); // Create a separate variable to iterate over the dates
-    // // let enddingdate = moment(myendDate)
-
-    // console.log(startDate, "startDate12");
-    // console.log(myendDate, "endDate12");
-
-    // while (currentDate <= enddingdate) {
-    //   if (currentDate.format('ddd') === 'Mon') {
-    //     weekdayMonCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Tue') {
-    //     weekdayTueCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Wed') {
-    //     weekdayWedCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Thu') {
-    //     weekdayThuCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Fri') {
-    //     weekdayFriCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Sat') {
-    //     weekdaySatCounter1++;
-    //   } else if (currentDate.format('ddd') === 'Sun') {
-    //     weekdaySunCounter1++;
-    //   }
-
-    //   currentDate.add(1, 'day');
-    // }
-
-    // console.log('Monday:', weekdayMonCounter1);
-    // console.log('Tuesday:', weekdayTueCounter1);
-    // console.log('Wednesday:', weekdayWedCounter1);
-    // console.log('Thursday:', weekdayThuCounter1);
-    // console.log('Friday:', weekdayFriCounter1);
-    // console.log('Saturday:', weekdaySatCounter1);
-    // console.log('Sunday:', weekdaySunCounter1);
-    // console.log('Sund1sa51ay:', currentDate.format('ddd'));
-
-    /////////////////////////////////////////////////////////////////
-
-    // let mystartDate1 = moment(enddate).startOf('month');
-    // let mystartdating = mystartDate1.format('YYYY-MM-DD');
-
-    // let weekdayMonCounter2 = 0;
-    // let weekdayTueCounter2 = 0;
-    // let weekdayWedCounter2 = 0;
-    // let weekdayThuCounter2 = 0;
-    // let weekdayFriCounter2 = 0;
-    // let weekdaySatCounter2 = 0;
-    // let weekdaySunCounter2 = 0;
-
-    // let currentDate1 = moment(mystartdating); // Create a separate variable to iterate over the dates
-    // let enddingdate = moment(stardate)
-
-    // console.log(startDate, "startDate12");
-    // console.log(myendDate, "endDate12");
-
-    // while (currentDate1 <= enddingdate) {
-    //   if (currentDate1.format('ddd') === 'Mon') {
-    //     weekdayMonCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Tue') {
-    //     weekdayTueCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Wed') {
-    //     weekdayWedCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Thu') {
-    //     weekdayThuCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Fri') {
-    //     weekdayFriCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Sat') {
-    //     weekdaySatCounter2++;
-    //   } else if (currentDate1.format('ddd') === 'Sun') {
-    //     weekdaySunCounter2++;
-    //   }
-
-    //   currentDate.add(1, 'day');
-    // }
-
-    // console.log('Monday:', weekdayMonCounter2);
-    // console.log('Tuesday:', weekdayTueCounter2);
-    // console.log('Wednesday:', weekdayWedCounter2);
-    // console.log('Thursday:', weekdayThuCounter2);
-    // console.log('Friday:', weekdayFriCounter2);
-    // console.log('Saturday:', weekdaySatCounter2);
-    // console.log('Sunday:', weekdaySunCounter2);
-    // console.log('Sund1sa51ay:', currentDate.format('ddd'));
-
-    /////////////////////////////////////////////////////////////////////
-
-    // let currentDate = start.clone();
-    // let myenddate =end.clone()
-    // let monthData = [];
-    // console.log(currentDate.startOf('month')._i,'start')
-    // // console.log(currentDate.endOf('month'),'end')
-
-    // while (currentDate <= myenddate) {
-    //   const year = currentDate.year();
-    //   const month = currentDate.month();
-    //   const myday = currentDate.daysInMonth();
-
-    //   console.log(myday,'myday')
-
-    //   const startDateOfMonth = currentDate.startOf('month');
-    //   const endDateOfMonth = currentDate.endOf('month');
-
-    //  const endingstartDateofMonth = myenddate.startOf('month');
-    //  const endingDateofMonth = myenddate.endOf('month');
-
-    //   const daysInMonth = endDateOfMonth.diff(startDateOfMonth, 'days') + 1;
-
-    //   console.log(startDateOfMonth,'startDateOfMonth');
-    //   console.log(endDateOfMonth,'endDateOfMonth')
-    //   console.log(daysInMonth,'daysInMonth')
-    //   console.log(endingstartDateofMonth,'enddate')
-    //   console.log(endingDateofMonth,'enddate12')
-
-    //   let weekdayCounts = {
-    //     Monday: 0,
-    //     Tuesday: 0,
-    //     Wednesday: 0,
-    //     Thursday: 0,
-    //     Friday: 0,
-    //     Saturday: 0,
-    //     Sunday: 0,
-    //   };
-
-    //   for (let day = 0; day < daysInMonth; day++) {
-    //     const currentDay = startDateOfMonth.clone().add(day, 'days');
-    //     const weekday = currentDay.format('dddd');
-    //     weekdayCounts[weekday]++;
-    //   }
-
-    //   monthData.push({ year, month, weekdayCounts });
-
-    //   currentDate.add(1, 'month');
-
-    // }
-
-    // console.log('Month-wise data:', monthData);
-
+  
     values[i]['total'] =
       Number(values[i]['monday']) +
       Number(values[i]['tuesday']) +
@@ -1863,6 +1613,8 @@ const Foam = () => {
   };
 
 
+ 
+
    
  
 
@@ -1873,7 +1625,8 @@ const Foam = () => {
   let myvalue = ((totaldiscount * abstdiscount) / 100).toFixed(2);
 
   let grand = Number(totaldiscount)+Number(myvalue)
-  // + Number(myvalue);
+  
+
 
   return (
     <>
@@ -1897,20 +1650,35 @@ const Foam = () => {
           onSubmit={(values) => {
             setLoading(true);
 
-            // console.log(values, 'okkkk');
           
-             if(mysign === '' || mysign === undefined || mysign === null) {
-              setmysignerror(true);
+          
+            if(myname === '' || myphone===''|| myemail=== '' || myadvertiser=== '') {
+              setnameerror(true);
+              console.log(setnameerror(true))
               
               setTimeout(() => setLoading(false), 2000);
             } 
+
+
+            else if(myevent == ""){
+                  seteventerror(true)
+                  setTimeout(() => setLoading(false), 2000);
+            }
+
+
+            else  if(startdate=="" && enddate ==""){
+              setdateerror(true)
+                 setTimeout(() => setLoading(false), 2000);
+            }
             
             
             else {
-              setmysignerror(false);
-           
-
+              setnameerror(false);
+              seteventerror(false);
+              setdateerror(false);
+              setLoading(true);
               var payload = {};
+              console.log(mydropdown,'4562')
 
               if (usertype === 'selectCustomer') {
                 payload = {
@@ -1925,12 +1693,14 @@ const Foam = () => {
                   paymentdue: paymentdue,
                   user_type: usertype,
                   weekhr: weekhr,
-                  customerid: customerid,
+                  customerid: mycustomerid,
                   cost: total,
                   trade: Number(trade),
                   discountabst: abstdiscount,
                   abst: Number(myvalue),
                   grandtotal: grand,
+                  discountdropdown:mydropdown,
+                
 
                   fields: [
                     fields.map((item, index) => ({
@@ -1971,10 +1741,10 @@ const Foam = () => {
               } else {
                 payload = {
                   sales_rep: mysalesrep,
-                  advertiser: values.Advertiser,
-                  name: values.name,
-                  event: values.event,
-                  phone: values.phone,
+                  advertiser: myadvetiser,
+                  name: custname,
+                  event: custemail,
+                  phone: custmobile,
                   email: values.email,
                   orderid: orderid,
                   sign: mysign,
@@ -1986,6 +1756,8 @@ const Foam = () => {
                   discountabst: abstdiscount,
                   abst: Number(myvalue),
                   grandtotal: grand,
+                  customerid:mycustomerid,
+                  discountdropdown:mydropdown,
 
                   fields: [
                     fields.map((item, index) => ({
@@ -2027,7 +1799,7 @@ const Foam = () => {
               }
               axios
                 .post(
-                  'http://3.142.245.136:8080/api/public/getdata',
+                  'http://localhost:8080/api/public/getdata',
                   payload,
 
                   {
@@ -2060,6 +1832,12 @@ const Foam = () => {
                     position: toast.POSITION.TOP_CENTER,
                   });
                 });
+
+              
+
+               
+               
+
             }
           }}
         >
@@ -2082,7 +1860,7 @@ const Foam = () => {
                       {/* <span style={{ marginLeft: '4px' }}>Select Customer With Email/Phone</span> */}
                       {showInput && (
                         <form onSubmit={handleSubmit}>
-                          <p style={{ marginTop: '5px' }}>Search Customer with Email/Phone</p>
+                          <p style={{ marginTop: '5px',marginBottom:'15px' }}>Search Customer with Email/Phone</p>
                           <div style={{ display: 'flex' }}>
                             <div>
                               <Field
@@ -2100,9 +1878,9 @@ const Foam = () => {
                               // type='submit'
                               // disable={isDisabled}
                               onClick={() => handleSearch()}
-                              style={{ marginLeft: '30px', marginTop: '-16px' }}
+                              style={{ marginLeft: '30px', marginTop: '-16px', fontWeight:'800' }}
                             >
-                              search
+                              Search
                             </Button>
 
                
@@ -2131,7 +1909,7 @@ const Foam = () => {
                   </div>
                 </div>
    <div className='add-cust-btn col-8'>
- <div className="btn create-invo" onClick={()=>openModal()}>
+ <div className="btn create-invo" style={{marginTop:'30px'}}  onClick={()=>openModal()}>
         Add Customer +
       </div>
 
@@ -2273,18 +2051,24 @@ const Foam = () => {
                             Name
                           </label>
                           {usertype === 'selectCustomer' ? (
-                            ''
-                          ) : (
-                            <>
-                              {errors.name && touched.name ? (
-                                <div className="error-message">{errors.name}</div>
-                              ) : null}
+                              <>
+                             {nameerror ? (
+                        <>
+                          <span className="requirederor" style={{ color: 'red' }}>
+                            required !
+                          </span>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                             </>
+                          ) : (
+                          ''
                           )}
                         </div>
                       
                         <div className="input-er-con">
-                          {isDisabled ? (
+                          {myname ? (
                             <Field
                               name="name"
                               type="text"
@@ -2301,7 +2085,7 @@ const Foam = () => {
                               className="form-control"
                               placeholder="Name"
                               value={custname}
-                              // disabled={isDisabled}
+                              disabled={isDisabled}
                               onChange={(e) => setcustname(e.target.value)}
                              
                             />
@@ -2315,35 +2099,44 @@ const Foam = () => {
                           <label htmlFor="phone" className="label-con">
                             Phone
                           </label>
-                          {usertype === 'selectCustomer' ? null : (
-                            <>
-                              {errors.phone && touched.phone ? (
-                                <div className="error-message">{errors.phone}</div>
-                              ) : null}
-                            </>
-                          )}
+                          {usertype === 'selectCustomer' ?      <>
+                             {nameerror ? (
+                        <>
+                          <span className="requirederor" style={{ color: 'red' }}>
+                            required !
+                          </span>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                            </> : (
+                            ''
+                          )} 
                         </div>
                         <div className="input-er-con">
-                          {isDisabled ? (
+                          {/* {myphone ? ( */}
                             <Field
                               //  name="phone"
                               min={0}
-                              type="number"
+                              type="tel"
                               className="form-control"
                               placeholder="Phone"
                               value={myphone}
                               disabled={isDisabled}
                               onChange={(e) => setmyphone(e.target.value)}
                             />
-                          ) : (
+                          {/* ) : (
                             <Field
                               name="phone"
+                              value={custmobile}
                               min={0}
                               type="number"
+                              disabled={isDisabled}
                               className="form-control"
                               placeholder="Phone"
+                              onChange={(e) => setcustmobile(e.target.value)}
                             />
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </Col>
@@ -2355,18 +2148,23 @@ const Foam = () => {
                             Email
                           </label>
                           {usertype === 'selectCustomer' ? (
-                            ''
-                          ) : (
+                                 <>
+                                 {nameerror ? (
                             <>
-                              {' '}
-                              {errors.email && touched.email ? (
-                                <div className="error-message">{errors.email}</div>
-                              ) : null}
+                              <span className="requirederor" style={{ color: 'red' }}>
+                                required !
+                              </span>
                             </>
+                          ) : (
+                            <></>
+                          )}
+                                </>
+                          ) : (
+                         ''
                           )}
                         </div>
                         <div className="input-er-con">
-                          {isDisabled ? (
+                          {myemail ? (
                             <Field
                               // name="email"
                               type="email"
@@ -2382,9 +2180,9 @@ const Foam = () => {
                               type="email"
                               className="form-control"
                               placeholder="Email"
-                              // value={myemail}
-                              // disabled={isDisabled}
-                              // onChange={(e) => setmyemail(e.target.value)}
+                              value={custemail}
+                              disabled={isDisabled}
+                              onChange={(e) => setcustemail(e.target.value)}
                             />
                           )}
                         </div>
@@ -2398,13 +2196,19 @@ const Foam = () => {
                             Event
                           </label>
                           {usertype === 'selectCustomer' ? (
-                            ''
-                          ) : (
+                                 <>
+                                 {eventerror ? (
                             <>
-                              {errors.event && touched.event ? (
-                                <div className="error-message">{errors.event}</div>
-                              ) : null}
+                              <span className="requirederor" style={{ color: 'red' }}>
+                                required !
+                              </span>
                             </>
+                          ) : (
+                            <></>
+                          )}
+                                </>
+                          ) : (
+                         ''
                           )}
                         </div>
                         <div className="input-er-con">
@@ -2425,7 +2229,7 @@ const Foam = () => {
                               className="form-control"
                               placeholder="Event"
                               // value={myevent}
-                              // // disabled={isDisabled}
+                              // disabled={isDisabled}
                               // onChange={(e) => setmyevent(e.target.value)}
                             />
                           )}
@@ -2476,25 +2280,32 @@ const Foam = () => {
                             Advertiser
                           </label>
                           {usertype === 'selectCustomer' ? (
-                            ''
-                          ) : (
+                                 <>
+                                 {nameerror ? (
                             <>
-                              {errors.Advertiser && touched.Advertiser ? (
-                                <div className="error-message">{errors.Advertiser}</div>
-                              ) : null}
+                              <span className="requirederor" style={{ color: 'red' }}>
+                                required !
+                              </span>
                             </>
+                          ) : (
+                            <></>
                           )}
+                                </>
+                          ) : (
+                         ''
+                          )}
+                        
                         </div>
 
                         <div className="input-er-con">
-                          {isDisabled ? (
+                          {myadvertiser ? (
                             <Field
                               // name="Advertiser"
                               type="text"
                               className="form-control"
                               placeholder="Advertiser"
                               value={myadvertiser}
-                              // disabled={isDisabled}
+                              disabled={isDisabled}
                               onChange={(e) => setmyadvertiser(e.target.value)}
                             />
                           ) : (
@@ -2504,7 +2315,7 @@ const Foam = () => {
                               className="form-control"
                               placeholder="Advertiser"
                               // value={myadvertiser}
-                              // // disabled={isDisabled}
+                              disabled={isDisabled}
                               // onChange={(e) => setmyadvertiser(e.target.value)}
                             />
                           )}
@@ -2561,7 +2372,7 @@ const Foam = () => {
                     </Button>
                     <div className="">
                       <div className="table-responsive " id="style-2">
-                        <Table className="">
+                        <Table className="" style={{alignItems:'right'}}>
                           <thead className="tr-row">
                             <tr className="text-center">
                               <th>Product Type</th>
@@ -2591,18 +2402,18 @@ const Foam = () => {
                                       className="dropdown"
                                       onChange={(event) => handleChange(index, event)}
                                     >
-                                      <option value="">select product type</option>
+                                      <option value="">Select product type</option>
                                       <option selected value="spots">
-                                        spots
+                                        Spots
                                       </option>
                                       <option value="Mentions">Mentions</option>
                                       <option value="Half Hours">Half Hours</option>
-                                      <option value="outside Broadcast">outside Broadcast</option>
+                                      <option value="outside Broadcast">Outside Broadcast</option>
                                     </select>
                                     {!errorMessage1 ? (
                                       <>
                                         <div className="requirederor" style={{ color: 'red' }}>
-                                          product type is required !
+                                          Product type is required !
                                         </div>
                                       </>
                                     ) : (
@@ -2655,7 +2466,9 @@ const Foam = () => {
                                             // console.log(startdate);
                                           }
                                           else{
-                                        // fields[index].cost = 0
+
+                                            // myfunction()
+                                       
                                         handle123(index,'','')
                                         setstartdate('')
                                         setenddate('')
@@ -2670,14 +2483,23 @@ const Foam = () => {
                                       />
 
                                       {/* </div> */}
-                                      {dates && dates.length < 2 ? (
+                                      {/* {dates && dates.length < 2 ? (
                                         <span
                                           style={{ textAlign: 'center' }}
                                           className="error-message"
                                         >
-                                          please select date range
+                                          Please select date range
                                         </span>
-                                      ) : null}
+                                      ) : null} */}
+                                        {dateerror ? (
+                        <>
+                          <span className="requirederor" style={{ color: 'red' }}>
+                          Please select date range
+                          </span>
+                        </>
+                      ) : (
+                        null
+                      )}
                                     </div>
                                   </div>
                                 </td>
@@ -2733,7 +2555,7 @@ const Foam = () => {
                                           style={{ textAlign: 'center' }}
                                           className="error-message"
                                         >
-                                          please select time range
+                                          Please select time range
                                         </span>
                                       ) : null}
                                     </div>
@@ -3023,7 +2845,26 @@ const Foam = () => {
                             />
                           </div>
                           <div>
-                            <span className="totalcosttext">Trade:</span>
+                          <select
+                          className="discountdropdown" 
+                                      // value={product_type}
+                                      // defaultValue="spots"
+                                      name="discount_type"
+                                      id="discount_type"
+                                      // className="dropdown"
+                                      onChange={(event) => handledropdown(event)}
+                                      
+
+                                    >
+                                      {/* <option value="">Select discount type</option> */}
+                                      <option selected value="Trade">
+                                        Trade
+                                      </option>
+                                      <option value="Sponsorship">Sponsorship</option>
+                                      <option value="Discount">Discount</option>
+                                      <option value="Charity">Charity</option>
+                                    </select>
+                                  
 
                             <input
                               className="totalcost2"
@@ -3111,7 +2952,7 @@ const Foam = () => {
                     </>
                   )}
 
-                  {paymenterr ? (
+                  {/* {paymenterr ? (
                     <>
                       <div className="requirederor" style={{ color: 'red' }}>
                         this field is required !
@@ -3119,11 +2960,11 @@ const Foam = () => {
                     </>
                   ) : (
                     <></>
-                  )}
+                  )} */}
                 </div>
 
                 <Row>
-                  <Col item xs={12} sm={7} md={7}>
+                  {/* <Col item xs={12} sm={7} md={7}>
                     <div className="signature-pad">
                       <SignatureCanvas ref={signRef} options={options} onEnd={handle} />
                       {mysignerror ? (
@@ -3136,13 +2977,13 @@ const Foam = () => {
                         <></>
                       )}
                     </div>
-                  </Col>
+                  </Col> */}
                   <Col item xs={12} sm={4} md={4}>
-                    <div className="sign-res-btn">
+                    {/* <div className="sign-res-btn">
                       <Button className="sign-button" onClick={handleClear}>
                         Clear
                       </Button>
-                    </div>
+                    </div> */}
                     <div className="chcek-box">
                       <div className="term-check">
                         <Field type="checkbox" name="termsAndConditions" />

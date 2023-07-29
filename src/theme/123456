@@ -15,6 +15,8 @@ import axios from 'axios';
 import SignaturePad from './SignaturePad';
 import moment from 'moment';
 import * as Yup from 'yup';
+// const [isEditing, setIsEditing] = useState(false);
+  // const [data, setData] = useState([]);
 
 
 
@@ -184,7 +186,40 @@ const Foam = () => {
       });
   }, [params.id ]);
 
+    const myproductupdate=()=>{
+      axios
+      .post(`http://localhost:8080/api/public/updateproductitem/${id}`, {
+       
+      product_type: '',
+     startdate:'',
+      enddate:'',
+      rate: '',
+       starttime:'',
+       endtime:'',
+      cost: '',
+      total: '',
+      monday: '',
+      tuesday: '',
+      wednesday: '',
+      thursday: '',
+      friday: '',
+      saturday: '',
+      sunday: '',
 
+    
+    
+       
+        
+       
+      })
+      .then((response) => {
+        toast.success(response.data.message);
+        console.log(response.data,'vgcgcfcfc');
+      });
+       }
+    
+
+    
 
     
 
@@ -218,6 +253,43 @@ const Foam = () => {
     console.log(response.data,'vgcgcfcfc');
   });
    }
+
+
+
+
+   const handleEdit = () => {
+    // setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    // setIsEditing(false);
+
+    data.forEach((row) => {
+      axios
+        .put(`${id}`, row)
+        .then((response) => {
+          console.log(`Row with ID ${row.id} updated successfully.`);
+        })
+        .catch((error) => {
+          console.error(`Error updating row with ID ${row.id}:`, error);
+        });
+    });
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   const signRef = useRef();
@@ -300,7 +372,7 @@ const Foam = () => {
         //                                     setenddate(event[1].$d);
 
         //                                     const valuess = [...fields];
-        //                                     valuess[index]['runDates'] = {
+        //                                     valuess[e,]['runDates'] = {
         //                                       startdate: values[0].$d,
         //                                       enddate: values[1].$d,
         //                                     };
@@ -858,7 +930,7 @@ const Foam = () => {
   }
 
 
-
+  
 
 
 
@@ -909,46 +981,46 @@ const Foam = () => {
     return calrate;
   };
 
-  function handleChange(i, event, productid) {
+  function handleChange(i, event, ) {
     const { name, value, id } = event.target;
 console.log(event.target.value,"event value")
 
-  // check to validate if entry is not a number
-  if (isNaN(name)) {
-    const updated = {};
-    const tempraryupdated = {};
-    updated['value'] = value;
-    updated['name'] = name;
-    tempraryupdated[name] = value;
+  // // check to validate if entry is not a number
+  // if (isNaN(name)) {
+  //   const updated = {};
+  //   const tempraryupdated = {};
+  //   updated['value'] = value;
+  //   updated['name'] = name;
+  //   tempraryupdated[name] = value;
     
-    updated["productid"] = productid;
+  //   updated["productid"] = productid;
     
-    setdatascan(datascan.filter((item) => (item['name'] !== name)));
+  //   setdatascan(datascan.filter((item) => (item['name'] !== name)));
   
-    setdatascan((datascan) => [...datascan, updated]);
-    settemprarydatascan(temprarydatascan.filter((item) => (item !== name)));
+  //   setdatascan((datascan) => [...datascan, updated]);
+  //   settemprarydatascan(temprarydatascan.filter((item) => (item !== name)));
 
-    settemprarydatascan((temprarydatascan) => [...temprarydatascan, tempraryupdated]);
-  }
-  console.log(datascan,temprarydatascan,'datascan123')
+  //   settemprarydatascan((temprarydatascan) => [...temprarydatascan, tempraryupdated]);
+  // }
+  // console.log(datascan,temprarydatascan,'datascan123')
    
-    let values = [...fields];
-    let myvalue =String(values[i][event.target.name]);
-    let index = myvalue.replace(/[0-9]/g,'');
+  //   let values = [...fields];
+  //   let myvalue =String(values[i][event.target.name]);
+  //   let index = myvalue.replace(/[0-9]/g,'');
 
-    index = event.target.value;
-    console.log(values,"values")
-    console.log(datascan,'datascan')
-    for(let defaultindex=0;defaultindex<values.length;defaultindex++){
-      for(let innerdefault=0;innerdefault<datascan.length;innerdefault++){
-        if(values[defaultindex].productId===datascan[innerdefault].productid){
+  //   index = event.target.value;
+  //   console.log(values,"values")
+  //   console.log(datascan,'datascan')
+    // for(let defaultindex=0;defaultindex<values.length;defaultindex++){
+    //   for(let innerdefault=0;innerdefault<datascan.length;innerdefault++){
+    //     if(values[defaultindex].productId===datascan[innerdefault].productid){
           
-          console.log("okay",Object.keys(values[defaultindex]))
-        }
-      }
-    }
-console.log(productid,'result')
-    values[i]["productId"]=productid
+    //       console.log("okay",Object.keys(values[defaultindex]))
+    //     }
+    //   }
+    // }
+// console.log(productid,'result')
+    // values[i]["productId"]=productid
     let start = moment(startdate, 'YYYY-MM-DD');
     let end = moment(enddate, 'YYYY-MM-DD');
     let weekdayMonCounter = 0;
@@ -1042,6 +1114,19 @@ console.log(productid,'result')
     setFields(values);
   };
 
+  const onInputChange = (e, rowId, field) => {
+    const updatedData = itemlist.map((row) =>
+      row.id === rowId ? { ...row, [field]: e.target.value } : row
+    );
+    setitemlist(updatedData);
+
+    console.log(updatedData,'dsdsd')
+    console.log(row.product_type,'ds123dsd')
+    
+  };
+
+
+
   var orderid = Math.floor(100000 + Math.random() * 900000);
 
   console.log(orderid);
@@ -1072,7 +1157,7 @@ console.log(productid,'result')
           email: '',
           start_date: '',
           end_date: '',
-          product_type: 'spots',
+          product_type: '',
           termsAndConditions: false,
         }}
         validationSchema={validationSchema}
@@ -1125,26 +1210,7 @@ console.log(productid,'result')
                       </div>
 
                       </Col>
-                      {/* <Col item xs={12} sm={6} md={4}>
-                      <div className="form-group">
-                        <label htmlFor="Contract_Date" className="label-con">
-                          Contract Date
-                        </label>
-                        <div className="input-er-con">
-                          <Field
-                            name="Contract_date"
-                            type="date"
-                            className="form-control"
-                            placeholder="Contract_date"
-                            value={contractdate}
-                            onChange={(e) => setcontractdate(e.target.value)}
-                          />
-                          {errors.Contract_date && touched.Contract_date ? (
-                            <div className="error-message">{errors.Contract_date}</div>
-                          ) : null}
-                        </div>
-                      </div>
-                      </Col> */}
+                      
                       <Col item xs={12} sm={6} md={4}>
                       <div className="form-group">
                         <label htmlFor="sales_rep" className="label-con">
@@ -1273,7 +1339,7 @@ console.log(productid,'result')
                          
                             <Table className="table-responsive ">
                               <thead className="tr-row">
-                                <tr>
+                                <tr  >
                                   <th>Product Type</th>
                                   <th>Run Dates</th>
                                   <th>Run Time</th>
@@ -1300,7 +1366,12 @@ console.log(productid,'result')
                                   
                                         return (
                                           <>
-                                            <tr key={index}>
+                                            <tr key={index}
+                                           
+                                            // rowData={row}
+                                            // isEditing={isEditing}
+                                            // onInputChange={handleInputChange}
+                                            >
                                               <td>
                                                 <div
                                                   className="form-group"
@@ -1309,11 +1380,11 @@ console.log(productid,'result')
                                                   <Field
                                                     defaultValue={field.product_type}
                                                     as="select"
-                                                    name='product_type' productid
+                                                    name='product_type' 
                                                     id="dropdown-input"
                                                     className="dropdown"
-                                                    // onChange={(e) => handleChange(index,e,field.id)}
-                                                    onChange={(e) => setmyproduct(e.target.value)}
+                                                    onChange={(e) => onInputChange(index,e,'product_type')}
+                                                    // onChange={(e) => setmyproduct(e.target.value)}
                                                   >
                                                     <option selected value="spots">
                                                       spots
@@ -1481,9 +1552,9 @@ console.log(productid,'result')
                                                             min={0}
                                                             defaultValue={field.monday}
                                                             onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                              onInputChange(e,index, 'monday')
                                                             }
-                                                            name={"monday"+id}
+                                                            name="monday"
                                                             placeholder="monday"
                                                             autoFocus
                                                           />
@@ -1503,9 +1574,9 @@ console.log(productid,'result')
                                                             min={0}
                                                             defaultValue={field.tuesday}
                                                             onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                              onInputChange(e,index, 'tuesday')
                                                             }
-                                                            name={"tuesday"+id}
+                                                            name="tuesday"
                                                             placeholder="tuesday"
                                                           />
                                                         </Form.Group>
@@ -1525,9 +1596,9 @@ console.log(productid,'result')
                                                             defaultValue={field.wednesday}
                                                       
                                                             onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                              onInputChange(e,index, 'wednesday')
                                                             }
-                                                            name={"wednesday"+ id}
+                                                            name="wednesday"
                                                             placeholder="Wednesday"
                                                           />
                                                         </Form.Group>
@@ -1546,9 +1617,9 @@ console.log(productid,'result')
                                                             className="popup-control"
                                                             defaultValue={field.thursday}
                                                             onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                              onInputChange(e,index, 'thursday')
                                                             }
-                                                            name="thursday" productid
+                                                            name="thursday" 
                                                             placeholder="thursday"
                                                           />
                                                         </Form.Group>
@@ -1567,9 +1638,9 @@ console.log(productid,'result')
                                                             min={0}
                                                             defaultValue={field.friday}
                                                             onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                              onInputChange(e,index, 'friday')
                                                             }
-                                                            name={"friday"+id}
+                                                            name="friday"
                                                             placeholder="friday"
                                                           />
                                                         </Form.Group>
@@ -1588,9 +1659,9 @@ console.log(productid,'result')
                                                             min={0}
                                                             defaultValue={field.saturday}
                                                             onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                              onInputChange(e,index, 'saturday')
                                                             }
-                                                            name="saturday"productid
+                                                            name="saturday"
                                                             placeholder="saturday"
                                                           />
                                                         </Form.Group>
@@ -1608,9 +1679,9 @@ console.log(productid,'result')
                                                             min={0}
                                                             defaultValue={field.sunday}
                                                             onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                              onInputChange(e,index, 'sunday')
                                                             }
-                                                            name={"sunday"+id}
+                                                            name="sunday"
                                                             placeholder="sunday"
                                                           />
                                                         </Form.Group>
@@ -1625,11 +1696,11 @@ console.log(productid,'result')
                                                           <Form.Control
                                                             className="popup-control"
                                                             type="total"
-                                                            name="total"productid
+                                                            name="total"
                                                             min={1}
                                                             defaultValue={field.total}
                                                             onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                              onInputChange( e,index, 'total')
                                                             }
                                                             placeholder="total"
                                                           />
@@ -1660,9 +1731,9 @@ console.log(productid,'result')
                                                     style={{ marginLeft: '-22px' }}
                                                  
                                                     defaultValue={field.rate}
-                                                    onChange={(e) => handleChange(index, e,field.id)}
+                                                    onChange={(e) => onInputChange(e,index,'rate')}
                                                     step="any"
-                                                    name="rate "  productid
+                                                    name="rate "  
 
                                                     type="number"
                                                     min={0}
@@ -1677,7 +1748,7 @@ console.log(productid,'result')
                                                   <input
                                                     style={{ marginLeft: '-22px' }}
                                                     defaultValue={field.discount}
-                                                    onChange={(e) => handleChange(index, e,field.id)}
+                                                    onChange={(e) => handleChange(e,, e,field.id)}
                                                     step="any"
                                                     name={"discount" 
                                                     type="number"
@@ -1694,7 +1765,7 @@ console.log(productid,'result')
                                                     style={{ marginLeft: '-22px' }}
                                                     step="0.01"
                                                     defaultValue={field.cost}
-                                                    onChange={(e) => handleChange(index, e,field.id)}
+                                                    onChange={(e) => onInputChange(e,index,'cost')}
                                                     name="cost"
                                                     min={0}
                                                     type="number"
@@ -1703,11 +1774,11 @@ console.log(productid,'result')
                                                 </div>
                                               </td>
 
-                                              {/* <td>
-                                              <button className="btn update-btn" style={{ float: 'right' }} type="submit" >
+                                           
+                                              <button className="btn update-btn" style={{ float: 'right' }} type="submit" onClick={myproductupdate} >
                     update
                   </button>
-                                              </td> */}
+                                             
 
                                               {/* <td style={{}}>
                                                 <div className="form-group">
@@ -1715,7 +1786,7 @@ console.log(productid,'result')
                                                     style={{ marginLeft: '-22px' }}
                                                     step="0.01"
                                                     defaultValue={field.discounted_cost}
-                                                    onChange={(e) => handleChange(index, e,field.id)}
+                                                    onChange={(e) => handleChange(e,, e,field.id)}
                                                     name={"discounted_cost"}
                                                     min={0}
                                                     type="number"
@@ -1730,7 +1801,7 @@ console.log(productid,'result')
                                                     style={{ marginLeft: '-22px' }}
                                                     step="0.01"
                                                     defaultValue={field.cost_tax}
-                                                    onChange={(e) => handleChange(index, e,field.id)}
+                                                    onChange={(e) => handleChange(e,, e,field.id)}
                                                     name={"cost_tax" 
                                                     min={0}
                                                     type="number"
@@ -1741,11 +1812,11 @@ console.log(productid,'result')
                                               </td> */}
 
                                               {/* <td>
-                                                {index !== 0 && (
+                                                {e, !== 0 && (
                                                   <button
                                                     type="button"
                                                     className="btn btn-outline-danger"
-                                                    onClick={() => handleDelete(index)}
+                                                    onClick={() => handleDelete(e,)}
                                                   >
                                                     X
                                                   </button>

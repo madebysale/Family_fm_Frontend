@@ -16,6 +16,22 @@
 }
 
 
+.header-cell {
+  cursor: pointer;
+  background-color: #f8f8f8;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+}
+
+.sort-icon {
+  color: blue;
+  margin-left: 5px;
+}
+
+
 .contact-detail{
    width: 100%;
   display: grid;

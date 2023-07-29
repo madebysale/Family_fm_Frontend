@@ -9,6 +9,7 @@ import { Table } from 'react-bootstrap';
 import { AiOutlineLogout } from 'react-icons/ai';
 import mylogo from '../icons/fm_logo.png';
 import './Invoice.css';
+import { RWebShare } from "react-web-share";
 
 const Contractview = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Contractview = () => {
 
   useEffect(() => {
     axios
-      .post('http://3.142.245.136:8080/api/public/agreementlist', {
+      .post('http://localhost:8080/api/public/agreementlist', {
         id: params.id,
       }, {
         headers: {'x-token': localStorage.getItem('token') },
@@ -50,7 +51,7 @@ const Contractview = () => {
 
   const onmakecontract = (id) => {
     axios
-      .post(`http://3.142.245.136:8080/api/public/makecontract/${id}`)
+      .post(`http://localhost:8080/api/public/makecontract/${id}`)
       .then((response) => {
         console.log(response.data);
         if (response.code !== 200) {
@@ -78,6 +79,12 @@ const Contractview = () => {
       {dataapi.map((type) => {
         var startDate = new Date(type.st_date);
         var endDate = new Date(type.ed_date);
+
+
+        const startMonth = moment(mindate).format('MMMM, YYYY');
+        const endMonth = moment(maxdate).format('MMMM, YYYY');
+
+
         return (
           <>
             {/* <div>
@@ -117,15 +124,30 @@ const Contractview = () => {
               <Pdf props={{ handleFunction: dataapi , handleFunction2:invoicedata , minfunction:mindate, maxfunction:maxdate, orderfunction:orderamount ,disorderfunction:monthly}} />
             </div>
 
+            <div>
+            <RWebShare
+        data={{
+          text: "Like humans, flamingos make friends for life",
+          url: `http://localhost/Vibz_FM/${type.contract_pdf}`,
+          title: "Flamingos",
+        }}
+        onClick={() => console.log("shared successfully!")}
+      >
+        <button className="create-invo-12" >Share 🔗</button>
+      </RWebShare>
+      </div>
+
+
+
             <div className="row" style={{ borderBottom: '2px solid black' }}>
               <div className="col">
-                {/* <p>
+                <p>
                     {" "}
                     Contract Dates:-
                     <span style={{ marginLeft: "12px", textAlign: "center" }}>
-                      {moment(type.contract_date).utc().format(" Do MMMM, YYYY")}
+                      {moment(type.contractdate).utc().format(" Do MMMM, YYYY")}
                     </span>
-                  </p> */}
+                  </p>
                 <p>
                   {' '}
                   Advertiser:-
@@ -253,38 +275,44 @@ const Contractview = () => {
 
             <div className='table-container'>
               <Table className='responsive-table' >
+
+
+              {
+dataapi.map((item) => {
+    return (
+      <>
                 <thead className='' >
                   <tr className='mytable'>
                    
-                    <th># OF WKS </th>
+                  
                    
                     <th >TOTAL COST OF PACKAGE</th>
-                    <th>TRADE</th>
+                    <th>{item.discountdropdown}</th>
                     <th>% ABST </th>
+                    <th>ABST </th>
                     <th>TOTAL</th>
                     </tr>
                   </thead>
                   <tbody className='second-table-body'>
 
-{
-dataapi.map((item) => {
-    return (
-      <>
+
 <tr  >
   {/* <td>{item.weekhr}</td> */}
-  <td> 2 </td>
+ 
  
   <td>${item.cost}</td>
   <td>${item.trade}</td>
  <td>%{item.discountabst}</td>
+ <td>${(((item.cost-item.trade)*item.discountabst)/100).toFixed(2)}</td>
 <td>${item.grandtotal}</td>
 
 </tr>
+</tbody>
 
 </>
     )})}
 
-</tbody>
+
               </Table>
             </div>
 
@@ -293,35 +321,44 @@ dataapi.map((item) => {
 })
 }
 
-<div style={{borderBottom:'2px solid black' ,paddingBottom:"5px"}}>  <p style={{marginTop:'8px' ,}}>Calender Month Projected Billing [Net+Tax]:</p>
-             <div style={{display:'grid', gridTemplateColumns:'auto auto auto auto' ,marginTop:'30px', textAlign:"center", gridGap:"10px"}}>
-            
-              <div>
-              <div >Jan: ${monthly.jan}</div>
-              <div>Feb: ${monthly.feb}</div>
-              <div>Mar: ${monthly.mar}</div>
+{startMonth === endMonth ? (
+              ''
+            ) : (
+              <div style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>
+                {' '}
+                <p style={{ marginTop: '8px' }}> Month Projected Billing [ABST Inclusive]:</p>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto auto auto auto',
+                    marginTop: '30px',
+                    textAlign: 'center',
+                    gridGap: '10px',
+                  }}
+                >
+                  <div>
+                    <div>Jan: ${monthly.jan}</div>
+                    <div>Feb: ${monthly.feb}</div>
+                    <div>Mar: ${monthly.mar}</div>
+                  </div>
+                  <div>
+                    <div>April: ${monthly.april}</div>
+                    <div>May: ${monthly.may}</div>
+                    <div>June: ${monthly.june}</div>
+                  </div>
+                  <div>
+                    <div>July: ${monthly.july}</div>
+                    <div>Aug: ${monthly.aug}</div>
+                    <div>Sept: ${monthly.sept}</div>
+                  </div>
+                  <div>
+                    <div>Oct: ${monthly.oct}</div>
+                    <div>Nov: ${monthly.nov}</div>
+                    <div>Dec: ${monthly.dec}</div>
+                  </div>
+                </div>
               </div>
-              <div >
-              <div>April: ${monthly.april}</div>
-              <div>May: ${monthly.may}</div>
-              <div>June: ${monthly.june}</div>
-              </div>
-              <div >
-              <div>July: ${monthly.july}</div>
-              <div>Aug: ${monthly.aug}</div>
-              <div>Sept: ${monthly.sept}</div>
-              </div>
-              <div >
-              <div>Oct: ${monthly.oct}</div>
-              <div>Nov: ${monthly.nov}</div>
-              <div>Dec: ${monthly.dec}</div>
-              </div>
-            
-             
-
-             </div>
-                    
-             </div>  
+            )}
 
             {/* <div className=" total-amount" > <p>Ordered Amount:- ${type.cost_total}</p>
                     <p style={{borderBottom:'1px solid black',paddingBottom:'8px'}}>+ABST 2: 15%</p>
@@ -329,7 +366,7 @@ dataapi.map((item) => {
 
             {/* <div className="mt-3" style={{borderBottom:"2px solid black"}} > */}
             {/* </div> */}
-            <div style={{ marginTop: '80px' }}>
+             <div style={{ marginTop: '80px' }}>
               <div style={{ paddingBottom: '10px' }}>
                 <div className="mt-3">
                   <p style={{ textDecoration: 'underline', paddingBottom: '1px' }}>
@@ -338,15 +375,15 @@ dataapi.map((item) => {
                   <p>{type.paymentdue}</p>
                 </div>
 
-                <div style={{ marginBottom: '10px', textAlign: 'right' }}>
+                {/* <div style={{ marginBottom: '10px', textAlign: 'right' }}>
                   <p>Please make all cheques payable to Family Fm Ltd</p>
                   <p style={{ textDecoration: 'underline', paddingBottom: '1px' }}>
                     Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.
                   </p>
-                </div>
+                </div> */}
               </div>
 
-              <div className="mt-5">
+              {/* <div className="mt-5">
                 <div style={{ textAlign: 'left', fontSize: '20px', fontWeight: '500' }}>
                   {' '}
                   Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract{' '}
@@ -436,27 +473,28 @@ dataapi.map((item) => {
                   not comply, he/she will be charged the full amount for spots, mention etc Saved
                   image png Client Signature
                 </p>
-              </div>
+              </div> */}
 
               <div className="writing-field">
-                <div>
-                  <img className="img-sign" src={type.signature} alt="signature" />
+                <div >
+                <img className="img-sign"src={`http://localhost/Vibz_FM/uploads/${type.signature}`} alt={"signature"}/>
+
 
                   <div className="sing-1">Family FM Representative </div>
                 </div>
-                <div>
+                {/* <div>
                   <img className="img-sign" src={type.sign} alt="example" />
                   <div className="sing-1">Client</div>
-                </div>
+                </div> */}
               </div>
 
-              <div style={{ marginBottom: '10px', textAlign: 'right' }}>
+              {/* <div style={{ marginBottom: '10px', textAlign: 'right' }}>
                 <p>Please make all cheques payable to Family Fm Ltd</p>
                 <p style={{ textDecoration: 'underline', paddingBottom: '1px' }}>
                   Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.
                 </p>
-              </div>
-            </div>
+              </div> */}
+            </div> 
           </>
         );
       })}

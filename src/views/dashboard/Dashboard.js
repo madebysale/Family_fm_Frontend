@@ -41,7 +41,7 @@ export default function DashboardApp() {
   useEffect(() => {
 
     axios.post(
-        'http://3.142.245.136:8080/api/public/numberofsales')
+        'http://localhost:8080/api/public/numberofsales')
 
       .then((response) => {
         setsales(response.data.data);
@@ -58,21 +58,21 @@ export default function DashboardApp() {
   useEffect(() => {
 
     axios.post(
-        'http://3.142.245.136:8080/api/public/totalcustomer')
+        'http://localhost:8080/api/public/totalcustomer')
 
       .then((response) => {
-        setagreement(response.data.data.totalagreement);
-        setcontract(response.data.data.totalcontract)
-        setcustomer(response.data.data.totalcustomer)
+        setagreement(response.data.data.totalagreement.total_agreement);
+        setcontract(response.data.data.totalcontract.total_contract)
+        setcustomer(response.data.data.totalcustomer.total_customer)
 
-        console.log(response.data.data.totalAgreement, 'agreement');
+        console.log(response.data.data.totalcontract.total_contract, 'agreement');
       });
 
   }, []);
 
   /////////////////////////////////////////////////////////
 
-  // -------------------------------------------------------------//
+  //------------------------------------------------------//
 
   
    useEffect(()=>{
@@ -85,7 +85,7 @@ export default function DashboardApp() {
 
     axios
     .post(
-      'http://3.142.245.136:8080/api/public/contractlist',
+      'http://localhost:8080/api/public/contractlist',
       {},
       {
         headers: { 'x-token': localStorage.getItem('token') },
@@ -94,7 +94,7 @@ export default function DashboardApp() {
 
     .then((response) => {
       setData(response.data.data);
-    console.log(response, 'sds');
+    
     });
 
   }
@@ -113,14 +113,17 @@ export default function DashboardApp() {
               <Icon icon="akar-icons:file" />
             </span>
             <div className='innerbox'>
-            {contract.map((con) => {
+            {/* {contract.map((con) => {
+              console.log(con,'123')
             
             return (
               
-                <h2>{con.total_contract}</h2>
+            
                
             );
-          })}
+          })} */}
+              <h2>{contract}</h2>
+          {/* console.log(contract.totalcontract) */}
             <h3>Contracts</h3>
               </div>
            
@@ -133,15 +136,11 @@ export default function DashboardApp() {
               <Icon icon="icon-park:agreement" />
             </span>
             <div className='innerbox'>
-            {agreement.map((agree) => {
-              console.log(agree,'sdsdd')
-            
-            return (
+           
               
-                <h2>{agree.total_agreement}</h2>
+                <h2>{agreement}</h2>
                
-            );
-          })}
+           
             <h3>Quotations</h3>
             </div>
           </div>
@@ -175,15 +174,11 @@ export default function DashboardApp() {
               <Icon icon="mingcute:user-1-line" />
             </span>
             <div className='innerbox'>
-            {customer.map((agree) => {
-              console.log(agree,'customerdd')
-            
-            return (
+           
               
-                <h2>{agree.total_customer}</h2>
+                <h2>{customer}</h2>
                
-            );
-          })}
+            
             <h3> Total Customers </h3>
             </div>
           </div>

@@ -54,7 +54,7 @@ function Mycustomer() {
 
     axios
       .post(
-        'http://3.142.245.136:8080/api/public/customerlist',
+        'http://localhost:8080/api/public/customerlist',
         {},
         {
           headers: {'x-token': localStorage.getItem('token') },
@@ -115,7 +115,7 @@ function Mycustomer() {
  
   const onDelete = (id) => {
     axios
-      .post(`http://3.142.245.136:8080/api/public/customerdelete/${id}`)
+      .post(`http://localhost:8080/api/public/customerdelete/${id}`)
       .then((response) => {
         console.log(response.data);
         if(response.code!==200){

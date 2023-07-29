@@ -13,8 +13,10 @@ const LinkStyled = styled(Link)(() => ({
 const Logo = () => {
   return (
    
-  
-  <img src = {LogoDar} alt='log' height={70}/>
+
+ <img src = {LogoDar} alt='log' height={70} style={{marginLeft:"15px", marginBottom:"25px"}}/>
+   
+ 
    
   
      

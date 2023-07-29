@@ -35,6 +35,10 @@ import { Icon } from '@iconify/react';
 import { Col, Row} from "react-bootstrap";
 
 import './Form.css';
+// import { DateRangePicker } from 'rsuite';
+import DateRangePicker from 'rsuite/DateRangePicker';
+import 'rsuite/dist/rsuite.css'
+import { DateTimePicker } from '@mui/lab';
 
 const { RangePicker } = DatePicker;
 
@@ -66,8 +70,8 @@ const Foam = () => {
   const [product_type, setproduct_type] = useState('');
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const handleClose = () => setShow(false);
+  // const handleShow = () => setShow(true);
 
   const [event, setevent] = useState('');
   const [rate, setrate] = useState('');
@@ -106,6 +110,8 @@ const Foam = () => {
   const[myproduct,setmyproduct]=useState('')
   const[myproduct1,setmyproduct1]=useState('')
   const[porductitem,setproductitem]=useState([])
+  const [modalVisibility, setModalVisibility] = useState({});
+  const [mytotal,setmytotal]=useState('')
   
   const [datascan, setdatascan] = useState([]);
   const [temprarydatascan, settemprarydatascan] = useState([]);
@@ -148,7 +154,7 @@ const Foam = () => {
 
   useEffect(() => {
     axios
-      .post('http://3.142.245.136:8080/api/public/agreementlist',{
+      .post('http://localhost:8080/api/public/agreementlist',{
         id: params.id,
       },{
         headers: {'x-token': localStorage.getItem('token') },
@@ -178,14 +184,14 @@ const Foam = () => {
      
         
       });
-  }, [params]);
+  }, [params.id ]);
 
 
    const updateAPIData=()=>{
 
    
   axios
-  .post(`http://3.142.245.136:8080/api/public/updateagreement/${id}`, {
+  .post(`http://localhost:8080/api/public/updateagreement/${id}`, {
    
     sales_rep: salesrep,
     advertiser: Advertiser,
@@ -204,7 +210,26 @@ const Foam = () => {
     toast.success(response.data.message);
     console.log(response.data,'vgcgcfcfc');
   });
-   }
+   
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   const signRef = useRef();
@@ -217,6 +242,1276 @@ const Foam = () => {
     penColor: 'red',
     onEnd: () => signRef.current.toDataURL(),
   };
+
+
+
+  const handleClose =(index)=>{
+    setModalVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [index]: false,
+    }));
+  };
+  
+   
+    
+   
+   const handleShow =(index)=>{
+    setModalVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [index]: true,
+    }));
+  
+  
+   }
+
+
+
+
+
+
+  // function handle123(i,startdate,enddate) {
+  //   // console.log(startdate,'ss')
+
+  //   const values = [...fields];
+
+ 
+  //   // values[i][fieldname] = event;
+  
+  //   // console.log(values[i], 'ii');
+
+  //   // console.log(event.target.getAttribute('name'),'sssss')
+
+  //   // if (event.target && event.target.name === 'runDates') {
+  //   //   console.log( event.target.name,'ssasas')
+  //   //   if (event.length === 0) {
+  //   //     console.log('requires');
+  //   //   } else {
+  //   //     console.log('not');
+  //   //   }
+  
+  //   //   if (values !== null) {
+  //   //     setDates(
+  //   //       values.map((item) => {
+  //   //         return item;
+  //   //       }),
+  //   //     );
+  
+  //   //     const startdate = event[0].$d;
+  //   //     const enddate = event[1].$d;
+  
+  //   //     setstartdate(startdate);
+  //   //     setenddate(enddate);
+  
+  //   //     const valuess = [...fields];
+  //   //     valuess[i]['runDates'] = {
+  //   //       startdate: startdate,
+  //   //       enddate: enddate,
+  //   //     };
+  //   //     setFields(valuess);
+  
+  //   //     console.log(event);
+  //   //   }
+  //   // }
+  
+   
+
+
+
+
+
+
+  //       //  onChange={(values, event) => {
+  //       //                                   if (event.length === 0) {
+  //       //                                     console.log('requires');
+  //       //                                   } else {
+  //       //                                     console.log('not');
+  //       //                                   }
+
+  //       //                                   if (values !== null) {
+  //       //                                     setDates(
+  //       //                                       values.map((item) => {
+  //       //                                         return item;
+  //       //                                       }),
+  //       //                                     );
+  //       //                                    setstartdate(event[0].$d);
+  //       //                                     setenddate(event[1].$d);
+
+  //       //                                     const valuess = [...fields];
+  //       //                                     valuess[index]['runDates'] = {
+  //       //                                       startdate: values[0].$d,
+  //       //                                       enddate: values[1].$d,
+  //       //                                     };
+  //       //                                     setFields(valuess);
+
+  //       //                                     setstartdate(values[0].$d);
+  //       //                                     setenddate(values[1].$d);
+
+  //       //                                     console.log(values);
+  //       //                                   }
+  //       //                                 }}
+
+   
+  
+
+   
+
+
+
+
+    
+  //   // console.log(startdate,'dssdds123')
+  //   // console.log(enddate,'dssdds123')
+    
+    
+  //   let start = moment(startdate, 'YYYY-MM-DD'); //Pick 0.01 format
+  //   let end = moment(enddate, 'YYYY-MM-DD'); //right now (or define an end date yourself)
+  //   let weekdayMonCounter = 0;
+  //   let weekdayTueCounter = 0;
+  //   let weekdayWedCounter = 0;
+  //   let weekdayThuCounter = 0;
+  //   let weekdayFriCounter = 0;
+  //   let weekdaySatCounter = 0;
+  //   let weekdaySunCounter = 0;
+
+  //   while (start <= end) {
+  //     if (start.format('ddd') === 'Mon') {
+  //       weekdayMonCounter++;
+  //       start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+  //     } else if (start.format('ddd') === 'Tue') {
+  //       weekdayTueCounter++;
+  //       start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+  //     } else if (start.format('ddd') === 'Wed') {
+  //       weekdayWedCounter++;
+  //       start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+  //     } else if (start.format('ddd') === 'Thu') {
+  //       weekdayThuCounter++;
+  //       start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+  //     } else if (start.format('ddd') === 'Fri') {
+  //       weekdayFriCounter++;
+  //       start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+  //     } else if (start.format('ddd') === 'Sat') {
+  //       weekdaySatCounter++;
+  //       start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+  //     } else if (start.format('ddd') === 'Sun') {
+  //       weekdaySunCounter++;
+  //       start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+  //     }
+  //   }
+
+  //   let startDate = moment(startdate).format('YYYY-MM-DD');
+  //   let endDate = moment(enddate).format('YYYY-MM-DD');
+  //   let betweenMonths = [];
+  //   let montharray = [];
+  //   var totalcost;
+
+  //   // console.log(startDate, 'start123');
+  //   // console.log(endDate, 'end');
+  //       // console.log(startDate,'startdate132')
+  //   if (startDate < endDate) {
+  //      let date = moment(startDate).startOf('month');
+  //      while (date < moment(endDate).endOf('month')) {
+  //       // console.log(date,"while.......")
+  //       betweenMonths.push(date.format('MM'));
+  //       montharray.push(date.format('YYYY-MM'));
+
+  //       date.add(1, 'month');
+  //     }
+  //   }
+
+
+  //   values[i]['jan']= 0.00
+  //   values[i]['feb']= 0.00
+  //   values[i]['mar']= 0.00
+
+  //   values[i]['april']= 0.00
+  //   values[i]['may']= 0.00
+  //   values[i]['sept']= 0.00
+  //   values[i]['oct']= 0.00
+  //   values[i]['nov']= 0.00
+  //   values[i]['dec']= 0.00
+
+  //   values[i]['jun']= 0.00
+  //   values[i]['july']= 0.00
+  //   values[i]['aug']= 0.00
+
+  //   for (let j = 0; j < betweenMonths.length; j++) {
+
+  //     // console.log("for loop.......")
+
+  //     if (j == 0) {
+
+     
+  //       let eendDate = moment(startDate).endOf('month');
+
+  //       let startdateofmonth = moment(eendDate).format('YYYY-MM-DD');
+
+  //       let weekdayMonCounter1 = 0;
+  //       let weekdayTueCounter1 = 0;
+  //       let weekdayWedCounter1 = 0;
+  //       let weekdayThuCounter1 = 0;
+  //       let weekdayFriCounter1 = 0;
+  //       let weekdaySatCounter1 = 0;
+  //       let weekdaySunCounter1 = 0;
+
+  //       let currentDate = moment(startDate); // Create a separate variable to iterate over the dates
+  //       let enddingdate = moment(startdateofmonth);
+
+  //       while (currentDate <= enddingdate) {
+  //         if (currentDate.format('ddd') === 'Mon') {
+  //           weekdayMonCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Tue') {
+  //           weekdayTueCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Wed') {
+  //           weekdayWedCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Thu') {
+  //           weekdayThuCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Fri') {
+  //           weekdayFriCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Sat') {
+  //           weekdaySatCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Sun') {
+  //           weekdaySunCounter1++;
+  //         }
+
+  //         currentDate.add(1, 'day');
+  //       }
+
+  //       totalcost =
+  //         (Number(values[i]['monday'] ) * weekdayMonCounter1 +
+  //           Number(values[i]['tuesday']) * weekdayTueCounter1 +
+  //           Number(values[i]['wednesday']) * weekdayWedCounter1 +
+  //           Number(values[i]['thursday']) * weekdayThuCounter1 +
+  //           Number(values[i]['friday']) * weekdayFriCounter1 +
+  //           Number(values[i]['saturday']) * weekdaySatCounter1 +
+  //           Number(values[i]['sunday']) * weekdaySunCounter1) *
+  //         fields[i].rate;
+  //     } else if (j == betweenMonths.length - 1) {
+  //       let eendDate = moment(endDate).startOf('month');
+
+  //       let startdateofmonth = moment(eendDate).format('YYYY-MM-DD');
+
+  //       let weekdayMonCounter2 = 0;
+  //       let weekdayTueCounter2 = 0;
+  //       let weekdayWedCounter2 = 0;
+  //       let weekdayThuCounter2 = 0;
+  //       let weekdayFriCounter2 = 0;
+  //       let weekdaySatCounter2 = 0;
+  //       let weekdaySunCounter2 = 0;
+
+  //       let enddingdate = moment(endDate); // Create a separate variable to iterate over the dates
+  //       let currentDate = moment(startdateofmonth);
+
+  //       while (currentDate <= enddingdate) {
+  //         if (currentDate.format('ddd') === 'Mon') {
+  //           weekdayMonCounter2++;
+  //         } else if (currentDate.format('ddd') === 'Tue') {
+  //           weekdayTueCounter2++;
+  //         } else if (currentDate.format('ddd') === 'Wed') {
+  //           weekdayWedCounter2++;
+  //         } else if (currentDate.format('ddd') === 'Thu') {
+  //           weekdayThuCounter2++;
+  //         } else if (currentDate.format('ddd') === 'Fri') {
+  //           weekdayFriCounter2++;
+  //         } else if (currentDate.format('ddd') === 'Sat') {
+  //           weekdaySatCounter2++;
+  //         } else if (currentDate.format('ddd') === 'Sun') {
+  //           weekdaySunCounter2++;
+  //         }
+
+  //         currentDate.add(1, 'day');
+  //       }
+
+  //       totalcost =
+  //         (Number(values[i]['monday']) * weekdayMonCounter2 +
+  //           Number(values[i]['tuesday']) * weekdayTueCounter2 +
+  //           Number(values[i]['wednesday']) * weekdayWedCounter2 +
+  //           Number(values[i]['thursday']) * weekdayThuCounter2 +
+  //           Number(values[i]['friday']) * weekdayFriCounter2 +
+  //           Number(values[i]['saturday']) * weekdaySatCounter2 +
+  //           Number(values[i]['sunday']) * weekdaySunCounter2) *
+  //         fields[i].rate;
+  //     } else {
+  //       let eendDate = moment(betweenMonths[j].concat('-01')).endOf('month');
+
+  //       let startdateofmonth = moment(eendDate).format('YYYY-MM-DD');
+  //       let mystartDate = moment(betweenMonths[j].concat('-01')).format('YYYY-MM-DD')
+
+  //       let weekdayMonCounter1 = 0;
+  //       let weekdayTueCounter1 = 0;
+  //       let weekdayWedCounter1 = 0;
+  //       let weekdayThuCounter1 = 0;
+  //       let weekdayFriCounter1 = 0;
+  //       let weekdaySatCounter1 = 0;
+  //       let weekdaySunCounter1 = 0;
+
+  //       let currentDate = moment(mystartDate); // Create a separate variable to iterate over the dates
+  //       let enddingdate = moment(startdateofmonth);
+
+  //       while (currentDate <= enddingdate) {
+  //         if (currentDate.format('ddd') === 'Mon') {
+  //           weekdayMonCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Tue') {
+  //           weekdayTueCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Wed') {
+  //           weekdayWedCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Thu') {
+  //           weekdayThuCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Fri') {
+  //           weekdayFriCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Sat') {
+  //           weekdaySatCounter1++;
+  //         } else if (currentDate.format('ddd') === 'Sun') {
+  //           weekdaySunCounter1++;
+  //         }
+
+  //         currentDate.add(1, 'day');
+  //       }
+
+  //       totalcost =
+  //         (Number(values[i]['monday']) * weekdayMonCounter1 +
+  //           Number(values[i]['tuesday']) * weekdayTueCounter1 +
+  //           Number(values[i]['wednesday']) * weekdayWedCounter1 +
+  //           Number(values[i]['thursday']) * weekdayThuCounter1 +
+  //           Number(values[i]['friday']) * weekdayFriCounter1 +
+  //           Number(values[i]['saturday']) * weekdaySatCounter1 +
+  //           Number(values[i]['sunday']) * weekdaySunCounter1) *
+  //         fields[i].rate;
+
+  //       // console.log(totalcost, 'middletotalcost');
+  //     }
+  //     var myresult = Number(betweenMonths[j]);
+  //     // console.log(betweenMonths[j], 'ds');
+  //     switch (myresult) {
+  //       case 1:
+  //         values[i]['jan']=Number(totalcost)
+  //         // console.log(totalcost)
+  //         break;
+  //       case 2:
+  //         values[i]['feb']=Number(totalcost)
+  //         // console.log(totalcost)
+  //         break;
+  //       case 3:
+  //         values[i]['mar']=Number(totalcost)
+  //         // console.log(totalcost)
+
+  //         break;
+  //       case 4:
+  //         values[i]['april']=Number(totalcost)
+  //         // console.log(totalcost)
+  //         break;
+  //       case 5:
+  //         values[i]['may']=Number(totalcost)
+  //         // console.log(totalcost)
+  //         break;
+  //       case 6:
+  //         values[i]['june']=Number(totalcost)
+  //         // console.log(totalcost)
+  //         break;
+  //       case 7:
+  //         values[i]['july']=Number(totalcost)
+  //         // console.log(totalcost)
+  //         break;
+  //       case 8:
+  //         values[i]['aug']=Number(totalcost)
+  //         // console.log(totalcost)
+  //         break;
+  //       case 9:
+  //         values[i]['sept']=Number(totalcost)
+  //         // console.log(totalcost)
+  //         break;
+  //       case 10:
+  //         values[i]['oct']=Number(totalcost)
+  //         // console.log(totalcost)
+  //         break;
+  //       case 11:
+  //         values[i]['nov']=Number(totalcost)
+  //         // console.log(totalcost)
+  //         break;
+  //       case 12:
+  //         values[i]['dec']=Number(totalcost)
+          
+  //         break;
+
+  //       default:
+  //         // console.log('none value selected');
+  //     }
+  //   }
+
+  //   // let eendDate = moment(startDate).endOf('month');
+  //   // let myendDate = eendDate.format('YYYY-MM-DD');
+
+  //   // let weekdayMonCounter1 = 0;
+  //   // let 2 = 0;
+  //   // let weekdayWedCounter1 = 0;
+  //   // let weekdayThuCounter1 = 0;
+  //   // let weekdayFriCounter1 = 0;
+  //   // let weekdaySatCounter1 = 0;
+  //   // let weekdaySunCounter1 = 0;
+
+  //   // let currentDate = moment(startDate); // Create a separate variable to iterate over the dates
+  //   // // let enddingdate = moment(myendDate)
+
+  //   // console.log(startDate, "startDate12");
+  //   // console.log(myendDate, "endDate12");
+
+  //   // while (currentDate <= enddingdate) {
+  //   //   if (currentDate.format('ddd') === 'Mon') {
+  //   //     weekdayMonCounter1++;
+  //   //   } else if (currentDate.format('ddd') === 'Tue') {
+  //   //     weekdayTueCounter1++;
+  //   //   } else if (currentDate.format('ddd') === 'Wed') {
+  //   //     weekdayWedCounter1++;
+  //   //   } else if (currentDate.format('ddd') === 'Thu') {
+  //   //     weekdayThuCounter1++;
+  //   //   } else if (currentDate.format('ddd') === 'Fri') {
+  //   //     weekdayFriCounter1++;
+  //   //   } else if (currentDate.format('ddd') === 'Sat') {
+  //   //     weekdaySatCounter1++;
+  //   //   } else if (currentDate.format('ddd') === 'Sun') {
+  //   //     weekdaySunCounter1++;
+  //   //   }
+
+  //   //   currentDate.add(1, 'day');
+  //   // }
+
+  //   // console.log('Monday:', weekdayMonCounter1);
+  //   // console.log('Tuesday:', weekdayTueCounter1);
+  //   // console.log('Wednesday:', weekdayWedCounter1);
+  //   // console.log('Thursday:', weekdayThuCounter1);
+  //   // console.log('Friday:', weekdayFriCounter1);
+  //   // console.log('Saturday:', weekdaySatCounter1);
+  //   // console.log('Sunday:', weekdaySunCounter1);
+  //   // console.log('Sund1sa51ay:', currentDate.format('ddd'));
+
+  //   /////////////////////////////////////////////////////////////////
+
+  //   // let mystartDate1 = moment(enddate).startOf('month');
+  //   // let mystartdating = mystartDate1.format('YYYY-MM-DD');
+
+  //   // let weekdayMonCounter2 = 0;
+  //   // let weekdayTueCounter2 = 0;
+  //   // let weekdayWedCounter2 = 0;
+  //   // let weekdayThuCounter2 = 0;
+  //   // let weekdayFriCounter2 = 0;
+  //   // let weekdaySatCounter2 = 0;
+  //   // let weekdaySunCounter2 = 0;
+
+  //   // let currentDate1 = moment(mystartdating); // Create a separate variable to iterate over the dates
+  //   // let enddingdate = moment(stardate)
+
+  //   // console.log(startDate, "startDate12");
+  //   // console.log(myendDate, "endDate12");
+
+  //   // while (currentDate1 <= enddingdate) {
+  //   //   if (currentDate1.format('ddd') === 'Mon') {
+  //   //     weekdayMonCounter2++;
+  //   //   } else if (currentDate1.format('ddd') === 'Tue') {
+  //   //     weekdayTueCounter2++;
+  //   //   } else if (currentDate1.format('ddd') === 'Wed') {
+  //   //     weekdayWedCounter2++;
+  //   //   } else if (currentDate1.format('ddd') === 'Thu') {
+  //   //     weekdayThuCounter2++;
+  //   //   } else if (currentDate1.format('ddd') === 'Fri') {
+  //   //     weekdayFriCounter2++;
+  //   //   } else if (currentDate1.format('ddd') === 'Sat') {
+  //   //     weekdaySatCounter2++;
+  //   //   } else if (currentDate1.format('ddd') === 'Sun') {
+  //   //     weekdaySunCounter2++;
+  //   //   }
+
+  //   //   currentDate.add(1, 'day');
+  //   // }
+
+  //   // console.log('Monday:', weekdayMonCounter2);
+  //   // console.log('Tuesday:', weekdayTueCounter2);
+  //   // console.log('Wednesday:', weekdayWedCounter2);
+  //   // console.log('Thursday:', weekdayThuCounter2);
+  //   // console.log('Friday:', weekdayFriCounter2);
+  //   // console.log('Saturday:', weekdaySatCounter2);
+  //   // console.log('Sunday:', weekdaySunCounter2);
+  //   // console.log('Sund1sa51ay:', currentDate.format('ddd'));
+
+  //   /////////////////////////////////////////////////////////////////////
+
+  //   // let currentDate = start.clone();
+  //   // let myenddate =end.clone()
+  //   // let monthData = [];
+  //   // console.log(currentDate.startOf('month')._i,'start')
+  //   // // console.log(currentDate.endOf('month'),'end')
+
+  //   // while (currentDate <= myenddate) {
+  //   //   const year = currentDate.year();
+  //   //   const month = currentDate.month();
+  //   //   const myday = currentDate.daysInMonth();
+
+  //   //   console.log(myday,'myday')
+
+  //   //   const startDateOfMonth = currentDate.startOf('month');
+  //   //   const endDateOfMonth = currentDate.endOf('month');
+
+  //   //  const endingstartDateofMonth = myenddate.startOf('month');
+  //   //  const endingDateofMonth = myenddate.endOf('month');
+
+  //   //   const daysInMonth = endDateOfMonth.diff(startDateOfMonth, 'days') + 1;
+
+  //   //   console.log(startDateOfMonth,'startDateOfMonth');
+  //   //   console.log(endDateOfMonth,'endDateOfMonth')
+  //   //   console.log(daysInMonth,'daysInMonth')
+  //   //   console.log(endingstartDateofMonth,'enddate')
+  //   //   console.log(endingDateofMonth,'enddate12')
+
+  //   //   let weekdayCounts = {
+  //   //     Monday: 0,
+  //   //     Tuesday: 0,
+  //   //     Wednesday: 0,
+  //   //     Thursday: 0,
+  //   //     Friday: 0,
+  //   //     Saturday: 0,
+  //   //     Sunday: 0,
+  //   //   };
+
+  //   //   for (let day = 0; day < daysInMonth; day++) {
+  //   //     const currentDay = startDateOfMonth.clone().add(day, 'days');
+  //   //     const weekday = currentDay.format('dddd');
+  //   //     weekdayCounts[weekday]++;
+  //   //   }
+
+  //   //   monthData.push({ year, month, weekdayCounts });
+
+  //   //   currentDate.add(1, 'month');
+
+  //   // }
+
+  //   // console.log('Month-wise data:', monthData);
+
+  //   values[i]['total'] =
+  //     Number(values[i]['monday']) +
+  //     Number(values[i]['tuesday']) +
+  //     Number(values[i]['wednesday']) +
+  //     Number(values[i]['thursday']) +
+  //     Number(values[i]['friday']) +
+  //     Number(values[i]['saturday']) +
+  //     Number(values[i]['sunday']);
+
+  //   values[i]['qty'] =
+  //     Number(values[i]['monday']) * weekdayMonCounter +
+  //     Number(values[i]['tuesday']) * weekdayTueCounter +
+  //     Number(values[i]['wednesday']) * weekdayWedCounter +
+  //     Number(values[i]['thursday']) * weekdayThuCounter +
+  //     Number(values[i]['friday']) * weekdayFriCounter +
+  //     Number(values[i]['saturday']) * weekdaySatCounter +
+  //     Number(values[i]['sunday']) * weekdaySunCounter;
+
+  //   values[i]['total'] =
+  //     Number(values[i]['monday']) +
+  //     Number(values[i]['tuesday']) +
+  //     Number(values[i]['wednesday']) +
+  //     Number(values[i]['thursday']) +
+  //     Number(values[i]['friday']) +
+  //     Number(values[i]['saturday']) +
+  //     Number(values[i]['sunday']);
+
+  //   setFields(values);
+
+  //   // let startYear = startDate.year();
+  //   // let startMonth = startDate.month();
+  //   // let endYear = endDate.year();
+  //   // let endMonth = endDate.month();
+
+  //   //     const startDate = moment(startdate, 'YYYY-MM-DD'); // Replace with your start date
+  //   // const endDate = moment(enddate, 'YYYY-MM-DD'); // Replace with your end date
+
+  //   // const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  //   // let currentDay = moment(startDate);
+  //   // let daysArray = [];
+  //   // let daysObject = {};
+
+  //   // for (let i = 0; i < 7; i++) {
+  //   //   const dayName = dayNames[currentDay.day()];
+  //   //   let value = 0;
+
+  //   //   if (currentDay.isBetween(startDate, endDate, null, '[]') || currentDay.isSame(startDate) || currentDay.isSame(endDate)) {
+  //   //     value = 1;
+  //   //   }
+
+  //   //   daysArray.push({ day: dayName, value: value });
+  //   //   daysObject[dayName] = value;
+
+  //   //   currentDay.add(1, 'day'); // Move to the next day
+  //   // }
+
+  //   // console.log('Days Array:', daysArray);
+  //   // console.log('Days Object:', daysObject);
+  //   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //   // const startDate = moment(); // Replace with your start date
+  //   // const endDate = new Date('2022-08-15'); // Replace with your end date
+  //   // const startDate = moment(startdate, 'YYYY-MM-DD'); //Pick 0.01 format
+  //   // const endDate = moment(enddate, 'YYYY-MM-DD');
+
+  //   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //   // var gettotalsecond =  ((Number(values[i]['monday'])* daysObject['Monday']) +
+  //   // (Number(values[i]['tuesday'])*daysObject['Tuesday'] )+
+  //   // (Number(values[i]['wednesday']) *daysObject['Wednesday'])+
+  //   // ( Number(values[i]['thursday'])*daysObject['Thursday'] )+
+  //   // (Number(values[i]['friday']) *daysObject['Friday']) +
+  //   // (Number(values[i]['saturday'])*daysObject['Saturday'] )+
+  //   // (Number(values[i]['sunday']))*daysObject['Sunday'] )*30
+
+  //   // var hours = Math.floor(gettotalsecond / 3600);
+  //   // var min = Math.floor((gettotalsecond % 3600) / 60);
+  //   // var sec = gettotalsecond%60
+
+  //   // setweekhr(
+  //   //   hours + ":" +min + ":" + sec
+  //   // )
+
+  //   // console.log(Number(values[i]['tuesday']), 'tuesday');
+
+  //   fields[i].cost = (
+  //     (Number(values[i]['monday' ]) * weekdayMonCounter +
+  //       Number(values[i]['tuesday']) * weekdayTueCounter +
+  //       Number(values[i]['wednesday']) * weekdayWedCounter +
+  //       Number(values[i]['thursday']) * weekdayThuCounter +
+  //       Number(values[i]['friday']) * weekdayFriCounter +
+  //       Number(values[i]['saturday']) * weekdaySatCounter +
+  //       Number(values[i]['sunday']) * weekdaySunCounter) *
+  //     fields[i].rate
+  //   ).toFixed(2);
+
+  //   fields[i].discounted_cost = fields[i].cost - fields[i].discount;
+
+  //   fields[i].cost_tax =
+  //     Math.round((fields[i].discounted_cost + (fields[i].discounted_cost * 15) / 100) * 100) / 100;
+
+  //   if (fields[i].product_type === '') {
+  //     // setErrorMessage1(false);
+  //   } else {
+  //     // setErrorMessage1(true);
+  //     setproduct_type(fields[i].product_type);
+  //   }
+  // }
+
+
+  function handleChange(i, event, fieldname) {
+    const values = [...fields];
+    values[i][event.target.name] = event.target.value;
+console.log(  values[i][event.target.name],'startd')
+
+    // console.log(values,'eventbgnm,nm,')
+ 
+    // values[i][fieldname] = event;
+  
+    // console.log(values[i], 'ii');
+
+    // console.log(event.target.getAttribute('name'),'sssss')
+
+    // if (event.target && event.target.name === 'runDates') {
+    //   console.log( event.target.name,'ssasas')
+    //   if (event.length === 0) {
+    //     console.log('requires');
+    //   } else {
+    //     console.log('not');
+    //   }
+  
+    //   if (values !== null) {
+    //     setDates(
+    //       values.map((item) => {
+    //         return item;
+    //       }),
+    //     );
+  
+    //     const startdate = event[0].$d;
+    //     const enddate = event[1].$d;
+  
+    //     setstartdate(startdate);
+    //     setenddate(enddate);
+  
+    //     const valuess = [...fields];
+    //     valuess[i]['runDates'] = {
+    //       startdate: startdate,
+    //       enddate: enddate,
+    //     };
+    //     setFields(valuess);
+  
+    //     console.log(event);
+    //   }
+    // }
+  
+   
+
+
+
+
+
+
+        //  onChange={(values, event) => {
+        //                                   if (event.length === 0) {
+        //                                     console.log('requires');
+        //                                   } else {
+        //                                     console.log('not');
+        //                                   }
+
+        //                                   if (values !== null) {
+        //                                     setDates(
+        //                                       values.map((item) => {
+        //                                         return item;
+        //                                       }),
+        //                                     );
+        //                                    setstartdate(event[0].$d);
+        //                                     setenddate(event[1].$d);
+
+        //                                     const valuess = [...fields];
+        //                                     valuess[index]['runDates'] = {
+        //                                       startdate: values[0].$d,
+        //                                       enddate: values[1].$d,
+        //                                     };
+        //                                     setFields(valuess);
+
+        //                                     setstartdate(values[0].$d);
+        //                                     setenddate(values[1].$d);
+
+        //                                     console.log(values);
+        //                                   }
+        //                                 }}
+
+   
+  
+
+   
+
+
+
+
+    
+    // console.log(startdate,'dssdds')
+    // console.log(endate,'dssdds')
+    
+    
+    let start = moment(startdate, 'YYYY-MM-DD'); //Pick 0.01 format
+    let end = moment(enddate, 'YYYY-MM-DD'); //right now (or define an end date yourself)
+    let weekdayMonCounter = 0;
+    let weekdayTueCounter = 0;
+    let weekdayWedCounter = 0;
+    let weekdayThuCounter = 0;
+    let weekdayFriCounter = 0;
+    let weekdaySatCounter = 0;
+    let weekdaySunCounter = 0;
+
+    console.log(startdate,'123560')
+
+    while (start <= end) {
+      if (start.format('ddd') === 'Mon') {
+        weekdayMonCounter++;
+        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+      } else if (start.format('ddd') === 'Tue') {
+        weekdayTueCounter++;
+        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+      } else if (start.format('ddd') === 'Wed') {
+        weekdayWedCounter++;
+        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+      } else if (start.format('ddd') === 'Thu') {
+        weekdayThuCounter++;
+        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+      } else if (start.format('ddd') === 'Fri') {
+        weekdayFriCounter++;
+        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+      } else if (start.format('ddd') === 'Sat') {
+        weekdaySatCounter++;
+        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+      } else if (start.format('ddd') === 'Sun') {
+        weekdaySunCounter++;
+        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
+      }
+    }
+
+    let startDate = moment(startdate).format('YYYY-MM-DD');
+    let endDate = moment(enddate).format('YYYY-MM-DD');
+    let betweenMonths = [];
+    let montharray = [];
+    var totalcost;
+
+    // console.log(startDate, 'start123');
+    // console.log(endDate, 'end');
+
+    if (startDate < endDate) {
+      let date = moment(startDate).startOf('month');
+
+      while (date < moment(endDate).endOf('month')) {
+        betweenMonths.push(date.format('MM'));
+        montharray.push(date.format('YYYY-MM'));
+
+        date.add(1, 'month');
+      }
+    }
+
+    for (let j = 0; j < betweenMonths.length; j++) {
+      if (j == 0) {
+        let eendDate = moment(startDate).endOf('month');
+
+        let startdateofmonth = moment(eendDate).format('YYYY-MM-DD');
+
+        let weekdayMonCounter1 = 0;
+        let weekdayTueCounter1 = 0;
+        let weekdayWedCounter1 = 0;
+        let weekdayThuCounter1 = 0;
+        let weekdayFriCounter1 = 0;
+        let weekdaySatCounter1 = 0;
+        let weekdaySunCounter1 = 0;
+
+        let currentDate = moment(startDate); // Create a separate variable to iterate over the dates
+        let enddingdate = moment(startdateofmonth);
+
+        while (currentDate <= enddingdate) {
+          if (currentDate.format('ddd') === 'Mon') {
+            weekdayMonCounter1++;
+          } else if (currentDate.format('ddd') === 'Tue') {
+            weekdayTueCounter1++;
+          } else if (currentDate.format('ddd') === 'Wed') {
+            weekdayWedCounter1++;
+          } else if (currentDate.format('ddd') === 'Thu') {
+            weekdayThuCounter1++;
+          } else if (currentDate.format('ddd') === 'Fri') {
+            weekdayFriCounter1++;
+          } else if (currentDate.format('ddd') === 'Sat') {
+            weekdaySatCounter1++;
+          } else if (currentDate.format('ddd') === 'Sun') {
+            weekdaySunCounter1++;
+          }
+
+          currentDate.add(1, 'day');
+        }
+
+        totalcost =
+          (Number(values[i]['monday']) * weekdayMonCounter1 +
+            Number(values[i]['tuesday']) * weekdayTueCounter1 +
+            Number(values[i]['wednesday']) * weekdayWedCounter1 +
+            Number(values[i]['thursday']) * weekdayThuCounter1 +
+            Number(values[i]['friday']) * weekdayFriCounter1 +
+            Number(values[i]['saturday']) * weekdaySatCounter1 +
+            Number(values[i]['sunday']) * weekdaySunCounter1) *
+          fields[i].rate;
+      } else if (j == betweenMonths.length - 1) {
+        let eendDate = moment(endDate).startOf('month');
+
+        let startdateofmonth = moment(eendDate).format('YYYY-MM-DD');
+
+        let weekdayMonCounter2 = 0;
+        let weekdayTueCounter2 = 0;
+        let weekdayWedCounter2 = 0;
+        let weekdayThuCounter2 = 0;
+        let weekdayFriCounter2 = 0;
+        let weekdaySatCounter2 = 0;
+        let weekdaySunCounter2 = 0;
+
+        let enddingdate = moment(endDate); // Create a separate variable to iterate over the dates
+        let currentDate = moment(startdateofmonth);
+
+        while (currentDate <= enddingdate) {
+          if (currentDate.format('ddd') === 'Mon') {
+            weekdayMonCounter2++;
+          } else if (currentDate.format('ddd') === 'Tue') {
+            weekdayTueCounter2++;
+          } else if (currentDate.format('ddd') === 'Wed') {
+            weekdayWedCounter2++;
+          } else if (currentDate.format('ddd') === 'Thu') {
+            weekdayThuCounter2++;
+          } else if (currentDate.format('ddd') === 'Fri') {
+            weekdayFriCounter2++;
+          } else if (currentDate.format('ddd') === 'Sat') {
+            weekdaySatCounter2++;
+          } else if (currentDate.format('ddd') === 'Sun') {
+            weekdaySunCounter2++;
+          }
+
+          currentDate.add(1, 'day');
+        }
+
+        totalcost =
+          (Number(values[i]['monday']) * weekdayMonCounter2 +
+            Number(values[i]['tuesday']) * weekdayTueCounter2 +
+            Number(values[i]['wednesday']) * weekdayWedCounter2 +
+            Number(values[i]['thursday']) * weekdayThuCounter2 +
+            Number(values[i]['friday']) * weekdayFriCounter2 +
+            Number(values[i]['saturday']) * weekdaySatCounter2 +
+            Number(values[i]['sunday']) * weekdaySunCounter2) *
+          fields[i].rate;
+      } else {
+        let eendDate = moment(betweenMonths[j].concat('-01')).endOf('month');
+
+        let startdateofmonth = moment(eendDate).format('YYYY-MM-DD');
+        let mystartDate = moment(betweenMonths[j].concat('-01')).format('YYYY-MM-DD')
+
+        let weekdayMonCounter1 = 0;
+        let weekdayTueCounter1 = 0;
+        let weekdayWedCounter1 = 0;
+        let weekdayThuCounter1 = 0;
+        let weekdayFriCounter1 = 0;
+        let weekdaySatCounter1 = 0;
+        let weekdaySunCounter1 = 0;
+
+        let currentDate = moment(mystartDate); // Create a separate variable to iterate over the dates
+        let enddingdate = moment(startdateofmonth);
+
+        while (currentDate <= enddingdate) {
+          if (currentDate.format('ddd') === 'Mon') {
+            weekdayMonCounter1++;
+          } else if (currentDate.format('ddd') === 'Tue') {
+            weekdayTueCounter1++;
+          } else if (currentDate.format('ddd') === 'Wed') {
+            weekdayWedCounter1++;
+          } else if (currentDate.format('ddd') === 'Thu') {
+            weekdayThuCounter1++;
+          } else if (currentDate.format('ddd') === 'Fri') {
+            weekdayFriCounter1++;
+          } else if (currentDate.format('ddd') === 'Sat') {
+            weekdaySatCounter1++;
+          } else if (currentDate.format('ddd') === 'Sun') {
+            weekdaySunCounter1++;
+          }
+
+          currentDate.add(1, 'day');
+        }
+
+        totalcost =
+          (Number(values[i]['monday']) * weekdayMonCounter1 +
+            Number(values[i]['tuesday']) * weekdayTueCounter1 +
+            Number(values[i]['wednesday']) * weekdayWedCounter1 +
+            Number(values[i]['thursday']) * weekdayThuCounter1 +
+            Number(values[i]['friday']) * weekdayFriCounter1 +
+            Number(values[i]['saturday']) * weekdaySatCounter1 +
+            Number(values[i]['sunday']) * weekdaySunCounter1) *
+          fields[i].rate;
+
+        console.log(totalcost, 'middletotalcost');
+      }
+      var myresult = Number(betweenMonths[j]);
+      console.log(betweenMonths[j], 'ds');
+      switch (myresult) {
+        case 1:
+          values[i]['jan']=Number(totalcost)
+          console.log(totalcost)
+          break;
+        case 2:
+          values[i]['feb']=Number(totalcost)
+          console.log(totalcost)
+          break;
+        case 3:
+          values[i]['mar']=Number(totalcost)
+          console.log(totalcost)
+
+          break;
+        case 4:
+          values[i]['april']=Number(totalcost)
+          console.log(totalcost)
+          break;
+        case 5:
+          values[i]['may']=Number(totalcost)
+          console.log(totalcost)
+          break;
+        case 6:
+          values[i]['june']=Number(totalcost)
+          console.log(totalcost)
+          break;
+        case 7:
+          values[i]['july']=Number(totalcost)
+          console.log(totalcost)
+          break;
+        case 8:
+          values[i]['aug']=Number(totalcost)
+          console.log(totalcost)
+          break;
+        case 9:
+          values[i]['sept']=Number(totalcost)
+          console.log(totalcost)
+          break;
+        case 10:
+          values[i]['oct']=Number(totalcost)
+          console.log(totalcost)
+          break;
+        case 11:
+          values[i]['nov']=Number(totalcost)
+          console.log(totalcost)
+          break;
+        case 12:
+          values[i]['dec']=Number(totalcost)
+          
+          break;
+
+        default:
+          console.log('none value selected');
+      }
+    }
+
+    // let eendDate = moment(startDate).endOf('month');
+    // let myendDate = eendDate.format('YYYY-MM-DD');
+
+    // let weekdayMonCounter1 = 0;
+    // let 2 = 0;
+    // let weekdayWedCounter1 = 0;
+    // let weekdayThuCounter1 = 0;
+    // let weekdayFriCounter1 = 0;
+    // let weekdaySatCounter1 = 0;
+    // let weekdaySunCounter1 = 0;
+
+    // let currentDate = moment(startDate); // Create a separate variable to iterate over the dates
+    // // let enddingdate = moment(myendDate)
+
+    // console.log(startDate, "startDate12");
+    // console.log(myendDate, "endDate12");
+
+    // while (currentDate <= enddingdate) {
+    //   if (currentDate.format('ddd') === 'Mon') {
+    //     weekdayMonCounter1++;
+    //   } else if (currentDate.format('ddd') === 'Tue') {
+    //     weekdayTueCounter1++;
+    //   } else if (currentDate.format('ddd') === 'Wed') {
+    //     weekdayWedCounter1++;
+    //   } else if (currentDate.format('ddd') === 'Thu') {
+    //     weekdayThuCounter1++;
+    //   } else if (currentDate.format('ddd') === 'Fri') {
+    //     weekdayFriCounter1++;
+    //   } else if (currentDate.format('ddd') === 'Sat') {
+    //     weekdaySatCounter1++;
+    //   } else if (currentDate.format('ddd') === 'Sun') {
+    //     weekdaySunCounter1++;
+    //   }
+
+    //   currentDate.add(1, 'day');
+    // }
+
+    // console.log('Monday:', weekdayMonCounter1);
+    // console.log('Tuesday:', weekdayTueCounter1);
+    // console.log('Wednesday:', weekdayWedCounter1);
+    // console.log('Thursday:', weekdayThuCounter1);
+    // console.log('Friday:', weekdayFriCounter1);
+    // console.log('Saturday:', weekdaySatCounter1);
+    // console.log('Sunday:', weekdaySunCounter1);
+    // console.log('Sund1sa51ay:', currentDate.format('ddd'));
+
+    /////////////////////////////////////////////////////////////////
+
+    // let mystartDate1 = moment(enddate).startOf('month');
+    // let mystartdating = mystartDate1.format('YYYY-MM-DD');
+
+    // let weekdayMonCounter2 = 0;
+    // let weekdayTueCounter2 = 0;
+    // let weekdayWedCounter2 = 0;
+    // let weekdayThuCounter2 = 0;
+    // let weekdayFriCounter2 = 0;
+    // let weekdaySatCounter2 = 0;
+    // let weekdaySunCounter2 = 0;
+
+    // let currentDate1 = moment(mystartdating); // Create a separate variable to iterate over the dates
+    // let enddingdate = moment(stardate)
+
+    // console.log(startDate, "startDate12");
+    // console.log(myendDate, "endDate12");
+
+    // while (currentDate1 <= enddingdate) {
+    //   if (currentDate1.format('ddd') === 'Mon') {
+    //     weekdayMonCounter2++;
+    //   } else if (currentDate1.format('ddd') === 'Tue') {
+    //     weekdayTueCounter2++;
+    //   } else if (currentDate1.format('ddd') === 'Wed') {
+    //     weekdayWedCounter2++;
+    //   } else if (currentDate1.format('ddd') === 'Thu') {
+    //     weekdayThuCounter2++;
+    //   } else if (currentDate1.format('ddd') === 'Fri') {
+    //     weekdayFriCounter2++;
+    //   } else if (currentDate1.format('ddd') === 'Sat') {
+    //     weekdaySatCounter2++;
+    //   } else if (currentDate1.format('ddd') === 'Sun') {
+    //     weekdaySunCounter2++;
+    //   }
+
+    //   currentDate.add(1, 'day');
+    // }
+
+    // console.log('Monday:', weekdayMonCounter2);
+    // console.log('Tuesday:', weekdayTueCounter2);
+    // console.log('Wednesday:', weekdayWedCounter2);
+    // console.log('Thursday:', weekdayThuCounter2);
+    // console.log('Friday:', weekdayFriCounter2);
+    // console.log('Saturday:', weekdaySatCounter2);
+    // console.log('Sunday:', weekdaySunCounter2);
+    // console.log('Sund1sa51ay:', currentDate.format('ddd'));
+
+    /////////////////////////////////////////////////////////////////////
+
+    // let currentDate = start.clone();
+    // let myenddate =end.clone()
+    // let monthData = [];
+    // console.log(currentDate.startOf('month')._i,'start')
+    // // console.log(currentDate.endOf('month'),'end')
+
+    // while (currentDate <= myenddate) {
+    //   const year = currentDate.year();
+    //   const month = currentDate.month();
+    //   const myday = currentDate.daysInMonth();
+
+    //   console.log(myday,'myday')
+
+    //   const startDateOfMonth = currentDate.startOf('month');
+    //   const endDateOfMonth = currentDate.endOf('month');
+
+    //  const endingstartDateofMonth = myenddate.startOf('month');
+    //  const endingDateofMonth = myenddate.endOf('month');
+
+    //   const daysInMonth = endDateOfMonth.diff(startDateOfMonth, 'days') + 1;
+
+    //   console.log(startDateOfMonth,'startDateOfMonth');
+    //   console.log(endDateOfMonth,'endDateOfMonth')
+    //   console.log(daysInMonth,'daysInMonth')
+    //   console.log(endingstartDateofMonth,'enddate')
+    //   console.log(endingDateofMonth,'enddate12')
+
+    //   let weekdayCounts = {
+    //     Monday: 0,
+    //     Tuesday: 0,
+    //     Wednesday: 0,
+    //     Thursday: 0,
+    //     Friday: 0,
+    //     Saturday: 0,
+    //     Sunday: 0,
+    //   };
+
+    //   for (let day = 0; day < daysInMonth; day++) {
+    //     const currentDay = startDateOfMonth.clone().add(day, 'days');
+    //     const weekday = currentDay.format('dddd');
+    //     weekdayCounts[weekday]++;
+    //   }
+
+    //   monthData.push({ year, month, weekdayCounts });
+
+    //   currentDate.add(1, 'month');
+
+    // }
+
+    // console.log('Month-wise data:', monthData);
+
+    values[i]['total'] =
+      Number(values[i]['monday']) +
+      Number(values[i]['tuesday']) +
+      Number(values[i]['wednesday']) +
+      Number(values[i]['thursday']) +
+      Number(values[i]['friday']) +
+      Number(values[i]['saturday']) +
+      Number(values[i]['sunday']);
+
+    values[i]['qty'] =
+      Number(values[i]['monday']) * weekdayMonCounter +
+      Number(values[i]['tuesday']) * weekdayTueCounter +
+      Number(values[i]['wednesday']) * weekdayWedCounter +
+      Number(values[i]['thursday']) * weekdayThuCounter +
+      Number(values[i]['friday']) * weekdayFriCounter +
+      Number(values[i]['saturday']) * weekdaySatCounter +
+      Number(values[i]['sunday']) * weekdaySunCounter;
+
+    values[i]['total'] =
+      Number(values[i]['monday']) +
+      Number(values[i]['tuesday']) +
+      Number(values[i]['wednesday']) +
+      Number(values[i]['thursday']) +
+      Number(values[i]['friday']) +
+      Number(values[i]['saturday']) +
+      Number(values[i]['sunday']);
+
+      //  setmytota values[i]['total'])
+      console.log( values[i]['total'],'total123')
+
+    setFields(values);
+
+    // let startYear = startDate.year();
+    // let startMonth = startDate.month();
+    // let endYear = endDate.year();
+    // let endMonth = endDate.month();
+
+    //     const startDate = moment(startdate, 'YYYY-MM-DD'); // Replace with your start date
+    // const endDate = moment(enddate, 'YYYY-MM-DD'); // Replace with your end date
+
+    // const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    // let currentDay = moment(startDate);
+    // let daysArray = [];
+    // let daysObject = {};
+
+    // for (let i = 0; i < 7; i++) {
+    //   const dayName = dayNames[currentDay.day()];
+    //   let value = 0;
+
+    //   if (currentDay.isBetween(startDate, endDate, null, '[]') || currentDay.isSame(startDate) || currentDay.isSame(endDate)) {
+    //     value = 1;
+    //   }
+
+    //   daysArray.push({ day: dayName, value: value });
+    //   daysObject[dayName] = value;
+
+    //   currentDay.add(1, 'day'); // Move to the next day
+    // }
+
+    // console.log('Days Array:', daysArray);
+    // console.log('Days Object:', daysObject);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // const startDate = moment(); // Replace with your start date
+    // const endDate = new Date('2022-08-15'); // Replace with your end date
+    // const startDate = moment(startdate, 'YYYY-MM-DD'); //Pick 0.01 format
+    // const endDate = moment(enddate, 'YYYY-MM-DD');
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // var gettotalsecond =  ((Number(values[i]['monday'])* daysObject['Monday']) +
+    // (Number(values[i]['tuesday'])*daysObject['Tuesday'] )+
+    // (Number(values[i]['wednesday']) *daysObject['Wednesday'])+
+    // ( Number(values[i]['thursday'])*daysObject['Thursday'] )+
+    // (Number(values[i]['friday']) *daysObject['Friday']) +
+    // (Number(values[i]['saturday'])*daysObject['Saturday'] )+
+    // (Number(values[i]['sunday']))*daysObject['Sunday'] )*30
+
+    // var hours = Math.floor(gettotalsecond / 3600);
+    // var min = Math.floor((gettotalsecond % 3600) / 60);
+    // var sec = gettotalsecond%60
+
+    // setweekhr(
+    //   hours + ":" +min + ":" + sec
+    // )
+
+    // console.log(Number(values[i]['tuesday']), 'tuesday');
+
+    fields[i].cost = (
+      (Number(values[i]['monday']) * weekdayMonCounter +
+        Number(values[i]['tuesday']) * weekdayTueCounter +
+        Number(values[i]['wednesday']) * weekdayWedCounter +
+        Number(values[i]['thursday']) * weekdayThuCounter +
+        Number(values[i]['friday']) * weekdayFriCounter +
+        Number(values[i]['saturday']) * weekdaySatCounter +
+        Number(values[i]['sunday']) * weekdaySunCounter) *
+      fields[i].rate
+    ).toFixed(2);
+
+    fields[i].discounted_cost = fields[i].cost - fields[i].discount;
+
+    fields[i].cost_tax =
+      Math.round((fields[i].discounted_cost + (fields[i].discounted_cost * 15) / 100) * 100) / 100;
+
+    if (fields[i].product_type === '') {
+      // setErrorMessage1(false);
+    } else {
+      // setErrorMessage1(true);
+      setproduct_type(fields[i].product_type);
+    }
+  }
+
+
+
+
+
+
+
+
 
   const handle = () => {
     if (
@@ -261,129 +1556,7 @@ const Foam = () => {
     return calrate;
   };
 
-  function handleChange(i, event, productid) {
-    const { name, value, id } = event.target;
-console.log(event.target.value,"event value")
-
-  //check to validate if entry is not a number
-  // if (isNaN(name)) {
-  //   const updated = {};
-  //   const tempraryupdated = {};
-  //   updated['value'] = value;
-  //   updated['name'] = name;
-  //   tempraryupdated[name] = value;
-    
-  //   updated["productid"] = productid;
-    
-  //   setdatascan(datascan.filter((item) => (item['name'] !== name)));
-  //   //somehow update data
-  //   setdatascan((datascan) => [...datascan, updated]);
-  //   settemprarydatascan(temprarydatascan.filter((item) => (item !== name)));
-  //   //somehow update data
-  //   settemprarydatascan((temprarydatascan) => [...temprarydatascan, tempraryupdated]);
-  // }
-  // console.log(datascan,temprarydatascan,'datascan')
-   
-    let values = [...fields];
-    // let myvalue =String(values[i][event.target.name]);
-    // let index = myvalue.replace(/[0-9]/g,'');
-
-    // index = event.target.value;
-    console.log(values,"values")
-    // console.log(datascan,'datascan')
-    // for(let defaultindex=0;defaultindex<values.length;defaultindex++){
-    //   for(let innerdefault=0;innerdefault<datascan.length;innerdefault++){
-    //     if(values[defaultindex].productId===datascan[innerdefault].productid){
-          
-    //       console.log("okay",Object.keys(values[defaultindex]))
-    //     }
-    //   }
-    // }
-// console.log(result,'result')
-    // values[i]["productId"]=productid
-    let start = moment(startdate, 'YYYY-MM-DD');
-    let end = moment(enddate, 'YYYY-MM-DD');
-    let weekdayMonCounter = 0;
-    let weekdayTueCounter = 0;
-    let weekdayWedCounter = 0;
-    let weekdayThuCounter = 0;
-    let weekdayFriCounter = 0;
-    let weekdaySatCounter = 0;
-    let weekdaySunCounter = 0;
-
-    while (start <= end) {
-      if (start.format('ddd') === 'Mon') {
-        weekdayMonCounter++;
-        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
-      } else if (start.format('ddd') === 'Tue') {
-        weekdayTueCounter++;
-        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
-      } else if (start.format('ddd') === 'Wed') {
-        weekdayWedCounter++;
-        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
-      } else if (start.format('ddd') === 'Thu') {
-        weekdayThuCounter++;
-        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
-      } else if (start.format('ddd') === 'Fri') {
-        weekdayFriCounter++;
-        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
-      } else if (start.format('ddd') === 'Sat') {
-        weekdaySatCounter++;
-        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
-      } else if (start.format('ddd') === 'Sun') {
-        weekdaySunCounter++;
-        start = moment(start, 'YYYY-MM-DD').add(1, 'days');
-      }
-    }
-    console.log(weekdayMonCounter, 'weekday');
-
-    values[i]['total'] =
-      Number(values[i]['monday']) +
-      Number(values[i]['tuesday']) +
-      Number(values[i]['wednesday']) +
-      Number(values[i]['thursday']) +
-      Number(values[i]['friday']) +
-      Number(values[i]['saturday']) +
-      Number(values[i]['sunday']);
-
-    values[i]['qty'] =
-      Number(values[i]['monday']) * weekdayMonCounter +
-      Number(values[i]['tuesday']) * weekdayTueCounter +
-      Number(values[i]['wednesday']) * weekdayWedCounter +
-      Number(values[i]['thursday']) * weekdayThuCounter +
-      Number(values[i]['friday']) * weekdayFriCounter +
-      Number(values[i]['saturday']) * weekdaySatCounter +
-      Number(values[i]['sunday']) * weekdaySunCounter;
-
-    console.log(fields.qty, 'iki');
-
-    values[i]['total'] =
-      Number(values[i]['monday']) +
-      Number(values[i]['tuesday']) +
-      Number(values[i]['wednesday']) +
-      Number(values[i]['thursday']) +
-      Number(values[i]['friday']) +
-      Number(values[i]['saturday']) +
-      Number(values[i]['sunday']);
-
-    setFields(values);
-    console.log(fields);
-    console.log(Number(values[i]['tuesday']), 'tuesday');
-
-    fields[i].cost =
-      (Number(values[i]['monday']) * weekdayMonCounter +
-        Number(values[i]['tuesday']) * weekdayTueCounter +
-        Number(values[i]['wednesday']) * weekdayWedCounter +
-        Number(values[i]['thursday']) * weekdayThuCounter +
-        Number(values[i]['friday']) * weekdayFriCounter +
-        Number(values[i]['saturday']) * weekdaySatCounter +
-        Number(values[i]['sunday']) * weekdaySunCounter) *
-      fields[i].rate;
-    fields[i].discounted_cost = fields[i].cost - fields[i].discount;
-
-    fields[i].cost_tax = fields[i].discounted_cost + (fields[i].discounted_cost * 15) / 100;
-  }
-
+ 
   console.log(startdate, enddate, 'startdate');
 
 
@@ -609,7 +1782,7 @@ console.log(event.target.value,"event value")
                   
                    
                     <div className="container">
-                    <button className="btn  update-btn" style={{ float: 'right' }} type="submit" onClick={updateAPIData}>
+                    <button className="btn update-btn" style={{ float: 'right' }} type="submit" onClick={updateAPIData}>
                     update
                   </button>
                   {/* <button
@@ -645,7 +1818,10 @@ console.log(event.target.value,"event value")
                                   // (()=>{
                                   //   handleChange(index, event)
                                   // })
-                                
+                                  {console.log(moment(field.start_date).format('YYYY-MM-DD'),'852')}
+
+                                  var startdate = moment(field.start_date)
+                                  var enddate = moment(field.end_date)
                                   
                                         return (
                                           <>
@@ -657,12 +1833,15 @@ console.log(event.target.value,"event value")
                                                 >
                                                   <Field
                                                     defaultValue={field.product_type}
+                                                    value={myproduct}
                                                     as="select"
-                                                    name='product_type'
+                                                    name='product_type' 
                                                     id="dropdown-input"
                                                     className="dropdown"
-                                                    onChange={(e) => handleChange(index,e,field.id)}
-                                                    // onChange={(e) => setmyproduct(e.target.value)}
+                                                    // onChange={(e) => 
+                                                  
+                                                      // handleChange(index,e,'product_id')}
+                                                    onChange={(e) => setmyproduct(e.target.value)}
                                                   >
                                                     <option selected value="spots">
                                                       spots
@@ -683,45 +1862,42 @@ console.log(event.target.value,"event value")
                                     className="form-group"
                                   >
                                     <div style={{ border: 'none' }} className="date-range">
-                                      <RangePicker
-                                      // defaultValue={[moment(field.start_date),moment(field.end_date)]}
-                                        // defaultValue={[field.start_date,field.end_date]}
-                                       
-                                        name="runDates"
-                                        onChange={(values, event) => {
-                                          if (event.length === 0) {
-                                            console.log('requires');
-                                          } else {
-                                            console.log('not');
-                                          }
+                               
+                                    <DateRangePicker showWeekNumbers
+  defaultValue={[new Date(field.start_date),new Date(field.end_date)]}
+  name="runDates"
 
-                                          if (values !== null) {
-                                            setDates(
-                                              values.map((item) => {
-                                                return item;
-                                              }),
-                                            );
-                                            setstartdate(event[0].$d);
-                                            setenddate(event[1].$d);
+  
+  onChange={(values, event) => {
+    if (event.length === 0) {
+      console.log('Requires selection');
+    } else {
+      console.log('Selection made');
+    }
 
-                                            const valuess = [...fields];
-                                            valuess[index]['runDates'] = {
-                                              startdate: values[0].$d,
-                                              enddate: values[1].$d,
-                                            };
-                                            setFields(valuess);
+    if (values !== null) {
+      setDates(values);
+      setstartdate(values[0]);
+      setenddate(values[1]);
+      console.log(setstartdate,'sdds')
 
-                                            setstartdate(values[0].$d);
-                                            setenddate(values[1].$d);
+      const valuess = [...fields];
+      valuess[index]['runDates'] = {
+        startdate: values[0],
+        enddate: values[1],
+      };
 
-                                            console.log(values);
-                                          }
-                                        }}
-                                       
-                                        
-                                       
+      setFields(valuess);
 
-                                      />
+      // handle123(index,values[0],values[1])
+
+      console.log(startdate,'sdd123456');
+      console.log(values,'sdd');
+      console.log(enddate,'sdd123456');
+    }
+  }}
+/>
+
                               
                                       {dates && dates.length < 2 ? (
                                         <span
@@ -737,8 +1913,9 @@ console.log(event.target.value,"event value")
 
                                               <td>
                                                 <div className="date-range">
-                                                <TimePicker.RangePicker
-                                           defaultValue={[moment(field.starttime).format(),moment(field.endtime)]}
+                                                  
+                                                <DateRangePicker
+                                           defaultValue={[new Date(field.starttime),new Date(field.endtime)]}
                                        
                                         name="runTimes" 
                                         onChange={(values, event) => {
@@ -758,26 +1935,26 @@ console.log(event.target.value,"event value")
                                               }),
                                             );
 
-                                            setstarttime(event[0].$d);
-                                            setendtime(event[1].$d);
+                                            setstarttime(event[0]);
+                                            setendtime(event[1]);
 
                                             const valuess = [...fields];
                                             valuess[index]['runTimes'] = {
-                                              starttime: values[0].$d,
-                                              endtime: values[1].$d,
+                                              starttime: values[0],
+                                              endtime: values[1],
                                             };
                                             setFields(valuess);
 
-                                            setstarttime(values[0].$d);
-                                            setendtime(values[1].$d);
+                                            setstarttime(values[0]);
+                                            setendtime(values[1]);
 
                                             console.log(values, 'ghm');
                                           }
                                         }}
-                                        format="H:mm A"
-                                        use12Hours
+                                        format="H:mm aa"
+                                      
                                         placeholder={['Start Time', 'End Time']}
-                                      />
+                                      /> 
                                                   {timeRange && timeRange.length < 2 ? (
                                                     <span
                                                       style={{ textAlign: 'center' }}
@@ -792,19 +1969,21 @@ console.log(event.target.value,"event value")
                                               <td>
                                                 <div className="form-group">
                                                   <Form.Control
-                                                    onClick={handleShow}
+                                                      onClick={()=>handleShow(index)}
                                                     className="popup-btn"
                                                     type="total"
-                                                    name="total" 
+                                                    name="total"
+                                                    // value={mytotal} 
                                                     defaultValue={field.total}
                                                     placeholder="Select Days"
-                                                  />
+                                                  /> 
                                                   {/* </button> */}
 
                                                   <Modal
                                                     className="pop-btn"
-                                                    show={show}
-                                                    onHide={handleClose}
+                                                    // show={show}
+                                                    // onHide={handleClose}
+                                                    show={modalVisibility[index]} key={`modal-${index}`} onHide={() => handleClose(index)}
                                                   >
                                                     <Modal.Header closeButton>
                                                       <Modal.Title>select Days</Modal.Title>
@@ -831,8 +2010,8 @@ console.log(event.target.value,"event value")
                                                             type="number"
                                                             min={0}
                                                             defaultValue={field.monday}
-                                                            onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                            onChange={(event) =>
+                                                              handleChange(index, event, 'monday')
                                                             }
                                                             name="monday" 
                                                             placeholder="monday"
@@ -853,10 +2032,10 @@ console.log(event.target.value,"event value")
                                                             type="number"
                                                             min={0}
                                                             defaultValue={field.tuesday}
-                                                            onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                            onChange={(event) =>
+                                                              handleChange(index, event,'tuesday')
                                                             }
-                                                            name="tuesday" 
+                                                            name="tuesday"
                                                             placeholder="tuesday"
                                                           />
                                                         </Form.Group>
@@ -875,10 +2054,10 @@ console.log(event.target.value,"event value")
                                                             min={0}
                                                             defaultValue={field.wednesday}
                                                       
-                                                            onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                            onChange={(event) =>
+                                                              handleChange(index, event,'wednesday')
                                                             }
-                                                            name="wednesday" 
+                                                            name="wednesday"
                                                             placeholder="Wednesday"
                                                           />
                                                         </Form.Group>
@@ -896,10 +2075,10 @@ console.log(event.target.value,"event value")
                                                             min={0}
                                                             className="popup-control"
                                                             defaultValue={field.thursday}
-                                                            onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                            onChange={(event) =>
+                                                              handleChange(index, event,'thursday')
                                                             }
-                                                            name="thursday"
+                                                            name="thursday" 
                                                             placeholder="thursday"
                                                           />
                                                         </Form.Group>
@@ -917,8 +2096,8 @@ console.log(event.target.value,"event value")
                                                             type="number"
                                                             min={0}
                                                             defaultValue={field.friday}
-                                                            onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                            onChange={(event) =>
+                                                              handleChange(index, event,'friday')
                                                             }
                                                             name="friday"
                                                             placeholder="friday"
@@ -938,8 +2117,8 @@ console.log(event.target.value,"event value")
                                                             type="number"
                                                             min={0}
                                                             defaultValue={field.saturday}
-                                                            onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                            onChange={(event) =>
+                                                              handleChange(index, event,'saturday')
                                                             }
                                                             name="saturday"
                                                             placeholder="saturday"
@@ -958,8 +2137,8 @@ console.log(event.target.value,"event value")
                                                             type="number"
                                                             min={0}
                                                             defaultValue={field.sunday}
-                                                            onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                            onChange={(event) =>
+                                                              handleChange(index, event,'sunday')
                                                             }
                                                             name="sunday"
                                                             placeholder="sunday"
@@ -978,9 +2157,10 @@ console.log(event.target.value,"event value")
                                                             type="total"
                                                             name="total"
                                                             min={1}
+                                                            // value={mytotal}
                                                             defaultValue={field.total}
-                                                            onChange={(e) =>
-                                                              handleChange(index, e,field.id)
+                                                            onChange={(event) =>
+                                                              handleChange(index, event,'total')
                                                             }
                                                             placeholder="total"
                                                           />
@@ -990,16 +2170,16 @@ console.log(event.target.value,"event value")
                                                     <Modal.Footer>
                                                       <Button
                                                         variant="secondary"
-                                                        onClick={handleClose}
+                                                        onClick={() => handleClose(index)}
                                                       >
                                                         Close
                                                       </Button>
-                                                      <Button
+                                                      {/* <Button
                                                         variant="primary"
                                                         onClick={handleClose}
                                                       >
                                                         ok
-                                                      </Button>
+                                                      </Button> */}
                                                     </Modal.Footer>
                                                   </Modal>
                                                 </div>
@@ -1011,9 +2191,10 @@ console.log(event.target.value,"event value")
                                                     style={{ marginLeft: '-22px' }}
                                                  
                                                     defaultValue={field.rate}
-                                                    onChange={(e) => handleChange(index, e,field.id)}
+                                                    onChange={(event) => handleChange(index, event)}
                                                     step="any"
-                                                    name="rate" 
+                                                    name="rate "  
+
                                                     type="number"
                                                     min={0}
                                                     className="form-control as"
@@ -1044,13 +2225,19 @@ console.log(event.target.value,"event value")
                                                     style={{ marginLeft: '-22px' }}
                                                     step="0.01"
                                                     defaultValue={field.cost}
-                                                    onChange={(e) => handleChange(index, e,field.id)}
+                                                    onChange={(event) => handleChange(index, event)}
                                                     name="cost"
                                                     min={0}
                                                     type="number"
                                                     className="form-control as"
                                                   />
                                                 </div>
+                                              </td>
+
+                                              <td>
+                                              <button className="btn update-btn" style={{ float: 'right' }} type="submit" >
+                    update
+                  </button>
                                               </td>
 
                                               {/* <td style={{}}>
@@ -1085,7 +2272,7 @@ console.log(event.target.value,"event value")
                                               </td> */}
 
                                               <td>
-                                                {index !== 0 && (
+                                                {/* {index !== 0 && (
                                                   <button
                                                     type="button"
                                                     className="btn btn-outline-danger"
@@ -1093,7 +2280,9 @@ console.log(event.target.value,"event value")
                                                   >
                                                     X
                                                   </button>
-                                                )}
+                                                )} */}
+
+                                           
                                               </td>
                                             </tr>
                                           </>
@@ -1103,28 +2292,7 @@ console.log(event.target.value,"event value")
                               </tbody>
                             </Table>
 
-                            {/* <div style={{ float: 'right' }}>
-      <div>
-        <span className="totalcosttext">cost:</span>
-        <input className= "totalcost1" type="text" Value={total} onChange={(e) => setmycost(e.target.value)} />
-      </div>
-      <div>
-        <span className="totalcosttext">Trade:</span>
-       
-        <input className="totalcost2" type="text" Value={trade} onChange={(e) => settrade(e.target.value)} />
-      </div>
-      <div>
-        <span className='totaltext' style={{paddingRight:"5px"}}>Abst%:</span> 
-        <input className="totalcost5" type="text" Value={abstdiscount} onChange={(e) => setabstdiscount(e.target.value)} />
-        <input className="totalcost3" type="text" Value={myvalue} onChange={(e) => setabst(e.target.value)}  />
-      </div>
-      <div>
-        <span className= "totalcosttext">Total:</span>
-        <input className="totalcost4" type="text" Value={grand} onChange={(e) => setgrandtotal(e.target.value)} />
-      </div>
-    </div>
-                             */}
-                          </div>
+                                              </div>
 
                           {/* lllllllllllllllllll//////////////////llllllllllllllllllllllll//////llllllllllllllllllllll////////////////////llllllllllllllllllllllchatgort */}
                         
@@ -1152,7 +2320,7 @@ console.log(event.target.value,"event value")
                     )}
                   </div>
                   <Row>
-                   <Col item xs={12} sm={7} md={7}>
+                   {/* <Col item xs={12} sm={7} md={7}>
                    <div className="signature-pad">
                     <SignatureCanvas ref={signRef} options={options} onEnd={handle} />
                     {mysignerror ? (
@@ -1164,13 +2332,13 @@ console.log(event.target.value,"event value")
                     )}
                    
                   </div>
-                    </Col>
+                    </Col> */}
                     <Col item xs={12} sm={4} md={4}>
-                    <div className="sign-res-btn">
+                    {/* <div className="sign-res-btn">
                       <Button className="sign-button" onClick={handleClear}>
                         Clear
                       </Button>
-                    </div>
+                    </div> */}
 
                   <div className="chcek-box">
                     <div className="term-check">

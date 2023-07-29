@@ -160,7 +160,7 @@ const AuthRegister = ({ subtitle }) => {
           console.log(values, 'resgister');
           axios
             .post(
-              'http://3.142.245.136:8080/api/public/user',
+              'http://localhost:8080/api/public/user',
               formData,
 
               {

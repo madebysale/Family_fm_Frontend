@@ -13,7 +13,7 @@ const SignatureModal = ({ showModal, closeModal, item }) => {
       </Modal.Header>
       <Modal.Body>
         <img
-          src={`https://3.142.245.136/Vibz_FM/uploads/${item}`}
+          src={`https://localhost/Vibz_FM/uploads/${item}`}
           style={{ width: "100%", height: "auto", maxWidth: "300px" }}
           alt="Image"
         />

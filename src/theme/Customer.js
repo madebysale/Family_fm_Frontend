@@ -8,6 +8,12 @@ import moment from 'moment';
 import { toast } from 'react-toastify';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import PhoneInput, {
+  isValidPhoneNumber,
+  formatPhoneNumberIntl,
+  isPossiblePhoneNumber,
+} from 'react-phone-number-input';
+
 
 import {RotatingLines} from 'react-loader-spinner';
 // import "./Adminpanel.css";
@@ -36,11 +42,14 @@ import {
  
 } from '@material-ui/core';
 import Pdf from 'src/views/utilities/Pdf';
+import ConfirmationModal from 'src/views/utilities/ConformationModal';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
   email: Yup.string().email('Invalid email').required('Email is required'),
-  mobile: Yup.string().required('Phone is required'),
+  // mobile: Yup.string()
+  // // .test("phone-number", "Invalid phone number")
+  // .required("Mobile is required"),
   address: Yup.string().required('Address is required'),
   company_name: Yup.string().required('company Name is required'),
  
@@ -56,7 +65,13 @@ function Customer() {
   const [Delete, setDelete] = useState();
   const[adddata,setadddata]=useState()
   const[mypdf,setmypdf]= useState([])
+  const [phone, setPhone] = useState('');
+  const [valid, setValid] = useState(true);
   const[mainloader,setmainloader] = useState(false);
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [itemId, setItemId] = useState(null);
+  const [itemIdToDelete, setItemIdToDelete] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [customerData, setCustomerData] = useState({
     name: '',
@@ -68,6 +83,9 @@ function Customer() {
   });
 
 
+
+ 
+
   useEffect(() => {
 
       setIsrole(parseInt(localStorage.getItem('role')));
@@ -76,7 +94,7 @@ function Customer() {
 
     axios
       .post(
-        'http://3.142.245.136:8080/api/public/customerlist',
+        'http://localhost:8080/api/public/customerlist',
         {},
         {
           headers: {'x-token': localStorage.getItem('token') },
@@ -88,9 +106,9 @@ function Customer() {
         setmypdf(response.data.data)
         setmainloader(true)
        
-        console.log(response, 'sds');
+        // console.log(response, 'sds');
       }).catch((error)=>{
-        console.log(error.response.data.message,'errod')
+        // console.log(error.response.data.message,'errod')
         setmainloader(false);
         toast.error(error.response.data.message);
       })
@@ -98,6 +116,36 @@ function Customer() {
     
   }, [Delete ,adddata ]);
 
+
+  const handlePhoneChange = (value) => {
+    setPhone(value);
+    setValid(validatePhoneNumber(value));
+  };
+
+
+
+
+  const validatePhoneNumber = (value) => {
+    if (!value) {
+      return 'Phone number is required';
+    }
+    if (!isPossiblePhoneNumber(value)) {
+      return 'Invalid phone number';
+    }
+    return undefined;
+  };
+
+
+
+  const handleSubmit = (values, { resetForm }) => {
+    const customer = {
+      ...values,
+      mobile: phone,
+    };
+    handleAddCustomer(customer ,resetForm);
+
+    console.log(handleAddCustomer(customer.mobile),'dssdss')
+  };
 
 
 
@@ -110,23 +158,33 @@ function Customer() {
   };
 
 
-  
+  // const validatePhoneNumber = (value) => {
+  //   const isValid = isValidPhoneNumber(value);
+  //   return isValid ? undefined : 'Invalid phone number';
+  // };
+ 
 
-
   
-  const handleAddCustomer = (values, { resetForm }) => {
+  const handleAddCustomer = (customer, resetForm ) => {
     // Perform actions to add customer using values
+    // const customer = {
+    //   ...values,
+    //   mobile: phone,
+    // };
+    // handleAddCustomer(customer);
 
-    console.log(values,'ddsdd')
+    console.log(customer.mobile)
+
+    // console.log(values,'dd4545cusmainsdd')
     axios
     .post(
-      'http://3.142.245.136:8080/api/public/createcustomer',
+      'http://localhost:8080/api/public/createcustomer',
          {
-          name:values.name,
-          email:values.email,
-          mobile:values.mobile,
-          address:values.address,
-          company_name:values.company_name
+          name:customer.name,
+          email:customer.email,
+          mobile:customer.mobile,
+          address:customer.address,
+          company_name:customer.company_name
          },
 
 
@@ -158,15 +216,16 @@ function Customer() {
 
       console.log(err.response, 'err-message');
 
-      toast.error(err.message, {
-        position: toast.POSITION.TOP_CENTER,
-      });
+      // toast.error(err.message, {
+      //   position: toast.POSITION.TOP_CENTER,
+      // });
     });
 
 
     // Reset form fields and close modal
     resetForm();
-    setShowModal(false);
+    setShowModal(false)
+    
   };
 
 
@@ -208,7 +267,7 @@ function Customer() {
  
   const onDelete = (id) => {
     axios
-      .post(`http://3.142.245.136:8080/api/public/customerdelete/${id}`)
+      .post(`http://localhost:8080/api/public/customerdelete/${id}`)
       .then((response) => {
         console.log(response.data);
         if(response.code!==200){
@@ -227,6 +286,37 @@ function Customer() {
           console.log(error.message);
         }
       });
+  };
+
+  const handleDeleteClick = (id) => {
+    setItemIdToDelete(id);
+    setShowConfirmation(true);
+  };
+  
+  const handleConfirm = () => {
+    if (itemIdToDelete) {
+      axios
+      .post(`http://localhost:8080/api/public/customerdelete/${itemIdToDelete}`)
+  
+        .then((response) => {
+          console.log(response.data);
+          if (response.code !== 200) {
+            setDelete(!Delete);
+            // Perform any necessary actions on delete failure
+          }
+          toast.success(response.data.message);
+        })
+        .catch((error) => {
+          // Handle error if API request fails
+        });
+      console.log("Item deleted!");
+      setShowConfirmation(false);
+    }
+  };
+  
+  const handleCancel = () => {
+    console.log("Deletion canceled.");
+    setShowConfirmation(false);
   };
 
   return (
@@ -259,7 +349,7 @@ function Customer() {
              
             }}
             validationSchema={validationSchema}
-            onSubmit={handleAddCustomer}
+            onSubmit={handleSubmit}
           >
             {({ handleSubmit, touched, errors }) => (
               <Form onSubmit={handleSubmit}>
@@ -294,19 +384,27 @@ function Customer() {
                   />
                 </Form.Group>
                 <Form.Group controlId="mobile">
-                  <Form.Label>mobile</Form.Label>
-                  <Field
-                    type="text"
-                    name="mobile"
-                    className={`form-control ${
-                      touched.mobile && errors.mobile ? 'is-invalid' : ''
-                    }`}
+                  <Form.Label>Mobile</Form.Label>
+                  <PhoneInput
+                  className='input-phn'
+                    international
+                     defaultCountry="RU"
+
+                    placeholder="Enter phone number"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    error={valid ? null : 'Invalid phone number'}
                   />
-                  <ErrorMessage
-                    name="mobile"
-                    component="div"
-                    className="invalid-feedback"
-                  />
+                  {/* ... Other JSX ... */}
+                  {phone && (
+                    <>
+                  
+                      {/* <p>
+                        Is Possible: {isPossiblePhoneNumber(phone) ? 'true' : 'false'}
+                      </p> */}
+                      <p style={{color:'red',fontSize:"12px"}}>{isValidPhoneNumber(phone) ? '' : 'invalid phone number'}</p>
+                    </>
+                  )}
                 </Form.Group>
                 <Form.Group controlId="address">
                   <Form.Label>Address</Form.Label>
@@ -407,7 +505,7 @@ function Customer() {
                      <td>{item.quotation}/{item.contract}</td>
                   
                      <td>
-                      <Icon style={{color:'red', fontSize: '19px',cursor:'pointer'}} icon="fluent:delete-32-regular" onClick={() => onDelete(item.id)} />
+                      <Icon style={{color:'red', fontSize: '19px',cursor:'pointer'}} icon="fluent:delete-32-regular" onClick={() => handleDeleteClick(item.id)} />
                       
                       </td>
                     
@@ -431,6 +529,14 @@ function Customer() {
         />
         </Card>
       </Container>
+      {showConfirmation && (
+        <ConfirmationModal
+          message="Are you sure you want to delete this Customer?"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          itemId={itemId}
+        />
+      )}
     </>
   );
 

@@ -43,7 +43,7 @@ function YearlyBreakup() {
 
     axios
     .post(
-      'http://3.142.245.136:8080/api/public/adminaccess',
+      'http://localhost:8080/api/public/adminaccess',
       {},
       {
         headers: { 'x-token': localStorage.getItem('token') },

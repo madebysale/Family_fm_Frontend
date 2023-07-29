@@ -124,7 +124,7 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function UserMoreMenu({ props }) {
-  console.log(props);
+  // console.log(props);
 
   const classes = useStyles();
   const [premiumContent, setPremiumContent] = useState([]);

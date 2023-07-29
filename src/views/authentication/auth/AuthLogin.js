@@ -39,7 +39,7 @@ const AuthLogin = ({subtitle}) => {
         onSubmit={(values) => {
           setLoading(true)
         axios
-        .post("http://3.142.245.136:8080/api/public/userlogin", {
+        .post("http://localhost:8080/api/public/userlogin", {
            email: values.email,
            password: values.password,
            }

@@ -8,6 +8,8 @@ import moment from 'moment';
 import { Descriptions } from 'antd';
 
 const Pdf = (props) => {
+  console.log(props, 'pppp');
+
   const [pdfdata, setpdfdata] = useState([]);
   const [pdfdata2, setpdfdata2] = useState([]);
   const [pdfdata3, setpdfdata3] = useState([]);
@@ -104,6 +106,12 @@ const Pdf = (props) => {
       console.log(pdfdata[dataindex], 'ok weww');
       const data = pdfdata[dataindex];
 
+      const startMonth = moment(pdfdata3).format('MMMM, YYYY');
+      const endMonth = moment(pdfdata4).format('MMMM, YYYY');
+
+      console.log(pdfdata3,'min date')
+
+
       doc.setFontSize(11);
       // doc.setTextAlignment("right");
 
@@ -145,7 +153,7 @@ const Pdf = (props) => {
       );
       doc.text(`Gross : $${data.cost}`, 120, 45);
       doc.text(`+Abst 2 : ${data.discountabst} %`, 120, 50);
-      doc.text(`Trade : ${data.trade}`,120, 55)
+      doc.text(`${data.discountdropdown}: $${data.trade}`,120, 55)
       doc.text(`Total Amount : $${data.grandtotal}`, 120, 60);
 
      
@@ -161,7 +169,7 @@ const Pdf = (props) => {
         
 
         const item = pdfdata2[insidedataindex];
-
+        console.log(item,'ffdvvcitem')
         tablerow.push([
           moment(item.start_date).utc().format('Do MMMM') +
             '-' +
@@ -194,78 +202,88 @@ const Pdf = (props) => {
       //   const item = pdfdata6[dataindex];
             
       doc.setLineWidth(0.5);
-      doc.line(5, 203, 205, 203);
+     
       doc.line(5, 164, 205, 164);
       doc.line(5, 144, 205, 144);
 
         doc.setFontSize(12).setFont(undefined, 'bold');
-        doc.text(`Calender Month Projected Billing [Net+Tax]:`,10,172)
-            console.log(pdfdata6.july,'july')
-          doc.setFontSize(9).setFont(undefined, 'normal');
-          doc.text(`Jan `,10,180)
-          doc.text(`$${pdfdata6.jan}`,37.14,180)
-          doc.text(`Feb `,64.28,180)
-          doc.text(`$${pdfdata6.feb}`,91.42,180)
-          doc.text(`Mar `,118.56,180)
-          doc.text(`$${pdfdata6.mar}`,145.70,180)
-          doc.text(`Q1-2023`, 172.84,180)
-          doc.text(`$${Number(pdfdata6.jan)+Number(pdfdata6.feb)+Number(pdfdata6.mar)}`,190,180)
-          doc.text(`April `,10,186)
-          doc.text(`$${pdfdata6.april}`,37.14,186)
-          doc.text(`May `,64.28,186)
-          doc.text(`$${pdfdata6.may}`,91.42,186)
-          doc.text(`June `,118.56,186)
-          doc.text(`$${pdfdata6.june}`,145.70,186)
-          doc.text(`Q2-2023`,172.84,186)
-          doc.text(`$${Number(pdfdata6.april)+Number(pdfdata6.may)+Number(pdfdata6.june)}`,190,186)
-          doc.text(`July `,10,192)
-          doc.text(`$${pdfdata6.july}`,37.14,192)
-          doc.text(`Aug `,64.28,192)
-          doc.text(`$${pdfdata6.aug}`,91.42,192)
-          doc.text(`Sept `,118.56,192)
-          doc.text(`$${pdfdata6.sept}`,145.70,192)
-          doc.text(`Q3-2023`,172.84,192)
-          doc.text(`$${Number(pdfdata6.july)+Number(pdfdata6.aug)+Number(pdfdata6.sept)}`,190,192)
-          doc.text(`Oct `,10,198)
-          doc.text(`$${pdfdata6.oct}`,37.14,198)
-          doc.text(`Nov `,64.28,198)
-          doc.text(`$${pdfdata6.nov}`,91.42,198)
-          doc.text(`Dec `,118.56,198)
-          doc.text(`$${pdfdata6.dec}`,145.70,198)
-          doc.text(`Q4-2023`,172.84,198)
-          doc.text(`$${Number(pdfdata6.oct)+Number(pdfdata6.nov)+Number(pdfdata6.dec)}`,190,198)
+  if(startMonth==endMonth){
+    doc.text(``,10,172)
+  }
 
+
+      else{
+        doc.line(5, 203, 205, 203);
+        doc.text(`Calender Month Projected Billing [Net+Tax]:`,10,172)
+        console.log(pdfdata6.july,'july')
+      doc.setFontSize(9).setFont(undefined, 'normal');
+      doc.text(`Jan `,10,180)
+      doc.text(`$${pdfdata6.jan}`,37.14,180)
+      doc.text(`Feb `,64.28,180)
+      doc.text(`$${pdfdata6.feb}`,91.42,180)
+      doc.text(`Mar `,118.56,180)
+      doc.text(`$${pdfdata6.mar}`,145.70,180)
+      doc.text(`Q1-2023`, 172.84,180)
+      doc.text(`$${Number(pdfdata6.jan)+Number(pdfdata6.feb)+Number(pdfdata6.mar)}`,190,180)
+      doc.text(`April `,10,186)
+      doc.text(`$${pdfdata6.april}`,37.14,186)
+      doc.text(`May `,64.28,186)
+      doc.text(`$${pdfdata6.may}`,91.42,186)
+      doc.text(`June `,118.56,186)
+      doc.text(`$${pdfdata6.june}`,145.70,186)
+      doc.text(`Q2-2023`,172.84,186)
+      doc.text(`$${Number(pdfdata6.april)+Number(pdfdata6.may)+Number(pdfdata6.june)}`,190,186)
+      doc.text(`July `,10,192)
+      doc.text(`$${pdfdata6.july}`,37.14,192)
+      doc.text(`Aug `,64.28,192)
+      doc.text(`$${pdfdata6.aug}`,91.42,192)
+      doc.text(`Sept `,118.56,192)
+      doc.text(`$${pdfdata6.sept}`,145.70,192)
+      doc.text(`Q3-2023`,172.84,192)
+      doc.text(`$${Number(pdfdata6.july)+Number(pdfdata6.aug)+Number(pdfdata6.sept)}`,190,192)
+      doc.text(`Oct `,10,198)
+      doc.text(`$${pdfdata6.oct}`,37.14,198)
+      doc.text(`Nov `,64.28,198)
+      doc.text(`$${pdfdata6.nov}`,91.42,198)
+      doc.text(`Dec `,118.56,198)
+      doc.text(`$${pdfdata6.dec}`,145.70,198)
+      doc.text(`Q4-2023`,172.84,198)
+      doc.text(`$${Number(pdfdata6.oct)+Number(pdfdata6.nov)+Number(pdfdata6.dec)}`,190,198)
+
+      }
+
+
+
+          tablerow2.push([
       
+            `$${data.cost}`,
+            `$${data.trade}`,
+            `$${(((data.cost-data.trade)*data.discountabst)/100).toFixed(2)}`,
+            `$${data.grandtotal}`,
+            
+           
+          ]);
+
+       
       const tableData2 = [
+        // console.log(data.discountdropdown,'7845'),
         [
-          '# OF WKS',
+       
+         
           'TOTAL COST OF PACKAGE',
-          'TRADE',
-          '% ABST',
+          `${data.discountdropdown}`,
+          'ABST',
           'TOTAL',
         ],
       ];
 
-      tablerow2.push([
-        '2',
-   `$${data.cost}`,
-   `$${data.trade}`,
-   `$${data.discountabst}`,
-   `$${data.grandtotal}`,
-   
- ]);
+  
 
       //  const tablerow2=[]
       //  for (let dataindex = 0; dataindex < pdfdata.length; dataindex++) {
       //   console.log(pdfdata[dataindex], 'ok weww');
       //   const data = pdfdata[dataindex];
-
-
-
-
-
-
-      //  }
+     //  }
 
 
 
@@ -273,26 +291,11 @@ const Pdf = (props) => {
 
 
 
-      // doc.autoTable({
-      //   head: tableData,
-      //   body: tablerow,
-      //   startY: 100, // Change this to adjust the vertical position
-      //   margin: { top: 10, right: 5, bottom: 40, left: 5 },
-      //   tableWidth: 'auto',
-      //   styles: {
-      //     overflow: 'linebreak',
-      //     cellWidth: 'wrap',
-      //     cellPadding: 1,
-      //     fontSize: 6,
-      //   },
-      //   theme: 'grid',
-      // });
-      const startY = 40;
-      const startX = 100;
-
-      const options = {
-        startY: 100,
-        margin: { bottom: startY + 30, right: 5, bottom: 40, left: 5 },
+      doc.autoTable({
+        head: tableData,
+        body: tablerow,
+        startY: 100, // Change this to adjust the vertical position
+        margin: { top: 10, right: 5, bottom: 40, left: 5 },
         tableWidth: 'auto',
         styles: {
           overflow: 'linebreak',
@@ -301,13 +304,28 @@ const Pdf = (props) => {
           fontSize: 6,
         },
         theme: 'grid',
-      };
-       
-      doc.autoTable({
-        head: [tableData[0]], // Header row
-        body: tablerow.slice(1), // Body rows
-        ...options,
       });
+      // const startY = 40;
+      // const startX = 100;
+
+      // const options = {
+      //   startY: 100,
+      //   margin: { bottom: startY + 30, right: 5, bottom: 40, left: 5 },
+      //   tableWidth: 'auto',
+      //   styles: {
+      //     overflow: 'linebreak',
+      //     cellWidth: 'wrap',
+      //     cellPadding: 1,
+      //     fontSize: 6,
+      //   },
+      //   theme: 'grid',
+      // };
+       
+      // doc.autoTable({
+      //   head: [tableData[0]], // Header row
+      //   body: tablerow.slice(1), // Body rows
+      //   ...options,
+      // });
 
 
       
@@ -449,7 +467,7 @@ const Pdf = (props) => {
 
       doc.setTextColor('black');
 
-      doc.addImage(data.sign, 'PNG', 10, 190, 50, 25);
+      // doc.addImage( `45545454512`, 10, 190, 50, 25);
     }
 
     const columnWidth = 65;
@@ -476,13 +494,13 @@ const Pdf = (props) => {
   };
 
   return (
-    <div className="generate">
+    <div className="">
       <button
         className="generate-btn"
-        style={{ marginRight: '80px', color: 'white', marginTop: '130px', background: 'red' }}
+        style={{ marginRight: '0px', color: 'white', marginTop: '0px', background: 'red', fontSize:"14px" }}
         onClick={generatePDF}
       >
-        Generate PDF
+        Download PDF
       </button>
     </div>
   );
