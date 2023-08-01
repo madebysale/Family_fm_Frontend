@@ -39,7 +39,7 @@ const AuthLogin = ({subtitle}) => {
         onSubmit={(values) => {
           setLoading(true)
         axios
-        .post("http://localhost:8080/api/public/userlogin", {
+        .post("http://192.168.29.28:8080/api/public/userlogin", {
            email: values.email,
            password: values.password,
            }
@@ -97,8 +97,8 @@ const AuthLogin = ({subtitle}) => {
         {({ errors,touched }) => (
           <Form className="login-form">
             <Row>
-              <Col>
-                <label htmlFor="email">Email</label>
+              <Col md={12} className="mt-3">
+                <label className="mb-2" htmlFor="email">Email</label>
                 <Field type="email" name="email" className="form-control-log" />
                 <ErrorMessage
                   name="email"
@@ -106,10 +106,9 @@ const AuthLogin = ({subtitle}) => {
                   className="text-danger"
                 />
               </Col>
-            </Row>
-            <Row>
-              <Col>
-                <label htmlFor="password">Password</label>
+            
+              <Col md={12} className="mt-3">
+                <label className="mb-2" htmlFor="password">Password</label>
                 <Field
                   type="password"
                   name="password"
@@ -121,13 +120,21 @@ const AuthLogin = ({subtitle}) => {
                   className="text-danger"
                 />
               </Col>
+              <Col md={12}>
+            <Link to='/forgetpassword' > 
+              <div className="link-btn" style={{float:"right"}}  >
+                    Forget password
+              </div>
+            </Link>
+            </Col>
+            <Col md={12} className="text-center">
+              <Button type="submit" style={{marginTop:'15px'}} className="btn-1">
+                  {loading ? "Loading..." : "Log In"}
+              </Button>
+            </Col>
             </Row>
-            <Button type="submit" style={{marginTop:'15px'}} className="btn-1">
-            {loading ? "Loading..." : "Log In"}
-            </Button>
-           <Link to='/forgetpassword' > <div className="link-btn" style={{float:"right"}}  >
-        Forget password
-      </div></Link>
+            
+          
           </Form>
         )}
       </Formik>

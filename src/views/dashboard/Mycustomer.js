@@ -54,7 +54,7 @@ function Mycustomer() {
 
     axios
       .post(
-        'http://localhost:8080/api/public/customerlist',
+        'http://192.168.29.28:8080/api/public/customerlist',
         {},
         {
           headers: {'x-token': localStorage.getItem('token') },
@@ -115,7 +115,7 @@ function Mycustomer() {
  
   const onDelete = (id) => {
     axios
-      .post(`http://localhost:8080/api/public/customerdelete/${id}`)
+      .post(`http://192.168.29.28:8080/api/public/customerdelete/${id}`)
       .then((response) => {
         console.log(response.data);
         if(response.code!==200){
@@ -160,7 +160,7 @@ function Mycustomer() {
 
           
 
-      
+{currentItems.length===0?<h1>No Data Found</h1>:<> 
           <Table className="ad-table " style={{}}>
             <thead>
               <tr className="head-row">
@@ -202,7 +202,7 @@ function Mycustomer() {
               })}
             </tbody>
           </Table>
-       
+       </>}
         </div>
 
         {/* <Pagination

@@ -12,13 +12,14 @@ const Register2 = () => (
         position: 'relative',
         '&:before': {
           content: '""',
-          background: 'radial-gradient(#d2f1df, #d3d7fa, #bad8f4)',
+         
           backgroundSize: '400% 400%',
           animation: 'gradient 15s ease infinite',
           position: 'absolute',
           height: '100%',
           width: '100%',
           opacity: '0.3',
+          margin:'15px'
         },
       }}
     >
@@ -27,14 +28,15 @@ const Register2 = () => (
           item
           xs={20}
           sm={12}
-          lg={4}
-          xl={12}
+          lg={6}
+          xl={6}
           display="flex"
           justifyContent="center"
           alignItems="center"
+          className='grid-regis'
         >
-          <Card elevation={9} sx={{ p: 1, zIndex: 1, width: '200%', maxWidth: '700px' }}>
-            <Box display="flex" alignItems="center" justifyContent="center" marginLeft='40px' marginTop='-5px' >
+          <Card elevation={9} sx={{ p: 1, zIndex: 1, width: '200%', maxWidth: '700px' ,margin:'15px'}}>
+            <Box display="flex" alignItems="center" justifyContent="center" >
               <Logo />
             </Box>
             <AuthRegister

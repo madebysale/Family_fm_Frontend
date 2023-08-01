@@ -19,36 +19,36 @@ import avtar3 from '../../assets/images/customer/avatar_4.jpg';
 import avtar4 from '../../assets/images/customer/avatar_11.jpg';
 import avtar5 from '../../assets/images/customer/avatar_24.jpg';
 import avtar6 from '../../assets/images/customer/avatar_1.jpg';
-import { useState ,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import YearlyBreakup from './components/YearlyBreakup';
 import Recentlsaleslist from './components/Recentsaleslist';
 import Mycustomer from './Mycustomer.js';
 // import { TabPanel } from '@mui/lab';
 import './dashboarddesign.css';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const [sales, setsales] = useState([0]);
   const [agreement, setagreement] = useState([0]);
-  const [contract, setcontract] = useState([0]);
+  const [contract, setcontract] = useState(0);
   const [customer, setcustomer] = useState([0]);
 
   //////////////////////////////////////////////////
   useEffect(() => {
-
-    axios.post(
-        'http://localhost:8080/api/public/numberofsales')
+    axios
+      .post('http://192.168.29.28:8080/api/public/numberofsales')
 
       .then((response) => {
         setsales(response.data.data);
 
         console.log(response, 'sds');
       });
-
   }, []);
 
   ///////////////////////////////////////////////////////////
@@ -56,47 +56,39 @@ export default function DashboardApp() {
   ///////////////////////////////////////////////////////////
 
   useEffect(() => {
-
-    axios.post(
-        'http://localhost:8080/api/public/totalcustomer')
+    axios
+      .post('http://192.168.29.28:8080/api/public/totalcustomer')
 
       .then((response) => {
         setagreement(response.data.data.totalagreement.total_agreement);
-        setcontract(response.data.data.totalcontract.total_contract)
-        setcustomer(response.data.data.totalcustomer.total_customer)
+        setcontract(response.data.data.totalcontract.total_contract);
+        setcustomer(response.data.data.totalcustomer.total_customer);
 
         console.log(response.data.data.totalcontract.total_contract, 'agreement');
       });
-
   }, []);
 
   /////////////////////////////////////////////////////////
 
   //------------------------------------------------------//
 
-  
-   useEffect(()=>{
-       handlecontract()
-   })
+  useEffect(() => {
+    handlecontract();
+  });
 
-
-
-  function handlecontract(){
-
+  function handlecontract() {
     axios
-    .post(
-      'http://localhost:8080/api/public/contractlist',
-      {},
-      {
-        headers: { 'x-token': localStorage.getItem('token') },
-      },
-    )
+      .post(
+        'http://192.168.29.28:8080/api/public/contractlist',
+        {},
+        {
+          headers: { 'x-token': localStorage.getItem('token') },
+        },
+      )
 
-    .then((response) => {
-      setData(response.data.data);
-    
-    });
-
+      .then((response) => {
+        setData(response.data.data);
+      });
   }
 
   // -------------------------------------------------------------------------//
@@ -104,124 +96,94 @@ export default function DashboardApp() {
   return (
     <div className="dashhead">
       <div className="container">
-     
+        <Row spacing={3}>
+          <Col item xs={12} sm={6} md={3}>
+            <div className="weeklysales box" onClick={() => navigate(`/dashboard/contract`)} style={{cursor:'pointer'}} >
+              <span className="icons">
+                <Icon icon="akar-icons:file" />
+              </span>
+              <div className="innerbox">
+                {console.log(contract,'852123')}
+                <h2>{contract === null ? '0' : contract}</h2>
 
-      <Row spacing={3}>
-        <Col item xs={12} sm={6} md={3}>
-          <div className="weeklysales box">
-            <span className="icons">
-              <Icon icon="akar-icons:file" />
-            </span>
-            <div className='innerbox'>
-            {/* {contract.map((con) => {
-              console.log(con,'123')
-            
-            return (
-              
-            
-               
-            );
-          })} */}
-              <h2>{contract}</h2>
-          {/* console.log(contract.totalcontract) */}
-            <h3>Contracts</h3>
+                <h3>Contracts</h3>
               </div>
-           
-          </div>
-        </Col>
-
-        <Col item xs={12} sm={6} md={3}>
-          <div className="Agreements box">
-            <span className="icons">
-              <Icon icon="icon-park:agreement" />
-            </span>
-            <div className='innerbox'>
-           
-              
-                <h2>{agreement}</h2>
-               
-           
-            <h3>Quotations</h3>
             </div>
-          </div>
-        </Col>
-{/* /////////////////////////////////////////////////////////////// */}
-        <Col item xs={12} sm={6} md={3}>
+          </Col>
 
-        <div className="sales box">
-                <span className="icons">
-                  <Icon icon="codicon:graph" />
-                </span>
-                <div className='innerbox'>
-          {sales.map((item) => {
-            // console.log(item, 'sales');
-            return (
-              
-                <h2>{item.sum_of_roles}</h2>
-               
-            );
-          })}
-           <h3>Sales Persons</h3>
-           </div>
+          <Col item xs={12} sm={6} md={3}>
+            <div className="Agreements box" onClick={() => navigate(`/dashboard/agreementlist`)} style={{cursor:'pointer'}} >
+              <span className="icons">
+                <Icon icon="icon-park:agreement" />
+              </span>
+              <div className="innerbox">
+                <h2>{agreement === null ? '0' : agreement}</h2>
+
+                <h3>Quotations</h3>
               </div>
-        </Col>
-
-        {/* ///////////////////////////////////////////////////////////////// */}
-
-        <Col item xs={12} sm={6} md={3}>
-          <div className="customer box">
-            <span className="icons">
-              <Icon icon="mingcute:user-1-line" />
-            </span>
-            <div className='innerbox'>
-           
-              
-                <h2>{customer}</h2>
-               
-            
-            <h3> Total Customers </h3>
             </div>
-          </div>
-        </Col>
-      </Row>
-       <Card className="mt-3 px-3 py-3">
-      <Row>
-        
-      <Col item xs={12} sm={12} md={12}>
-           <h3 className="mt-3 heading-nw"> Recent List</h3>
-      <Tabs>
-    <TabList>
-      <Tab>Contracts </Tab>
-      <Tab>Quotations</Tab>
-      <Tab>Sales Persons</Tab>
-      <Tab>Customers </Tab>
-    </TabList>
+          </Col>
+          {/* /////////////////////////////////////////////////////////////// */}
+          <Col item xs={12} sm={6} md={3}>
+            <div className="sales box"onClick={() => navigate(`/dashboard/salesperson`)} style={{cursor:'pointer'}}  >
+              <span className="icons">
+                <Icon icon="codicon:graph" />
+                
+              </span>
+              <div className="innerbox">
+                {sales.map((item) => {
+                  // console.log(item, 'sales');
+                  return <h2>{item.sum_of_roles}</h2>;
+                })}
+                <h3>Sales Persons</h3>
+              </div>
+            </div>
+          </Col>
 
-    <TabPanel>
-       
-        <YearlyBreakup/>
-       
-    </TabPanel>
-    <TabPanel>
-      
-      <ProductPerformance />
-    </TabPanel>
-    <TabPanel>
-     <Recentlsaleslist/>
+          {/* ///////////////////////////////////////////////////////////////// */}
 
-    </TabPanel>
-    <TabPanel>
- <Mycustomer/>
-     
-    </TabPanel>
-  </Tabs>
-       
-        </Col>
-      
-      </Row>
-   </Card>
+          <Col item xs={12} sm={6} md={3}>
+            <div className="customer box" onClick={() => navigate(`/dashboard/Customer`)} style={{cursor:'pointer'}} >
+              <span className="icons">
+                <Icon icon="mingcute:user-1-line" />
+              </span>
+              <div className="innerbox">
+                <h2>{customer=== null ? '0': customer}</h2>
 
-     </div>
+                <h3> Total Customers </h3>
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Card className="mt-3 px-3 py-3">
+          <Row>
+            <Col item xs={12} sm={12} md={12}>
+              <h3 className="mt-3 heading-nw"> Recent List</h3>
+              <Tabs>
+                <TabList>
+                  <Tab>Contracts </Tab>
+                  <Tab>Quotations</Tab>
+                  <Tab>Sales Persons</Tab>
+                  <Tab>Customers </Tab>
+                </TabList>
+
+                <TabPanel>
+                  <YearlyBreakup />
+                </TabPanel>
+                <TabPanel>
+                  <ProductPerformance />
+                </TabPanel>
+                <TabPanel>
+                  <Recentlsaleslist />
+                </TabPanel>
+                <TabPanel>
+                  <Mycustomer />
+                </TabPanel>
+              </Tabs>
+            </Col>
+          </Row>
+        </Card>
+      </div>
     </div>
   );
 }

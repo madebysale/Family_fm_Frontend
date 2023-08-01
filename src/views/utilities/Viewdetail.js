@@ -9,11 +9,13 @@ import { Table } from 'react-bootstrap';
 import { AiOutlineLogout } from 'react-icons/ai';
 import mylogo from '../icons/fm_logo.png';
 import './Invoice.css';
+import { Modal, Button, Form } from 'react-bootstrap';
 import ConfirmationModal from './ConformationModal';
 import Share from './Share';
 import { RWebShare } from 'react-web-share';
 
 import { shortener } from 'c-url-shortener';
+import Getclickupdata from './Getclickupdata';
 
 const Viewdetail = () => {
   const navigate = useNavigate();
@@ -34,17 +36,22 @@ const Viewdetail = () => {
 
   const startMonth = moment(mindate).format('MMMM, YYYY');
   const endMonth = moment(maxdate).format('MMMM, YYYY');
+  const [data, setData] = useState([]);
+  const [show, setShow] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
+
+ 
 
   // console.log(startMonth)
   // console.log(endMonth)
 
-  //  var imagepath = "http://localhost:3000/static/media/fm_logo.8ab00a202cf2f9daeaa1.png";
+  //  var imagepath = "http://192.168.29.28:3000/static/media/fm_logo.8ab00a202cf2f9daeaa1.png";
   //  /New folder/vidzfmproject/uploads
 
   useEffect(() => {
     axios
       .post(
-        'http://localhost:8080/api/public/agreementlist',
+        'http://192.168.29.28:8080/api/public/agreementlist',
         {
           id: params.id,
         },
@@ -76,7 +83,7 @@ const Viewdetail = () => {
 
   const handleConfirm = () => {
     axios
-      .post(`http://localhost:8080/api/public/makecontract/${itemId}`, {
+      .post(`http://192.168.29.28:8080/api/public/makecontract/${itemId}`, {
         // Provide the relevant data related to the item here
       })
       .then((response) => {
@@ -112,7 +119,7 @@ const Viewdetail = () => {
 
   const onmakecontract = (id) => {
     axios
-      .post(`http://localhost:8080/api/public/makecontract/${id}`)
+      .post(`http://192.168.29.28:8080/api/public/makecontract/${id}`)
       .then((response) => {
         console.log(response.data.status, 'dddsx');
         if (response.status == 200) {
@@ -136,7 +143,7 @@ const Viewdetail = () => {
   const clickupcreatetask = (id) => {
     console.log(id, 'function');
     axios
-      .post(`http://localhost:8080/api/public/createclickuptask/${id}`)
+      .post(`http://192.168.29.28:8080/api/public/createclickuptask/${id}`)
       .then((response) => {
         console.log(response.data.status, 'dddsx');
         if (response.status == 200) {
@@ -157,37 +164,54 @@ const Viewdetail = () => {
       });
   };
 
-  const clickupgettask = () => {
-    axios
-      .post(`http://localhost:8080/api/public/getclickuptask`)
+  useEffect(() => {
+    // Fetch data from the API and update the tasks state
+   axios.post(`http://192.168.29.28:8080/api/public/getclickuptask`) 
       .then((response) => {
-        console.log(response.data.status, 'dddsx');
-        if (response.status == 200) {
-          toast.success(response.data.message);
-        } else {
-          toast.error(err.data.message);
-        }
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response.status);
-          console.log(error.response.data);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log(error.message);
-        }
-      });
+
+        console.log(response.data.data.tasks,'123')
+        setData(response.data.data.tasks)
+      }
+      
+      
+    
+      
+      )
+      .catch((error) => console.error('Error fetching tasks:', error));
+  }, []);
+
+
+
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value.toLowerCase();
+    const filtered = data.filter(item => item.name.toLowerCase().includes(searchTerm));
+    setFilteredData(filtered);
   };
 
-  //   shortener("http://localhost/Vibz_FM/Arun%20tihaiya_VIBZ-236155-167.pdf").then((shortUrl) => {
-  //     console.log(shortUrl,'52');
-  // });
+  // const handleSearch = (event) => {
+  //   const searchTerm = event.target.value.toLowerCase();
+  //   const filtered = data.filter(data =>
+  //     data.id.toString().includes(searchTerm) ||
+  //     data.name.toLowerCase().includes(searchTerm)
+  //   )
+  //   setFilteredData(filtered);
+  // };
+
+  // const handleSearchChange = (event) => {
+  //   setSearchText(event.target.value);
+  // };
+
+  // // Filter tasks based on the search input
+  // const filteredTasks = tasks.filter(task =>
+  //   task.id.toString().includes(searchText) ||
+  //   task.name.toLowerCase().includes(searchText.toLowerCase())
+  // );
 
   ////////////////////////////////////////////////////////////////
 
   return (
     <div className="main-container">
+      
       {dataapi.map((type) => {
         var startDate = new Date(type.id);
         var endDate = new Date(type.ed_date);
@@ -212,13 +236,42 @@ const Viewdetail = () => {
                 />
               )}
             </div>
+            <>
+      <Button className='btn-exsting' variant="primary" onClick={() => setShow(true)}>exitsing task</Button>
+
+      <Modal show={show} onHide={() => setShow(false)} >
+        <Modal.Header closeButton>
+          <Modal.Title>exitsing task</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{width:"100%"}}>
+          <Form.Control
+            type="text"
+            placeholder="Search..."
+            onChange={handleSearch}
+          />
+          <ul style={{textDecoration:"none" ,listStyle:"none",padding:"0px", margin:"0px"}}>
+            {filteredData.map((item) => (
+             < div style={{display:"flex" ,justifyContent:'space-between'}}>
+              <li key={item.id}><strong>task id</strong>-{item.id}</li>
+               <li>{item.name}</li>
+              </div>
+            ))}
+          </ul>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShow(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
             <div>
               <div style={{ marginTop: '10px' }}>
                 <div>
                   <RWebShare
                     data={{
                       text: 'html>Like humans, flamingos make friends for life',
-                      url: `http://localhost/Vibz_FM/Arun%20tihaiya_VIBZ-236155-167.pdf`,
+                      url: `http://192.168.29.28/Vibz_FM/Arun%20tihaiya_VIBZ-236155-167.pdf`,
                       title: 'Qoutation pdf',
                     }}
                     onClick={() => console.log('shared successfully!')}
@@ -610,7 +663,7 @@ const Viewdetail = () => {
                 <div>
                   <img
                     className="img-sign"
-                    src={`http://localhost/Vibz_FM/uploads/${type.signature}`}
+                    src={`http://192.168.29.28/Vibz_FM/uploads/${type.signature}`}
                     alt={'signature'}
                   />
 

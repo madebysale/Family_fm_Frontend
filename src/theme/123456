@@ -154,7 +154,7 @@ const Foam = () => {
 
   useEffect(() => {
     axios
-      .post('http://localhost:8080/api/public/agreementlist',{
+      .post('http://192.168.29.28:8080/api/public/agreementlist',{
         id: params.id,
       },{
         headers: {'x-token': localStorage.getItem('token') },
@@ -188,7 +188,7 @@ const Foam = () => {
 
     const myproductupdate=()=>{
       axios
-      .post(`http://localhost:8080/api/public/updateproductitem/${id}`, {
+      .post(`http://192.168.29.28:8080/api/public/updateproductitem/${id}`, {
        
       product_type: '',
      startdate:'',
@@ -233,7 +233,7 @@ const Foam = () => {
 
    
   axios
-  .post(`http://localhost:8080/api/public/updateagreement/${id}`, {
+  .post(`http://192.168.29.28:8080/api/public/updateagreement/${id}`, {
    
     sales_rep: salesrep,
     advertiser: Advertiser,

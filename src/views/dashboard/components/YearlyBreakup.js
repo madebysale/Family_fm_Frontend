@@ -7,7 +7,6 @@ import Button from 'react-bootstrap/Button';
 import moment from 'moment';
 import { toast } from 'react-toastify';
 
-
 // import mylogo from "../component/fm_logo.png";
 // import view from "../component/view.png.png";
 // import{AiOutlineLogout} from 'react-icons/ai'4
@@ -39,62 +38,22 @@ function YearlyBreakup() {
   const [mysales, setmysales] = useState([]);
 
   useEffect(() => {
-    
-
     axios
-    .post(
-      'http://localhost:8080/api/public/contractlist',
-      {
-        page:currentPage,
-          limit:itemsPerPage,
-      },
-      {
-        headers: { 'x-token': localStorage.getItem('token') },
-      },
-    )
+      .post(
+        'http://192.168.29.28:8080/api/public/contractlist',
+        {
+          page: currentPage,
+          limit: itemsPerPage,
+        },
+        {
+          headers: { 'x-token': localStorage.getItem('token') },
+        },
+      )
 
-    .then((response) => {
-      setData(response.data.results);
-    
-
-      
-    });
-   
-  
-
-   
+      .then((response) => {
+        setData(response.data.results);
+      });
   }, []);
-
-
-
-
-
- 
-
-
-
-
-
-
-
-  /////////////////////////////////////////////////////////////////////
-
-
-
-  ///////////////////////////////////////////////////////////////////
-
-    
- 
-
-
-
-
-
-
-
-
-
-  /////////////////////////////////////////////////////////////////////
 
 
 
@@ -136,35 +95,24 @@ function YearlyBreakup() {
     navigate('/');
   };
 
-
-
   return (
-    
-      <div className="container">
-        
-      <div  style={{display:"grid", gridTemplateColumns:"repeat(4, 1fr)",gridGap:"60px"}}>
-      
-    
- 
+    <div className="container">
+      <div
+        style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridGap: '60px' }}
+      ></div>
+      <div className="header-div" style={{ marginTop: '20px' }}></div>
 
+      <div className="search-admin">
+        <Input
+          placeholder="Search"
+          className="col-3 mt-2 mb-1 mx-3 input"
+          value={searchTerm}
+          onChange={handleSearch}
+        ></Input>
 
- 
-   </div>
-        <div className="header-div" style={{marginTop:"20px"}}></div>
-      
-        
-
-        <div className="search-admin">
-          <Input
-            placeholder="Search"
-            className="col-3 mt-2 mb-1 mx-3 input"
-            value={searchTerm}
-            onChange={handleSearch}
-          ></Input>
-
-          <div className='table-responsive '>
-           
-          <Table className="ad-table " >
+        <div className="table-responsive ">
+          {currentItems.length === 0?<h1>No Data Found</h1>:<>
+          <Table className="ad-table ">
             <thead>
               <tr className="head-row">
                 <th>ID</th>
@@ -184,7 +132,7 @@ function YearlyBreakup() {
                 console.log(item, 'sjh');
                 return (
                   <React.Fragment key={index}>
-                    <tr >
+                    <tr>
                       <td className="plus-btn">{item.orderid}</td>
                       <td>{item.name}</td>
                       <td>{item.email}</td>
@@ -192,21 +140,16 @@ function YearlyBreakup() {
                       <td>{item.event}</td>
                       <td>{item.sales_rep}</td>
                       {/* <td>{moment(item.contract_date).utc().format('MM/DD/YY')}</td> */}
-
-                   
                     </tr>
                   </React.Fragment>
                 );
               })}
             </tbody>
           </Table>
-          </div>
-
+          </>}
         </div>
-
-        
       </div>
-      
+    </div>
   );
 
   function Pagination({ itemsPerPage, totalItems, paginate }) {

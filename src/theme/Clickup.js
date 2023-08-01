@@ -26,12 +26,3 @@
 //   }
 //  })
 
-import React from 'react'
-
-const Clickup = () => {
-  return (
-    <div>Clickup</div>
-  )
-}
-
-export default Clickup

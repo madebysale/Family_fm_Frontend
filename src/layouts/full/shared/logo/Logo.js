@@ -5,7 +5,7 @@ import { styled } from '@mui/material';
 const LinkStyled = styled(Link)(() => ({
   height: '100px',
   marginTop:'18px',
-  width: '220px',
+  width: '100px',
   overflow: 'hidden',
   display: 'block',
 }));
@@ -14,7 +14,9 @@ const Logo = () => {
   return (
    
 
- <img src = {LogoDar} alt='log' height={70} style={{marginLeft:"15px", marginBottom:"25px"}}/>
+<img className='logo-img' src = {LogoDar} alt='log'  style={{ marginBottom:"15px"}}/>
+  
+ 
    
  
    

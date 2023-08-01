@@ -257,7 +257,7 @@ console.log(mydropdown,'dsdfdfs')
   
 
     axios.post(
-      'http://localhost:8080/api/public/createcustomer',
+      'http://192.168.29.28:8080/api/public/createcustomer',
          {
           name:customer.name,
           email:customer.email,
@@ -325,7 +325,7 @@ console.log(mydropdown,'dsdfdfs')
       }
 
       await axios
-        .post('http://localhost:8080/api/public/checkcustomer', condition, {
+        .post('http://192.168.29.28:8080/api/public/checkcustomer', condition, {
           headers: { 'x-token': localStorage.getItem('token') },
         })
 
@@ -358,7 +358,7 @@ console.log(mydropdown,'dsdfdfs')
     const fetchOptions = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:8080/api/public/salesdropdown',
+          'http://192.168.29.28:8080/api/public/salesdropdown',
           {},
           {
             headers: { 'x-token': localStorage.getItem('token') },
@@ -1799,7 +1799,7 @@ console.log(mydropdown,'dsdfdfs')
               }
               axios
                 .post(
-                  'http://localhost:8080/api/public/getdata',
+                  'http://192.168.29.28:8080/api/public/getdata',
                   payload,
 
                   {

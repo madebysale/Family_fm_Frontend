@@ -154,7 +154,7 @@ const Foam = () => {
 
   useEffect(() => {
     axios
-      .post('http://localhost:8080/api/public/agreementlist',{
+      .post('http://192.168.29.28:8080/api/public/agreementlist',{
         id: params.id,
       },{
         headers: {'x-token': localStorage.getItem('token') },
@@ -191,7 +191,7 @@ const Foam = () => {
 
    
   axios
-  .post(`http://localhost:8080/api/public/updateagreement/${id}`, {
+  .post(`http://192.168.29.28:8080/api/public/updateagreement/${id}`, {
    
     sales_rep: salesrep,
     advertiser: Advertiser,
@@ -1424,62 +1424,7 @@ console.log(  values[i][event.target.name],'startd')
 
     setFields(values);
 
-    // let startYear = startDate.year();
-    // let startMonth = startDate.month();
-    // let endYear = endDate.year();
-    // let endMonth = endDate.month();
 
-    //     const startDate = moment(startdate, 'YYYY-MM-DD'); // Replace with your start date
-    // const endDate = moment(enddate, 'YYYY-MM-DD'); // Replace with your end date
-
-    // const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-    // let currentDay = moment(startDate);
-    // let daysArray = [];
-    // let daysObject = {};
-
-    // for (let i = 0; i < 7; i++) {
-    //   const dayName = dayNames[currentDay.day()];
-    //   let value = 0;
-
-    //   if (currentDay.isBetween(startDate, endDate, null, '[]') || currentDay.isSame(startDate) || currentDay.isSame(endDate)) {
-    //     value = 1;
-    //   }
-
-    //   daysArray.push({ day: dayName, value: value });
-    //   daysObject[dayName] = value;
-
-    //   currentDay.add(1, 'day'); // Move to the next day
-    // }
-
-    // console.log('Days Array:', daysArray);
-    // console.log('Days Object:', daysObject);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // const startDate = moment(); // Replace with your start date
-    // const endDate = new Date('2022-08-15'); // Replace with your end date
-    // const startDate = moment(startdate, 'YYYY-MM-DD'); //Pick 0.01 format
-    // const endDate = moment(enddate, 'YYYY-MM-DD');
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // var gettotalsecond =  ((Number(values[i]['monday'])* daysObject['Monday']) +
-    // (Number(values[i]['tuesday'])*daysObject['Tuesday'] )+
-    // (Number(values[i]['wednesday']) *daysObject['Wednesday'])+
-    // ( Number(values[i]['thursday'])*daysObject['Thursday'] )+
-    // (Number(values[i]['friday']) *daysObject['Friday']) +
-    // (Number(values[i]['saturday'])*daysObject['Saturday'] )+
-    // (Number(values[i]['sunday']))*daysObject['Sunday'] )*30
-
-    // var hours = Math.floor(gettotalsecond / 3600);
-    // var min = Math.floor((gettotalsecond % 3600) / 60);
-    // var sec = gettotalsecond%60
-
-    // setweekhr(
-    //   hours + ":" +min + ":" + sec
-    // )
-
-    // console.log(Number(values[i]['tuesday']), 'tuesday');
 
     fields[i].cost = (
       (Number(values[i]['monday']) * weekdayMonCounter +
@@ -1650,26 +1595,7 @@ console.log(  values[i][event.target.name],'startd')
                       </div>
 
                       </Col>
-                      {/* <Col item xs={12} sm={6} md={4}>
-                      <div className="form-group">
-                        <label htmlFor="Contract_Date" className="label-con">
-                          Contract Date
-                        </label>
-                        <div className="input-er-con">
-                          <Field
-                            name="Contract_date"
-                            type="date"
-                            className="form-control"
-                            placeholder="Contract_date"
-                            value={contractdate}
-                            onChange={(e) => setcontractdate(e.target.value)}
-                          />
-                          {errors.Contract_date && touched.Contract_date ? (
-                            <div className="error-message">{errors.Contract_date}</div>
-                          ) : null}
-                        </div>
-                      </div>
-                      </Col> */}
+                  
                       <Col item xs={12} sm={6} md={4}>
                       <div className="form-group">
                         <label htmlFor="sales_rep" className="label-con">
@@ -2009,7 +1935,7 @@ console.log(  values[i][event.target.name],'startd')
                                                             className="popup-control"
                                                             type="number"
                                                             min={0}
-                                                            defaultValue={field.monday}
+                                                            value={field.monday}
                                                             onChange={(event) =>
                                                               handleChange(index, event, 'monday')
                                                             }

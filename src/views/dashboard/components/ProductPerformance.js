@@ -43,7 +43,7 @@ function Tabletable() {
 
     axios
     .post(
-      'http://localhost:8080/api/public/list',
+      'http://192.168.29.28:8080/api/public/list',
       {
         page:currentPage,
           limit:itemsPerPage,
@@ -81,7 +81,7 @@ function Tabletable() {
 
   //   axios
   //   .post(
-  //     'http://localhost:8080/api/public/contractlist',
+  //     'http://192.168.29.28:8080/api/public/contractlist',
   //     {},
   //     {
   //       headers: { 'x-token': localStorage.getItem('token') },
@@ -117,7 +117,7 @@ function Tabletable() {
 
 //  axios
 //  .post(
-//    'http://localhost:8080/api/public/adminaccess',
+//    'http://192.168.29.28:8080/api/public/adminaccess',
 //    {},
 //    {
 //      headers: { 'x-token': localStorage.getItem('token') },
@@ -145,7 +145,7 @@ function Tabletable() {
  
 
     axios.post(
-        'http://localhost:8080/api/public/numberofsales')
+        'http://192.168.29.28:8080/api/public/numberofsales')
 
       .then((response) => {
         setsales(response.data.data);
@@ -165,7 +165,7 @@ function Tabletable() {
  
 
     axios.post(
-        'http://localhost:8080/api/public/totalcustomer')
+        'http://192.168.29.28:8080/api/public/totalcustomer')
 
       .then((response) => {
         setcustomer(response.data.results);
@@ -254,7 +254,7 @@ function Tabletable() {
           ></Input>
 
           <div className='table-responsive '>
-           
+          {currentItems.length===0?<h1>No Data Found</h1>:<> 
           <Table className="ad-table " >
             <thead>
               <tr className="head-row">
@@ -291,6 +291,7 @@ function Tabletable() {
               })}
             </tbody>
           </Table>
+          </>}
           </div>
 {/* 
           <div className='table-responsive ' id="style-2">

@@ -43,7 +43,7 @@ function YearlyBreakup() {
 
     axios
     .post(
-      'http://localhost:8080/api/public/adminaccess',
+      'http://192.168.29.28:8080/api/public/adminaccess',
       {},
       {
         headers: { 'x-token': localStorage.getItem('token') },
@@ -160,7 +160,7 @@ function YearlyBreakup() {
           ></Input>
 
           <div className='table-responsive '>
-           
+          {currentItems.length===0?<h1>No Data Found</h1>:<> 
           <Table className="ad-table " >
             <thead>
               <tr className="text-center">
@@ -197,6 +197,7 @@ function YearlyBreakup() {
               })}
             </tbody>
           </Table>
+          </>} 
           </div>
 
         </div>

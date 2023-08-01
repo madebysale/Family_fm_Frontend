@@ -18,13 +18,14 @@ const Login2 = () => {
           position: 'relative',
           '&:before': {
             content: '""',
-            background: 'radial-gradient(#d2f1df, #d3d7fa, #bad8f4)',
+            
             backgroundSize: '400% 400%',
             animation: 'gradient 15s ease infinite',
             position: 'absolute',
             height: '100%',
             width: '100%',
             opacity: '0.3',
+            // margin:'15px',
           },
         }}
       >
@@ -35,18 +36,22 @@ const Login2 = () => {
             item
             xs={12}
             sm={12}
-            lg={4}
-            xl={3}
+            lg={5}
+            xl={5}
             display="flex"
             justifyContent="center"
             alignItems="center"
+            className='grid-login'
           >
                
-            <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '500px' }}>
+            <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '500px', margin:'20px' }}>
             {/* <span style={{textAlign:'center',color:"red"}}>
 First, the admin of VibzFM needs to verify you, and then you can <span >log In</span> .</span> */}
-              <Box display="flex" alignItems="center" justifyContent="center">
-                <Logo />
+              <Box display="flex" alignItems="center" justifyContent="center" >
+                {/* <div style={{width:'10px'}}> */}
+                <Logo  />
+                {/* </div> */}
+               
               </Box>
               <AuthLogin
                 subtext={
@@ -68,7 +73,7 @@ First, the admin of VibzFM needs to verify you, and then you can <span >log In</
                         color: 'primary.main',
                       }}
                     >
-                      Register here
+                      Register Here
                     </Typography>
                   </Stack>
                 }
