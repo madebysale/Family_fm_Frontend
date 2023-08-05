@@ -20,10 +20,17 @@ import avtar4 from '../../assets/images/customer/avatar_11.jpg';
 import avtar5 from '../../assets/images/customer/avatar_24.jpg';
 import avtar6 from '../../assets/images/customer/avatar_1.jpg';
 import { useState, useEffect } from 'react';
+import Swal from "sweetalert2";
+
+
+
+
 import axios from 'axios';
 import YearlyBreakup from './components/YearlyBreakup';
 import Recentlsaleslist from './components/Recentsaleslist';
 import Mycustomer from './Mycustomer.js';
+import SweetAlert from 'react-bootstrap-sweetalert';
+// import Swal from "sweetalert2";
 // import { TabPanel } from '@mui/lab';
 import './dashboarddesign.css';
 import { useNavigate } from 'react-router-dom';
@@ -33,39 +40,89 @@ import { useNavigate } from 'react-router-dom';
 export default function DashboardApp() {
   const theme = useTheme();
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   const [sales, setsales] = useState([0]);
   const [agreement, setagreement] = useState([0]);
   const [contract, setcontract] = useState(0);
   const [customer, setcustomer] = useState([0]);
+  // const [showAlert, setShowAlert] = useState(false);
+
+
+
+
+
+
+
+
+
+
 
   //////////////////////////////////////////////////
   useEffect(() => {
     axios
-      .post('http://192.168.29.28:8080/api/public/numberofsales')
+      .post('http://localhost:8080/api/public/numberofsales',{
+
+      },
+      {
+        headers: { 'x-token': localStorage.getItem('token') },
+      },
+      )
 
       .then((response) => {
+
+        if(response.data.message ==400){
+          navigate('/login', { replace: true });
+          toast.success("Asdsd", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+         }
         setsales(response.data.data);
 
         console.log(response, 'sds');
       });
   }, []);
 
+  
+
   ///////////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////////
 
   useEffect(() => {
     axios
-      .post('http://192.168.29.28:8080/api/public/totalcustomer')
+      .post('http://localhost:8080/api/public/totalcustomer',{},
+      {
+        headers: { 'x-token': localStorage.getItem('token') },
+      },)
+
+
 
       .then((response) => {
+        if(response.data.message ==400){
+          localStorage.removeItem('token')
+
+          console.log(response.data.code,'dssdfdfs')
+          navigate('/login', { replace: true });
+          
+          showAlert()
+          // localStorage.removeItem('tempary')
+          toast.success("Asdsd", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+         }
+       
+
+
+
         setagreement(response.data.data.totalagreement.total_agreement);
         setcontract(response.data.data.totalcontract.total_contract);
         setcustomer(response.data.data.totalcustomer.total_customer);
 
         console.log(response.data.data.totalcontract.total_contract, 'agreement');
       });
+
+
   }, []);
 
   /////////////////////////////////////////////////////////
@@ -77,9 +134,12 @@ export default function DashboardApp() {
   });
 
   function handlecontract() {
+
+
+
     axios
       .post(
-        'http://192.168.29.28:8080/api/public/contractlist',
+        'http://localhost:8080/api/public/contractlist',
         {},
         {
           headers: { 'x-token': localStorage.getItem('token') },
@@ -91,11 +151,31 @@ export default function DashboardApp() {
       });
   }
 
-  // -------------------------------------------------------------------------//
+  // -
+  // ------------------------------------------------------------------------//
+
+  const showAlert = () => {
+    Swal.fire({
+      title: "Message Sent",
+      text: "Thank you for contacting us.We will get back to you asap.",
+      icon: "success",
+      confirmButtonText: "OK",
+    });
+  };
 
   return (
+    
     <div className="dashhead">
+
+      
       <div className="container">
+      {/* <SweetAlert
+        show={showAlert}
+        title="API Response Success!"
+        onConfirm={handleCloseAlert}
+      >
+        The API call was successful!
+      </SweetAlert> */}
         <Row spacing={3}>
           <Col item xs={12} sm={6} md={3}>
             <div className="weeklysales box" onClick={() => navigate(`/dashboard/contract`)} style={{cursor:'pointer'}} >
@@ -106,7 +186,9 @@ export default function DashboardApp() {
                 {console.log(contract,'852123')}
                 <h2>{contract === null ? '0' : contract}</h2>
 
-                <h3>Contracts</h3>
+                <h3>Contracts
+               
+                </h3>
               </div>
             </div>
           </Col>

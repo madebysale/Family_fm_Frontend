@@ -40,7 +40,7 @@ function YearlyBreakup() {
   useEffect(() => {
     axios
       .post(
-        'http://192.168.29.28:8080/api/public/contractlist',
+        'http://localhost:8080/api/public/contractlist',
         {
           page: currentPage,
           limit: itemsPerPage,

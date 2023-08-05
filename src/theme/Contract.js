@@ -61,7 +61,7 @@ function Contract() {
 
     axios
       .post(
-        'http://192.168.29.28:8080/api/public/contractlist',
+        'http://localhost:8080/api/public/contractlist',
         {
           page:currentPage,
           limit:itemsPerPage,
@@ -136,7 +136,7 @@ function Contract() {
 
   const onDelete = (id) => {
     axios
-      .post(`http://192.168.29.28:8080/api/public/delete/${id}`)
+      .post(`http://localhost:8080/api/public/delete/${id}`)
       .then((response) => {
         console.log(response.data);
         if(response.code!==200){
@@ -198,7 +198,7 @@ function Contract() {
   const handleConfirm = () => {
     if (itemIdToDelete) {
       axios
-        .post(`http://192.168.29.28:8080/api/public/delete/${itemIdToDelete}`)
+        .post(`http://localhost:8080/api/public/delete/${itemIdToDelete}`)
   
         .then((response) => {
           console.log(response.data);

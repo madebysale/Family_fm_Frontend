@@ -532,6 +532,14 @@ margin-top: 7px;
 
 }
 
+
+.payment_input:focus{
+  border-color: #5D87FF;
+}
+
+
+
+
 .form-table-div{
   /* border: 3px solid gray; */
 }

@@ -165,11 +165,7 @@ const AuthRegister = ({ subtitle }) => {
             setSignatureError(true);
             setTimeout(() => setLoading(false), 100);
           } else {
-            if (!phoneValidation) {
-              setSignatureError(true);
-              setSubmitting(false); // Set submitting to false to re-enable form submission
-              return;
-            }
+           
 
             setSignatureError(false);
             setLoading(true);
@@ -185,7 +181,7 @@ const AuthRegister = ({ subtitle }) => {
             console.log(values, 'resgister');
             axios
               .post(
-                'http://192.168.29.28:8080/api/public/user',
+                'http://localhost:8080/api/public/user',
                 formData,
 
                 {

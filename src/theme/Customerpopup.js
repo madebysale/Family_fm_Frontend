@@ -57,13 +57,13 @@ const Customerpopup = ({ showModal, closeModal, handleAddCustomer }) => {
     return undefined;
   };
 
-  const handleSubmit = (values, { resetForm }) => {
+  const handleSubmit = async (values, { resetForm }) => {
     const customer = {
       ...values,
       mobile: phone,
     };
-    handleAddCustomer(customer ,resetForm);
-  
+   await handleAddCustomer(customer ,resetForm);
+    setPhone('');
   };
 
 

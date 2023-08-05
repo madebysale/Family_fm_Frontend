@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useParams,useLocation,useSearchParams } from 'react-router-dom';
 import { Grid, Box, Card, Stack, Typography } from '@mui/material';
 
 // components
@@ -8,7 +8,10 @@ import Logo from 'src/layouts/full/shared/logo/Logo';
 import AuthLogin from './auth/AuthLogin';
 
 const Login2 = () => {
-  
+
+  const queryParameters = new URLSearchParams(window.location.search)
+  const type = queryParameters.get("name")
+  console.log(type);
   return (
     <PageContainer title="Login" description="this is Login page">
       

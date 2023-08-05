@@ -154,7 +154,7 @@ const Foam = () => {
 
   useEffect(() => {
     axios
-      .post('http://192.168.29.28:8080/api/public/agreementlist',{
+      .post('http://localhost:8080/api/public/agreementlist',{
         id: params.id,
       },{
         headers: {'x-token': localStorage.getItem('token') },
@@ -175,7 +175,7 @@ const Foam = () => {
         settrade(response.data.data.details[0].trade)
         setabst(response.data.data.details[0].abst)
         setdiscountabst(response.data.data.details[0].discountabst)
-        setitemlist(response.data.data.itemlist)
+        (response.data.data.itemlist)
 
           
          
@@ -191,7 +191,7 @@ const Foam = () => {
 
    
   axios
-  .post(`http://192.168.29.28:8080/api/public/updateagreement/${id}`, {
+  .post(`http://localhost:8080/api/public/updateagreement/${id}`, {
    
     sales_rep: salesrep,
     advertiser: Advertiser,
@@ -1900,6 +1900,7 @@ console.log(  values[i][event.target.name],'startd')
                                                     type="total"
                                                     name="total"
                                                     // value={mytotal} 
+                                                  // {console.log(field.tota)}
                                                     defaultValue={field.total}
                                                     placeholder="Select Days"
                                                   /> 

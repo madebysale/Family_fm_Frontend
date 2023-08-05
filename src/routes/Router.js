@@ -15,6 +15,7 @@ import Forgetpassword from 'src/views/authentication/auth/Authforgetpassword';
 import AuthForgetpassword from 'src/views/authentication/auth/Authforgetpassword';
 import Authforgetpassword from 'src/views/authentication/auth/Authforgetpassword';
 import Authresetpassword from 'src/views/authentication/auth/Authresetpassword';
+import Clickup_page from 'src/views/utilities/Clickup_page';
 import Contractview from 'src/views/utilities/Contractview';
 import Pdf from 'src/views/utilities/Pdf';
 // import Updateform from 'src/views/utilities/Updateform';
@@ -70,13 +71,14 @@ export default function Router() {
       { path: 'contract',  element:  <Contract/> },
       { path: 'Customer',  element:  <Customer/> },
       { path: 'Mail',  element:  <Mail/> },
-      { path: 'Clickup',  element:  <Clickup/> },
+      { path: 'myclickup',  element:  <Clickup/> },
      
       {path:'Viewdetail/:id',element: <Viewdetail/>},
       {path:'contractview/:id',element: <Contractview/>},
    
-      // {path:"/pdf",element:<Pdf/>}
+
       {path:'updateagreement/:id',element: <Updateform />},
+
     
 
     ],
@@ -89,11 +91,13 @@ export default function Router() {
       // { path: '404', element: <Error/> },
       { path: "/", element: <Navigate to="/login" replace /> },
       { path: 'login', element: <Login /> },
+      {path:'authorization',element:<Clickup_page/>},
       { path: 'register', element: <Register /> },
       { path: 'forgetpassword', element: <AuthForgetpassword /> },
       { path: 'resetpassword', element: <Authresetpassword /> },
       { path: '404', element: <Error/> },
       { path: "*", element: <Navigate to="/404"  /> },
+      // {path:"clickup_page",  element: <Clickup_page />},
       
     ],
   },

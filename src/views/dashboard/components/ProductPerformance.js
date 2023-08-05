@@ -43,7 +43,7 @@ function Tabletable() {
 
     axios
     .post(
-      'http://192.168.29.28:8080/api/public/list',
+      'http://localhost:8080/api/public/list',
       {
         page:currentPage,
           limit:itemsPerPage,
@@ -81,7 +81,7 @@ function Tabletable() {
 
   //   axios
   //   .post(
-  //     'http://192.168.29.28:8080/api/public/contractlist',
+  //     'http://localhost:8080/api/public/contractlist',
   //     {},
   //     {
   //       headers: { 'x-token': localStorage.getItem('token') },
@@ -117,7 +117,7 @@ function Tabletable() {
 
 //  axios
 //  .post(
-//    'http://192.168.29.28:8080/api/public/adminaccess',
+//    'http://localhost:8080/api/public/adminaccess',
 //    {},
 //    {
 //      headers: { 'x-token': localStorage.getItem('token') },
@@ -145,7 +145,7 @@ function Tabletable() {
  
 
     axios.post(
-        'http://192.168.29.28:8080/api/public/numberofsales')
+        'http://localhost:8080/api/public/numberofsales')
 
       .then((response) => {
         setsales(response.data.data);
@@ -165,7 +165,7 @@ function Tabletable() {
  
 
     axios.post(
-        'http://192.168.29.28:8080/api/public/totalcustomer')
+        'http://localhost:8080/api/public/totalcustomer')
 
       .then((response) => {
         setcustomer(response.data.results);

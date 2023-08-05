@@ -97,7 +97,7 @@ const Foam = () => {
   const [loading, setLoading] = useState(false);
   const [timeRange, setTimeRange] = useState([]);
   const [mysignerror, setmysignerror] = useState(false);
-  const [paymentdue, setpaymentdue] = useState("This payment of balance due will be billed over a two month period. The 1st in April 25th and the next on 15th may");
+  const [paymentdue, setpaymentdue] = useState(" ");
   const [errorMessage, setErrorMessage] = useState(false);
   const [errorMessage1, setErrorMessage1] = useState(false);
   const [mystatus, setmystatus] = useState(false);
@@ -159,6 +159,7 @@ const Foam = () => {
   const[mydropdown,setmydropdown]= useState('Trade')
   const[nameerror,setnameerror] = useState(false)
   const[eventerror,seteventerror] = useState(false)
+  const[salesreperor,setsalesreperror]=useState(false)
 
 
   // const [inputValues, setInputValues] = useState({
@@ -216,10 +217,7 @@ const Foam = () => {
 
 
 
-  const query = new URLSearchParams({
-    custom_task_ids: 'true',
-    team_id: '9002104625'
-  }).toString();
+
 
 
 
@@ -257,7 +255,7 @@ console.log(mydropdown,'dsdfdfs')
   
 
     axios.post(
-      'http://192.168.29.28:8080/api/public/createcustomer',
+      'http://localhost:8080/api/public/createcustomer',
          {
           name:customer.name,
           email:customer.email,
@@ -286,6 +284,8 @@ console.log(mydropdown,'dsdfdfs')
          setmycustomerid(resp.data.data.id)
         setmyname(resp.data.data.name)
         setmyphone(resp.data.data.mobile)
+        console.log(resp.data.data.mobile,'fd')
+        console.log(resp.data.data.email,'fdemail')
         setmyemail(resp.data.data.email)
         setmyadvertiser(resp.data.data.company_name)
         
@@ -310,7 +310,7 @@ console.log(mydropdown,'dsdfdfs')
 
     resetForm();
 
-
+   
     closeModal()
   };
 
@@ -325,7 +325,7 @@ console.log(mydropdown,'dsdfdfs')
       }
 
       await axios
-        .post('http://192.168.29.28:8080/api/public/checkcustomer', condition, {
+        .post('http://localhost:8080/api/public/checkcustomer', condition, {
           headers: { 'x-token': localStorage.getItem('token') },
         })
 
@@ -333,21 +333,20 @@ console.log(mydropdown,'dsdfdfs')
           toast.error(response.data.message, {
             position: toast.POSITION.TOP_CENTER,
           });
-          // console.log(response.data.id, 'mydata');
+        
           setmyname(response.data.name);
-          // setmysalesrep(response.data[0].sales_rep);
-          // setmyevent(response.data[0].event);
-          // setmyadvertiser(response.data[0].advertiser);
+         
           setmyemail(response.data.email);
           setmyphone(response.data.mobile);
+          console.log(response.data.mobile,'fd2')
+          console.log(response.data.email,'fdemai2')
           setmyadvertiser(response.data.company_name);
           setIsDisabled(true);
           setmycustomerid(response.data.id);
           console.log(response.data.id,'1235');
         })
         .catch((error) => {
-          // Handle error
-          // setIsDisabled(false);
+       
         });
     } catch (err) {
       // console.log(err);
@@ -358,13 +357,13 @@ console.log(mydropdown,'dsdfdfs')
     const fetchOptions = async () => {
       try {
         const response = await axios.post(
-          'http://192.168.29.28:8080/api/public/salesdropdown',
+          'http://localhost:8080/api/public/salesdropdown',
           {},
           {
             headers: { 'x-token': localStorage.getItem('token') },
           },
         );
-        // console.log(response.data, 'saLESDROP');
+    
         setmyOptions(response.data);
       } catch (error) {
         console.error(error);
@@ -925,52 +924,52 @@ console.log(mydropdown,'dsdfdfs')
       switch (myresult) {
         case 1:
           values[i]['jan']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,"jan")
           break;
         case 2:
           values[i]['feb']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,'feb')
           break;
         case 3:
           values[i]['mar']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,'m')
 
           break;
         case 4:
           values[i]['april']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,'a')
           break;
         case 5:
           values[i]['may']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,'j')
           break;
         case 6:
           values[i]['june']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,'auf')
           break;
         case 7:
           values[i]['july']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,'sdf')
           break;
         case 8:
           values[i]['aug']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,'s')
           break;
         case 9:
           values[i]['sept']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,'sep')
           break;
         case 10:
           values[i]['oct']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,'oct')
           break;
         case 11:
           values[i]['nov']=Number(totalcost)
-          // console.log(totalcost)
+          console.log(totalcost,'nov')
           break;
         case 12:
           values[i]['dec']=Number(totalcost)
-          
+          console.log(totalcost,'DDD')
           break;
 
         default:
@@ -1608,7 +1607,7 @@ console.log(mydropdown,'dsdfdfs')
     const value = event.target.value;
     setpaymentdue(value);
   
-    setpaymenterr(value.trim() === "");
+    // setpaymenterr(value.trim() === "");
   
   };
 
@@ -1659,6 +1658,10 @@ console.log(mydropdown,'dsdfdfs')
               setTimeout(() => setLoading(false), 2000);
             } 
 
+            else if(!mysalesrep){
+              setsalesreperror(true)
+            }
+
 
             else if(myevent == ""){
                   seteventerror(true)
@@ -1676,6 +1679,8 @@ console.log(mydropdown,'dsdfdfs')
               setnameerror(false);
               seteventerror(false);
               setdateerror(false);
+              setsalesreperror(false)
+
               setLoading(true);
               var payload = {};
               console.log(mydropdown,'4562')
@@ -1799,7 +1804,7 @@ console.log(mydropdown,'dsdfdfs')
               }
               axios
                 .post(
-                  'http://192.168.29.28:8080/api/public/getdata',
+                  'http://localhost:8080/api/public/getdata',
                   payload,
 
                   {
@@ -2114,9 +2119,9 @@ console.log(mydropdown,'dsdfdfs')
                           )} 
                         </div>
                         <div className="input-er-con">
-                          {/* {myphone ? ( */}
+                          {myphone ? (
                             <Field
-                              //  name="phone"
+                               name="phone"
                               min={0}
                               type="tel"
                               className="form-control"
@@ -2125,7 +2130,7 @@ console.log(mydropdown,'dsdfdfs')
                               disabled={isDisabled}
                               onChange={(e) => setmyphone(e.target.value)}
                             />
-                          {/* ) : (
+                          ) : (
                             <Field
                               name="phone"
                               value={custmobile}
@@ -2136,7 +2141,7 @@ console.log(mydropdown,'dsdfdfs')
                               placeholder="Phone"
                               onChange={(e) => setcustmobile(e.target.value)}
                             />
-                          )} */}
+                          )}
                         </div>
                       </div>
                     </Col>
@@ -2270,6 +2275,15 @@ console.log(mydropdown,'dsdfdfs')
                               </option>
                             ))}
                           </select>
+                          {salesreperor ? (
+                            <>
+                              <span className="requirederor" style={{ color: 'red' }}>
+                                required !
+                              </span>
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </div>
                       </div>
                     </Col>
@@ -2916,41 +2930,44 @@ console.log(mydropdown,'dsdfdfs')
 
               {/* <Addrow /> */}
               <Card className="mt-5 px-3 py-3">
-                <h3 className="mb-3 heading-nw"> Payment Condition</h3>
+                <h3 className="mb-3 heading-nw"> </h3>
                 <div className="signaturearea">
-                  {editfield ? (
+                  {/* {editfield ? ( */}
                     <>
                       {' '}
                       <div>
-                        <input
+                        
+                        <p style={{color:'red'}}>Additional Details*</p>
+                        <textarea
                           type="text"
-                          style={{ width: '950px' }}
+                          className='payment_input'
+                          style={{ width: '950px' , }}
                           value={paymentdue}
                           onChange={handlePaymentDue}
                         />
-                        <Button
+                        {/* <Button
                           style={{ marginLeft: '15px' }}
                           onClick={() => {
                             seteditfield(false);
                           }}
                         >
                           Done
-                        </Button>
+                        </Button> */}
                       </div>
                     </>
-                  ) : (
+                
                     <>
-                      <span>{paymentdue}</span>
-                      <Button
+                      {/* <span>{paymentdue}</span> */}
+                      {/* <Button
                         style={{ marginLeft: '15px' }}
                         onClick={() => {
                           seteditfield(true);
                         }}
                       >
                         Edit
-                      </Button>
+                      </Button> */}
                     </>
-                  )}
+               
 
                   {/* {paymenterr ? (
                     <>

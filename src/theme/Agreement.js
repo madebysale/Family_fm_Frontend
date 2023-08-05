@@ -27,7 +27,7 @@ const[itemlist,Setitemlist] = useState([])
     useEffect(() => {
         
         axios
-          .post("http://192.168.29.28:8080/api/public/agreementlist",
+          .post("http://localhost:8080/api/public/agreementlist",
           {
             id: params.id
           })
@@ -38,6 +38,15 @@ const[itemlist,Setitemlist] = useState([])
             Setitemlist(response.data.data.itemlist)
             // console.log(response.data.data.details, "responses");
             console.log(response.data.data.itemlist, "respons454es");
+
+            if(response.data.code ==400){
+              console.log(response.data.code,'dssdds') 
+              localStorage.removeItem('token');
+            
+            navigate('/clickup', { replace: true });
+            showAlert();
+
+          }
 
           });
         },[params.id] );

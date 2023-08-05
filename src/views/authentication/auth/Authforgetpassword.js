@@ -58,7 +58,7 @@ const AuthForgetpassword = () => {
         onSubmit={(values) => {
             setLoading(true)
           axios
-            .post("http://192.168.29.28:8080/api/public/forgetpassword", {
+            .post("http://localhost:8080/api/public/forgetpassword", {
               email: values.email,
             })
             .then((response) => {

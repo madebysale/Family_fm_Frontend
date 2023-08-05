@@ -46,6 +46,7 @@
 } 
 
 
+
 .form-con{
  
   /* width: 100%; */
@@ -319,6 +320,79 @@ margin-top: 7px;
 
 
 }
+
+
+.clickup-img .logo-img {
+
+  width: 100px;
+}
+
+.clickup-div{
+  text-align: center;
+  margin-top: 100px;
+}
+
+  .btn-clickup {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+/* //////////////////////////////////////////////////////////////// */
+/* Styles for the container */
+.clickup-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for the logo image (assuming it's an SVG) */
+.clickup-img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+  /* Add your image styling here */
+}
+
+/* Styles for the text */
+.clickup-div div {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Styles for the submit button */
+.btn-clickup {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-clickup:hover {
+  background-color: #0056b3;
+}
+
+/* Optional: Adjust Card styles if needed */
+.Card {
+  /* Add your Card styles here */
+}
+
+
+/* //////////////////////////////////////////////////////////////////// */
 
 
 

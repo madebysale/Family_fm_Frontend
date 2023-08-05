@@ -45,13 +45,13 @@ const Viewdetail = () => {
   // console.log(startMonth)
   // console.log(endMonth)
 
-  //  var imagepath = "http://192.168.29.28:3000/static/media/fm_logo.8ab00a202cf2f9daeaa1.png";
+  //  var imagepath = "http://localhost:3000/static/media/fm_logo.8ab00a202cf2f9daeaa1.png";
   //  /New folder/vidzfmproject/uploads
 
   useEffect(() => {
     axios
       .post(
-        'http://192.168.29.28:8080/api/public/agreementlist',
+        'http://localhost:8080/api/public/agreementlist',
         {
           id: params.id,
         },
@@ -83,7 +83,7 @@ const Viewdetail = () => {
 
   const handleConfirm = () => {
     axios
-      .post(`http://192.168.29.28:8080/api/public/makecontract/${itemId}`, {
+      .post(`http://localhost:8080/api/public/makecontract/${itemId}`, {
         // Provide the relevant data related to the item here
       })
       .then((response) => {
@@ -119,7 +119,7 @@ const Viewdetail = () => {
 
   const onmakecontract = (id) => {
     axios
-      .post(`http://192.168.29.28:8080/api/public/makecontract/${id}`)
+      .post(`http://localhost:8080/api/public/makecontract/${id}`)
       .then((response) => {
         console.log(response.data.status, 'dddsx');
         if (response.status == 200) {
@@ -143,7 +143,7 @@ const Viewdetail = () => {
   const clickupcreatetask = (id) => {
     console.log(id, 'function');
     axios
-      .post(`http://192.168.29.28:8080/api/public/createclickuptask/${id}`)
+      .post(`http://localhost:8080/api/public/createclickuptask/${id}`)
       .then((response) => {
         console.log(response.data.status, 'dddsx');
         if (response.status == 200) {
@@ -166,7 +166,7 @@ const Viewdetail = () => {
 
   useEffect(() => {
     // Fetch data from the API and update the tasks state
-   axios.post(`http://192.168.29.28:8080/api/public/getclickuptask`) 
+   axios.post(`http://localhost:8080/api/public/getclickuptask`) 
       .then((response) => {
 
         console.log(response.data.data.tasks,'123')
@@ -271,7 +271,7 @@ const Viewdetail = () => {
                   <RWebShare
                     data={{
                       text: 'html>Like humans, flamingos make friends for life',
-                      url: `http://192.168.29.28/Vibz_FM/Arun%20tihaiya_VIBZ-236155-167.pdf`,
+                      url: `http://localhost/Vibz_FM/Arun%20tihaiya_VIBZ-236155-167.pdf`,
                       title: 'Qoutation pdf',
                     }}
                     onClick={() => console.log('shared successfully!')}
@@ -350,9 +350,12 @@ const Viewdetail = () => {
                 </p>
                 <p>
                   {' '}
-                  Advertiser:-
-                  <span style={{ marginLeft: '45px' }}>{type.advertiser}</span>
+                 Qoute Expiry Date:-
+                  <span style={{ marginLeft: '12px' }}>
+                    {moment(futureDate).utc().format(' Do MMMM, YYYY')}
+                  </span>
                 </p>
+                
 
                 <p>
                   Contact No:- <span style={{ marginLeft: '33px' }}>{type.phone}</span>
@@ -394,10 +397,8 @@ const Viewdetail = () => {
 
                 <p>
                   {' '}
-                  Expiry Date:-
-                  <span style={{ marginLeft: '12px' }}>
-                    {moment(futureDate).utc().format(' Do MMMM, YYYY')}
-                  </span>
+                  Advertiser:-
+                  <span style={{ marginLeft: '30px' }}>{type.advertiser}</span>
                 </p>
               </div>
             </div>
@@ -663,7 +664,7 @@ const Viewdetail = () => {
                 <div>
                   <img
                     className="img-sign"
-                    src={`http://192.168.29.28/Vibz_FM/uploads/${type.signature}`}
+                    src={`http://localhost/Vibz_FM/uploads/${type.signature}`}
                     alt={'signature'}
                   />
 

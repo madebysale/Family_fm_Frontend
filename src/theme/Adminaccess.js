@@ -62,7 +62,7 @@ function Adminaccess() {
 
   const [status, setStatus] = useState(false);
 
-  const path ="http://192.168.29.28/Vibz_FM/uploads/"
+  const path ="http://localhost/Vibz_FM/uploads/"
   
 
 
@@ -86,7 +86,7 @@ function Adminaccess() {
     setTimeout(() => setmainloader(false), 2000);
 
     axios
-      .post('http://192.168.29.28:8080/api/public/adminaccess')
+      .post('http://localhost:8080/api/public/adminaccess')
 
       .then((response) => {
         setData(response.data.data);
@@ -123,7 +123,7 @@ function Adminaccess() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleToggle = (id) => {
-    axios.post(`http://192.168.29.28:8080/api/public/salesrepverified/${id}`).then((response) => {
+    axios.post(`http://localhost:8080/api/public/salesrepverified/${id}`).then((response) => {
       console.log(response.data.id,'11111111');
       setStatus(response.data.data.id === false ? true : false);
 
@@ -134,7 +134,7 @@ function Adminaccess() {
 
 
   const getdata=()=>{
-    axios.post("http://192.168.29.28:8080/api/public/adminaccess" )
+    axios.post("http://localhost:8080/api/public/adminaccess" )
   
     .then((response) => {
       setData(response.data.data);

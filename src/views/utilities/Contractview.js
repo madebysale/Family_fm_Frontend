@@ -27,7 +27,7 @@ const Contractview = () => {
 
   useEffect(() => {
     axios
-      .post('http://192.168.29.28:8080/api/public/agreementlist', {
+      .post('http://localhost:8080/api/public/agreementlist', {
         id: params.id,
       }, {
         headers: {'x-token': localStorage.getItem('token') },
@@ -51,7 +51,7 @@ const Contractview = () => {
 
   const onmakecontract = (id) => {
     axios
-      .post(`http://192.168.29.28:8080/api/public/makecontract/${id}`)
+      .post(`http://localhost:8080/api/public/makecontract/${id}`)
       .then((response) => {
         console.log(response.data);
         if (response.code !== 200) {
@@ -128,7 +128,7 @@ const Contractview = () => {
             <RWebShare
         data={{
           text: "Like humans, flamingos make friends for life",
-          url: `http://192.168.29.28/Vibz_FM/${type.contract_pdf}`,
+          url: `http://localhost/Vibz_FM/${type.contract_pdf}`,
           title: "Flamingos",
         }}
         onClick={() => console.log("shared successfully!")}
@@ -477,7 +477,7 @@ dataapi.map((item) => {
 
               <div className="writing-field">
                 <div >
-                <img className="img-sign"src={`http://192.168.29.28/Vibz_FM/uploads/${type.signature}`} alt={"signature"}/>
+                <img className="img-sign"src={`http://localhost/Vibz_FM/uploads/${type.signature}`} alt={"signature"}/>
 
 
                   <div className="sing-1">Family FM Representative </div>

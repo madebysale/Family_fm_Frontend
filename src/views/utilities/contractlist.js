@@ -70,7 +70,7 @@ function Contractlist(props) {
 
     axios
       .post(
-        'http://192.168.29.28:8080/api/public/list',
+        'http://localhost:8080/api/public/list',
         {
           page: currentPage,
           limit: itemsPerPage,
@@ -143,7 +143,7 @@ function Contractlist(props) {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   function onpdf(id) {
-    axios.post(`http://192.168.29.28:8080/api/public/pdf/${id}`).then((res) => {
+    axios.post(`http://localhost:8080/api/public/pdf/${id}`).then((res) => {
       setmypdf(res.data.data);
       setmypdfinvoice(res.data.data.fields[0][0]);
       console.log(res.data.data.fields[0][0]);
@@ -158,7 +158,7 @@ function Contractlist(props) {
   const handleConfirm = () => {
     if (itemIdToDelete) {
       axios
-        .post(`http://192.168.29.28:8080/api/public/delete/${itemIdToDelete}`)
+        .post(`http://localhost:8080/api/public/delete/${itemIdToDelete}`)
 
         .then((response) => {
           console.log(response.data);
@@ -183,7 +183,7 @@ function Contractlist(props) {
 
   // const onDelete = (id) => {
   //   axios
-  //     .post(`http://192.168.29.28:8080/api/public/delete/${id}`)
+  //     .post(`http://localhost:8080/api/public/delete/${id}`)
   //     .then((response) => {
   //       console.log(response.data);
   //       if(response.code!==200){
@@ -224,7 +224,7 @@ function Contractlist(props) {
 
   const fetchData = async (invoiceId) => {
     try {
-      const response = await axios.post(`http://192.168.29.28:8080/api/public/pdf/${invoiceId}`);
+      const response = await axios.post(`http://localhost:8080/api/public/pdf/${invoiceId}`);
       const { data } = response.data;
 
       // Assuming the data structure is as follows:
@@ -584,7 +584,7 @@ function Contractlist(props) {
 
         doc.setTextColor('black');
 
-        // doc.addImage( `http://192.168.29.28/Vibz_FM/uploads/${data.signature}`, 10, 190, 50, 25);
+        // doc.addImage( `http://localhost/Vibz_FM/uploads/${data.signature}`, 10, 190, 50, 25);
         // }
 
         const columnWidth = 65;

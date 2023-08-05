@@ -94,7 +94,7 @@ function Customer() {
 
     axios
       .post(
-        'http://192.168.29.28:8080/api/public/customerlist',
+        'http://localhost:8080/api/public/customerlist',
         {},
         {
           headers: {'x-token': localStorage.getItem('token') },
@@ -178,7 +178,7 @@ function Customer() {
     // console.log(values,'dd4545cusmainsdd')
     axios
     .post(
-      'http://192.168.29.28:8080/api/public/createcustomer',
+      'http://localhost:8080/api/public/createcustomer',
          {
           name:customer.name,
           email:customer.email,
@@ -267,7 +267,7 @@ function Customer() {
  
   const onDelete = (id) => {
     axios
-      .post(`http://192.168.29.28:8080/api/public/customerdelete/${id}`)
+      .post(`http://localhost:8080/api/public/customerdelete/${id}`)
       .then((response) => {
         console.log(response.data);
         if(response.code!==200){
@@ -296,7 +296,7 @@ function Customer() {
   const handleConfirm = () => {
     if (itemIdToDelete) {
       axios
-      .post(`http://192.168.29.28:8080/api/public/customerdelete/${itemIdToDelete}`)
+      .post(`http://localhost:8080/api/public/customerdelete/${itemIdToDelete}`)
   
         .then((response) => {
           console.log(response.data);
