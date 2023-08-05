@@ -28,6 +28,7 @@ const Profile = () => {
 
    const handleLogout =()=>{
     localStorage.removeItem('token');
+    localStorage.removeItem('temporytoken');
     localStorage.removeItem('role') 
     navigate(0)
 

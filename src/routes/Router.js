@@ -1,5 +1,5 @@
 import { Mail } from '@mui/icons-material';
-import React, { lazy,useState ,useEffect } from 'react';
+import React, { lazy, useState, useEffect } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 import Adminaccess from 'src/theme/Adminaccess';
 import Agreement from 'src/theme/Agreement';
@@ -30,79 +30,66 @@ const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
 
 /* ****Pages***** */
-const Dashboard = Loadable(lazy(() => import('../views/dashboard/Dashboard')))
-const SamplePage = Loadable(lazy(() => import('../views/sample-page/SamplePage')))
-const Icons = Loadable(lazy(() => import('../views/icons/Icons')))
+const Dashboard = Loadable(lazy(() => import('../views/dashboard/Dashboard')));
+const SamplePage = Loadable(lazy(() => import('../views/sample-page/SamplePage')));
+const Icons = Loadable(lazy(() => import('../views/icons/Icons')));
 // const TypographyPage = Loadable(lazy(() => import('../views/utilities/TypographyPage')))
-const Contractlist = Loadable(lazy(() => import('../views/utilities/contractlist')))
+const Contractlist = Loadable(lazy(() => import('../views/utilities/contractlist')));
 
 const Error = Loadable(lazy(() => import('../views/authentication/Error')));
 const Register = Loadable(lazy(() => import('../views/authentication/Register')));
 const Login = Loadable(lazy(() => import('../views/authentication/Login')));
 
-
-
 export default function Router() {
- 
-  const [Isloggin,setIsLogin]=useState();
-  useEffect(()=>{
-    setIsLogin(localStorage.getItem("token"))
-  },[localStorage.getItem("token")])
+  const [Isloggin, setIsLogin] = useState();
+  useEffect(() => {
+    setIsLogin(localStorage.getItem('token'));
+  }, [localStorage.getItem('token')]);
   // useEffect(() => {
   //   setIsLogin(localStorage.getItem("token"))
   // }, []);
 
   return useRoutes([
-  
-  {
-    path: '/dashboard',
-    element: Isloggin!==null ?<FullLayout />:<Navigate to="/"/>,
- 
-    children: [
-      { path: '/dashboard', element: <Navigate to="/dashboard/home" /> },
-  
-      { path: 'home',  element: <Dashboard /> },
+    {
+      path: '/dashboard',
+      element: Isloggin !== null ? <FullLayout /> : <Navigate to="/" />,
 
-      
-      { path: 'agreement',  element: <Form/> },
-      { path: 'salesperson',  element:  <Adminaccess /> },
-      { path: 'invoice',  element:  <Invoice/> },
-      { path: 'agreementlist',  element:  <Contractlist/> },
-      { path: 'contract',  element:  <Contract/> },
-      { path: 'Customer',  element:  <Customer/> },
-      { path: 'Mail',  element:  <Mail/> },
-      { path: 'myclickup',  element:  <Clickup/> },
-     
-      {path:'Viewdetail/:id',element: <Viewdetail/>},
-      {path:'contractview/:id',element: <Contractview/>},
-   
+      children: [
+        { path: '/dashboard', element: <Navigate to="/dashboard/home" /> },
 
-      {path:'updateagreement/:id',element: <Updateform />},
+        { path: 'home', element: <Dashboard /> },
 
-    
+        { path: 'agreement', element: <Form /> },
+        { path: 'salesperson', element: <Adminaccess /> },
+        { path: 'invoice', element: <Invoice /> },
+        { path: 'agreementlist', element: <Contractlist /> },
+        { path: 'contract', element: <Contract /> },
+        { path: 'Customer', element: <Customer /> },
+        { path: 'Mail', element: <Mail /> },
+        { path: 'myclickup', element: <Clickup /> },
 
-    ],
-  },
-  {
-    path: '/',
-    element: !Isloggin?<BlankLayout />:<Navigate to="/dashboard"/>,
-  
-    children: [
-      // { path: '404', element: <Error/> },
-      { path: "/", element: <Navigate to="/login" replace /> },
-      { path: 'login', element: <Login /> },
-      {path:'authorization',element:<Clickup_page/>},
-      { path: 'register', element: <Register /> },
-      { path: 'forgetpassword', element: <AuthForgetpassword /> },
-      { path: 'resetpassword', element: <Authresetpassword /> },
-      { path: '404', element: <Error/> },
-      { path: "*", element: <Navigate to="/404"  /> },
-      // {path:"clickup_page",  element: <Clickup_page />},
-      
-    ],
-  },
-  { path: '*', element: <Navigate to="/404" /> },
-]);
+        { path: 'Viewdetail/:id', element: <Viewdetail /> },
+        { path: 'contractview/:id', element: <Contractview /> },
 
+        { path: 'updateagreement/:id', element: <Updateform /> },
+      ],
+    },
+    {
+      path: '/',
+      element: !Isloggin ? <BlankLayout /> : <Navigate to="/dashboard" />,
+
+      children: [
+        // { path: '404', element: <Error/> },
+        { path: '/', element: <Navigate to="/login" replace /> },
+        { path: 'login', element: <Login /> },
+        { path: 'authorization', element: <Clickup_page /> },
+        { path: 'register', element: <Register /> },
+        { path: 'forgetpassword', element: <AuthForgetpassword /> },
+        { path: 'resetpassword', element: <Authresetpassword /> },
+        { path: '404', element: <Error /> },
+        { path: '*', element: <Navigate to="/404" /> },
+      ],
+    },
+    { path: '*', element: <Navigate to="/404" /> },
+  ]);
 }
-

@@ -13,8 +13,7 @@ const AuthLogin = ({ subtitle }) => {
   const [checkcode, setcheckcode] = useState(false);
   const token = localStorage.getItem('token');
   const isrole = localStorage.getItem('role');
-  // setauthtoken(localStorage.getItem("token"))
-  // console.log(isrole)
+ 
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -36,49 +35,35 @@ const AuthLogin = ({ subtitle }) => {
             })
             .then((response) => {
               console.log(response.data.token);
-              // localStorage.setItem('temprarytoken', response.data.token);
-              if (response.data) {
 
+              if (response.data) {
                 if (response.data.code !== 200) {
-               
-                     localStorage.setItem("token",response.data.token)
-                      localStorage.setItem('role',response.data.data.role)
-                    
-                           console.log(response.data, 'cl4545');
-                       
-                      toast.success(response.data.message, {
-                              position: toast.POSITION.TOP_CENTER,
-                            });
+                  localStorage.setItem('token', response.data.token);
+                     localStorage.setItem('role', response.data.data.role);
+
+                  toast.success(response.data.message, {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
 
                   if (
                     response.data.data.clickup_code === null ||
                     response.data.data.clickup_code === '' ||
                     response.data.data.clickup_code === undefined
                   ) {
-                   
                     setcheckcode(false);
-                    // localStorage.setItem("temporytoken",response.data.token)
-                    // localStorage.setItem('myrole',response.data.data.role)
-                    
-                      // console.log(temprarytoken)
-              
+                    localStorage.setItem("temporytoken",response.data.token)
+                   
+
                     setauthtoken(response.data.token);
                     console.log('clickup_code_generated');
 
                     navigate('/authorization', { replace: true });
-
-                    // window.location.replace(
-                    //   'https://app.clickup.com/api?client_id=2CRFJAUW4G6R9H0CH78SQUUI7QIQKXYL&redirect_uri=https://contract.familyfm.ltd/authorization',
-                    // );
                   } else {
                     if (response.data.data.clickup_code) {
-                    
                       axios
                         .post(
                           'http://localhost:8080/api/public/checkauthrization',
-                          {
-                            // clickup_code:response.data.data.clickup_code
-                          },
+                          {},
 
                           {
                             headers: { 'x-token': localStorage.getItem('token') },
@@ -88,40 +73,37 @@ const AuthLogin = ({ subtitle }) => {
                           if (res.data.code == 200 || res.data.code == 400) {
                             console.log('else_condition');
                             //  localStorage.setItem('token', response.data.token);
-                           setcheckcode(true);
-                           navigate('/dashboard/home', { replace: true });
+                            setcheckcode(true);
+                            navigate('/dashboard/home', { replace: true });
                             toast.success(response.data.message, {
                               position: toast.POSITION.TOP_CENTER,
                             });
-                          } else if(res.data.code==404) {
+                          } else if (res.data.code == 404) {
                             console.log(res.data.code, '1235');
-                              // localStorage.setItem('temprarytoken', res.data.token);
+                            // localStorage.setItem('temprarytoken', res.data.token);
                             console.log('else_condition591559192');
-                            
+
                             // navigate('/login', { replace: true });
-                            toast.error("something went wrong", {
+                            toast.error('something went wrong', {
                               position: toast.POSITION.TOP_CENTER,
                             });
                             window.location.replace(
                               'https://app.clickup.com/api?client_id=2CRFJAUW4G6R9H0CH78SQUUI7QIQKXYL&redirect_uri=https://contract.familyfm.ltd/authorization',
                             );
-                          }
-                          else{
+                          } else {
                             //     console.log(res.data.code, '1235');
                             //   localStorage.setItem('temprarytoken', res.data.token);
                             // console.log('else_condition591559192');
 
-
                             window.location.replace(
                               'https://app.clickup.com/api?client_id=2CRFJAUW4G6R9H0CH78SQUUI7QIQKXYL&redirect_uri=https://contract.familyfm.ltd/authorization',
                             );
-
                           }
-                        }).catch((error)=>{
-                          console.log(error)
-                          console.log(response.data,'sds')
-                         
                         })
+                        .catch((error) => {
+                          console.log(error);
+                          console.log(response.data, 'sds');
+                        });
                     }
                   }
                 } else {
@@ -132,11 +114,10 @@ const AuthLogin = ({ subtitle }) => {
               }
             })
             .catch((error) => {
-             
-                 toast.error(error.response.data.message, {
-                              position: toast.POSITION.TOP_CENTER,
-                            });
-                            
+              toast.error(error.response.data.message, {
+                position: toast.POSITION.TOP_CENTER,
+              });
+
               setLoading(false);
             });
         }}
