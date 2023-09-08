@@ -69,8 +69,8 @@ const Customerpopup = ({ showModal, closeModal, handleAddCustomer }) => {
 
 
   return (
-    <div className="mt-3 img-con-ad">
-      <Modal show={showModal} onHide={closeModal}>
+    <div className="mt-6 img-con-ad">
+      <Modal style={{marginTop:'70px'}} show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>Add Customer</Modal.Title>
         </Modal.Header>

@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import moment from 'moment';
 import { toast } from 'react-toastify';
 
+import './dashboard.css';
 
 // import mylogo from "../component/fm_logo.png";
 // import view from "../component/view.png.png";
@@ -39,155 +40,50 @@ function Tabletable() {
   const [mysales, setmysales] = useState([]);
 
   useEffect(() => {
-    
-
     axios
-    .post(
-      'http://localhost:8080/api/public/list',
-      {
-        page:currentPage,
-          limit:itemsPerPage,
-      },
-      {
-        headers: { 'x-token': localStorage.getItem('token') },
-      },
-    )
+      .post(
+        'https://api.familyfm.ltd:8080/api/public/contractlist',
+        {
+          page: currentPage,
+          limit: itemsPerPage,
+        },
+        {
+          headers: { 'x-token': localStorage.getItem('token') },
+        },
+      )
 
-    .then((response) => {
-      setData(response.data.results);
-    
-
-      
-    });
-   
-  
-
-   
+      .then((response) => {
+        setData(response.data.results);
+      });
   }, []);
-
-
-
-
-
-  ///////////////////////////////////////////////////////////////////////////////
-
-  //  useEffect(()=>{
-  //      handlecontract()
-  //  } ,[])
-
-
-
-  // function handlecontract(){
-
-  //   axios
-  //   .post(
-  //     'http://localhost:8080/api/public/contractlist',
-  //     {},
-  //     {
-  //       headers: { 'x-token': localStorage.getItem('token') },
-  //     },
-  //   )
-
-  //   .then((response) => {
-  //     setcontract(response.data.data);
-    
-
-  //     console.log(response, 'sds');
-  //   });
- 
-  // }
-
-
-
-
-
-
-
-
-  /////////////////////////////////////////////////////////////////////////////////
-
-
-//   useEffect(()=>{
-//     handlesales()
-// } ,[])
-
-
-
-// function handlesales(){
-
-//  axios
-//  .post(
-//    'http://localhost:8080/api/public/adminaccess',
-//    {},
-//    {
-//      headers: { 'x-token': localStorage.getItem('token') },
-//    },
-//  )
-
-//  .then((response) => {
-//    setcontract(response.data.data);
- 
-
-//    console.log(response, 'sds');
-//  });
-
- 
-// }
-
-
-
-
-
 
   /////////////////////////////////////////////////////////////////////
 
   useEffect(() => {
- 
-
-    axios.post(
-        'http://localhost:8080/api/public/numberofsales')
+    axios
+      .post('https://api.familyfm.ltd:8080/api/public/numberofsales')
 
       .then((response) => {
         setsales(response.data.data);
-      
 
         console.log(response, 'sds');
       });
-
-   
   }, []);
-
 
   ///////////////////////////////////////////////////////////////////
 
-    
   useEffect(() => {
- 
-
-    axios.post(
-        'http://localhost:8080/api/public/totalcustomer')
+    axios
+      .post('https://api.familyfm.ltd:8080/api/public/totalcustomer')
 
       .then((response) => {
         setcustomer(response.data.results);
-      
 
         console.log(response, 'sds');
       });
-
-   
   }, []);
 
-
-
-
-
-
-
-
-
   /////////////////////////////////////////////////////////////////////
-
-
 
   const [expandedRow, setExpandedRow] = useState(null);
 
@@ -227,73 +123,64 @@ function Tabletable() {
     navigate('/');
   };
 
-
-
   return (
-    
-      <div className="container">
-        
-      <div  style={{display:"grid", gridTemplateColumns:"repeat(4, 1fr)",gridGap:"60px"}}>
-      
-    
- 
+    <div className="container">
+      <div
+        style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridGap: '60px' }}
+      ></div>
+      <div className="header-div" style={{ marginTop: '20px' }}></div>
 
+      <div className="search-admin">
+        <Input
+          placeholder="Search"
+          className="col-3 mt-2 mb-1 mx-3 input"
+          value={searchTerm}
+          onChange={handleSearch}
+        ></Input>
 
- 
-   </div>
-        <div className="header-div" style={{marginTop:"20px"}}></div>
-      
-        
+        <div className="table-responsive ">
+          {currentItems.length === 0 ? (
+            <h1>No Data Found</h1>
+          ) : (
+            <>
+              <Table className="">
+                <thead>
+                  <tr className="head-row">
+                    <th>ID</th>
+                    <th>Name</th>
+                    {/* <th>contract Date</th> */}
+                    <th>Email</th>
+                    <th>phone</th>
+                    <th>event</th>
+                    <th>Sales rep</th>
 
-        <div className="search-admin">
-          <Input
-            placeholder="Search"
-            className="col-3 mt-2 mb-1 mx-3 input"
-            value={searchTerm}
-            onChange={handleSearch}
-          ></Input>
-
-          <div className='table-responsive '>
-          {currentItems.length===0?<h1>No Data Found</h1>:<> 
-          <Table className="ad-table " >
-            <thead>
-              <tr className="head-row">
-                <th>ID</th>
-                <th>Name</th>
-                {/* <th>contract Date</th> */}
-                <th>Email</th>
-                <th>phone</th>
-                <th>event</th>
-                <th>Sales rep</th>
-
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((item, index) => {
-                console.log(item, 'sjh');
-                return (
-                  <React.Fragment key={index}>
-                    <tr >
-                      <td className="plus-btn">{item.orderid}</td>
-                      <td>{item.name}</td>
-                      {/* <td>{moment(item.contract_date).utc().format('MM/DD/YY')}</td> */}
-                      <td>{item.email}</td>
-                      <td>{item.phone}</td>
-                      <td>{item.event}</td>
-                      <td>{item.sales_rep}</td>
-
-                   
-                    </tr>
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
-          </Table>
-          </>}
-          </div>
-{/* 
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentItems.map((item, index) => {
+                    console.log(item, 'sjh');
+                    return (
+                      <React.Fragment key={index}>
+                        <tr>
+                          <td className="plus-btn">{item.orderid}</td>
+                          <td>{item.name}</td>
+                          {/* <td>{moment(item.contract_date).utc().format('MM/DD/YY')}</td> */}
+                          <td>{item.email}</td>
+                          <td>{item.phone}</td>
+                          <td>{item.event}</td>
+                          <td>{item.sales_rep}</td>
+                        </tr>
+                      </React.Fragment>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </>
+          )}
+        </div>
+        {/* 
           <div className='table-responsive ' id="style-2">
           <Table className="ad-table " style={{}} id ={'contracttable'}>
             <thead>
@@ -333,8 +220,7 @@ function Tabletable() {
           </Table>
           </div> */}
 
-
-          {/* <div className='table-responsive ' id="style-2">
+        {/* <div className='table-responsive ' id="style-2">
           <Table className="ad-table " style={{}} id ={'contracttable'}>
             <thead>
               <tr className="head-row">
@@ -370,16 +256,15 @@ function Tabletable() {
             </tbody>
           </Table>
           </div> */}
-        </div>
+      </div>
 
-         {/* <Pagination
+      {/* <Pagination
           style={{ alignItems: 'center' }}
           itemsPerPage={itemsPerPage}
           totalItems={filteredData.length}
           paginate={paginate}
         />  */}
-      </div>
-      
+    </div>
   );
 
   function Pagination({ itemsPerPage, totalItems, paginate }) {

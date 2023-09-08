@@ -32,6 +32,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Field } from 'formik';
 import { Option } from 'antd/es/mentions';
 import { Grid, Container, Typography } from '@mui/material';
+import './Form.css'
 
 // components
 
@@ -63,6 +64,7 @@ function Contractlist(props) {
   const [pdfdata6, setpdfdata6] = useState([]);
   const [pdfdata3, setpdfdata3] = useState('');
   const [pdfdata4, setpdfdata4] = useState('');
+  const[ImageDataUrl,setImageDataUrl]= useState('');
 
   useEffect(() => {
     setIsrole(parseInt(localStorage.getItem('role')));
@@ -70,7 +72,7 @@ function Contractlist(props) {
 
     axios
       .post(
-        'http://localhost:8080/api/public/list',
+        'https://api.familyfm.ltd:8080/api/public/list',
         {
           page: currentPage,
           limit: itemsPerPage,
@@ -142,8 +144,11 @@ function Contractlist(props) {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+
+  
+
   function onpdf(id) {
-    axios.post(`http://localhost:8080/api/public/pdf/${id}`).then((res) => {
+    axios.post(`https://api.familyfm.ltd:8080/api/public/pdf/${id}`).then((res) => {
       setmypdf(res.data.data);
       setmypdfinvoice(res.data.data.fields[0][0]);
       console.log(res.data.data.fields[0][0]);
@@ -158,7 +163,7 @@ function Contractlist(props) {
   const handleConfirm = () => {
     if (itemIdToDelete) {
       axios
-        .post(`http://localhost:8080/api/public/delete/${itemIdToDelete}`)
+        .post(`https://api.familyfm.ltd:8080/api/public/delete/${itemIdToDelete}`)
 
         .then((response) => {
           console.log(response.data);
@@ -181,29 +186,7 @@ function Contractlist(props) {
     setShowConfirmation(false);
   };
 
-  // const onDelete = (id) => {
-  //   axios
-  //     .post(`http://localhost:8080/api/public/delete/${id}`)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       if(response.code!==200){
-  //         setDelete(!Delete)
 
-  //       }
-  //       toast.success(response.data.message);
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-
-  //         console.log(error.response.status);
-  //         console.log(error.response.data);
-  //       } else if (error.request) {
-  //         console.log(error.request);
-  //       } else {
-  //         console.log(error.message);
-  //       }
-  //     });
-  // };
 
   const sortedData = filteredData.sort((a, b) => {
     console.log(filteredData, 's45dsx');
@@ -224,7 +207,7 @@ function Contractlist(props) {
 
   const fetchData = async (invoiceId) => {
     try {
-      const response = await axios.post(`http://localhost:8080/api/public/pdf/${invoiceId}`);
+      const response = await axios.post(`https://api.familyfm.ltd:8080/api/public/pdf/${invoiceId}`);
       const { data } = response.data;
 
       // Assuming the data structure is as follows:
@@ -239,7 +222,6 @@ function Contractlist(props) {
       console.log(data.minStartDate, 'pdfdata.minStartDate');
       console.log(data.maxEndDate, 'pdfdata.maxEndDate');
 
-      // After the data is set, call generatePDF
       if(pdfdata1.length){
       generatePDF(invoiceId)
       }
@@ -248,21 +230,39 @@ function Contractlist(props) {
     }
   };
 
+  useEffect(() => {
+    
+    // if (pdfdata.length > 0) {
+      console.log(pdfdata.signature)
+      axios
+        .post(
+          'https://api.familyfm.ltd:8080/api/public/getimage',
+          {
+            file_name: pdfdata.signature,
+          },
+          {
+            headers: { 'x-token': localStorage.getItem('token') },
+          },
+        )
 
-// }, []);
+        .then((response) => {
+          setImageDataUrl(response.data);
+          console.log(response.data,'123456');
+        });
+    // }
+  }, [pdfdata]);
+
+
   
 
   const generatePDF = () => {
 
     try {
-     
-  
-      
-      console.log('pdfdata:', pdfdata);
-      console.log('pdfdata1:', pdfdata1);
-      console.log('pdfdata6:', pdfdata6);
-      console.log('pdfdata3:', pdfdata3);
-      console.log('pdfdata4:', pdfdata4);
+       console.log('pdfdata:', pdfdata);
+       console.log('pdfdata1:', pdfdata1);
+       console.log('pdfdata6:', pdfdata6);
+       console.log('pdfdata3:', pdfdata3);
+       console.log('pdfdata4:', pdfdata4);
 
 
     
@@ -277,21 +277,30 @@ function Contractlist(props) {
 
         const tableData = [
           [
-            'Run Dates',
-            'Run Times',
-            'Run Weeks',
-            'Mon',
-            'Tue',
-            'Wed',
-            'Thu',
-            'Fri',
-            'Sat',
-            'sun',
-            'Wks Total',
-            'Description',
-            'Qty',
-            'item Cost',
-            'Total Cost',
+          
+    
+            { content: '' },
+            { content: '' },
+            { content: 'SPOTS OR PROGRSMMERS By Days', colSpan: 8 },
+            { content: '' },
+            { content: '' },
+            { content: '' },
+          ],
+          [
+            { content: 'Run Dates' },
+            { content: 'Run Times' },
+            { content: 'Mon' },
+            { content: 'Tue' },
+            { content: 'Wed' },
+            { content: 'Thu' },
+            { content: 'Fri' },
+            { content: 'Sat' },
+            { content: 'Sun' },
+            { content: 'Total' },
+            { content: 'Instructions' },
+            { content: 'Qty' },
+    
+            { content: 'Total Cost' },
           ],
         ];
         const startX = 5;
@@ -303,145 +312,289 @@ function Contractlist(props) {
         const tablerow2 = [];
        
 
+        const startMonth = moment(pdfdata3).format('MMMM, YYYY');
+        const endMonth = moment(pdfdata4).format('MMMM, YYYY');
+
+
+        const currentDate = moment(pdfdata.createdAt);
+  const futureDate = currentDate.add(30, 'days');
+     
         doc.setFontSize(11);
-       
 
         doc.text(``, 70, 0, { setFontSize: '20' });
     
-        doc.setFontSize(12).setFont(undefined, 'bold');
-        doc.text(`FAMILY FM LTD`, 60, 30, { fontSize: '18' });
+     
 
-        doc.setFontSize(12).setFont(undefined, 'normal');
+        doc.text(`Family FM Ltd`, 166, 20, { fontSize: '18' });
 
-        doc.text(`Langsford Estate`, 60, 35);
-        doc.text(`P.O. Box W1102`, 60, 40);
-        doc.text(`All Saints Rd`, 60, 45);
-        doc.text(`St John's, Antigua`, 60, 50);
-        doc.text(`Tel (268) 560- 7578/9`, 60, 55);
-        doc.text(`Email: info@familyfm.ltd`, 60, 60);
+        doc.text(`Langsford Estate`, 162, 25);
+      doc.text(`P.O. Box W1102`, 163, 30);
+      doc.text(`All Saints Rd`, 169, 35);
+      doc.text(`St John's, Antigua`, 160, 40);
+      doc.text(`Tel (268) 560- 7578/9`, 154, 45);
+      doc.text(`Email: info@familyfm.ltd`, 150, 50);
 
-        doc.text(`name:${pdfdata.name}`, 60, 70);
-        doc.text(`phone:${pdfdata.phone}`, 60, 75);
-        doc.text(`Email:${pdfdata.email}`, 60, 80);
 
-        doc.setFontSize(14).setFont(undefined, 'bold');
+      doc.setFontSize(11).setFont(undefined, 'bold');
+      doc.text(`OrderID: #${pdfdata.orderid}`, 155, 10);
 
-        doc.text(`Family FM , Vibz FM Order Confirmation`, 110, 15);
-        doc.text(`${pdfdata.orderid}`, 115, 20);
+      doc.setFontSize(11).setFont(undefined, 'normal');
+
+      doc.text(`Name: ${pdfdata.name}`, 20, 70);
+      doc.text(`Phone: ${pdfdata.phone}`, 20, 75);
+      doc.text(`Email: ${pdfdata.email}`, 20, 80);
+
+        doc.setFontSize(14).setFont(undefined, 'normal');
+
+        doc.text(`Advertising Investment Quotations`, 63, 60);
+      
 
         doc.setFontSize(11).setFont(undefined, 'normal');
 
-        doc.text(`Estimate/PO:`, 120, 30);
+        doc.text(`Estimate/PO:`, 20, 85);
 
-        doc.text(`AccountRep:${pdfdata.sales_rep}`, 120, 35);
+        doc.text(`AccountRep: ${pdfdata.sales_rep}`, 20, 90);
+         doc.text(`Qoute expiry:${moment(futureDate).utc().format(' Do MMM, YYYY')}`,20,95)
         doc.text(
-          `Run Dates :${moment(pdfdata3).utc().format('Do MMMM, YYYY')} - ${moment(pdfdata4)
+          `Run Dates: ${moment(pdfdata3).utc().format('Do MMM, YYYY')} - ${moment(pdfdata4)
             .utc()
-            .format('Do MMMM, YYYY')}`,
-          120,
-          40,
-        );
-        doc.text(`Gross : $${pdfdata.cost}`, 120, 45);
-        doc.text(`+Abst 2 : ${pdfdata.discountabst} %`, 120, 50);
-        doc.text(`${pdfdata.discountdropdown}: $${pdfdata.trade}`, 120, 55);
-        doc.text(`Total Amount : $${pdfdata.grandtotal}`, 120, 60);
-
-        doc.text('Payment Schedule/Other Details:', 5, 245);
-        doc.text(`${pdfdata.paymentdue}`, 5, 250);
-        doc.text('Please make all cheques payable to Family Fm Ltd', 115, 260);
-        doc.text(
-          'Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',
+            .format('Do MMM, YYYY')}`,
+          110,
           70,
-          265,
         );
+        doc.text(`Gross: $${pdfdata.cost}`, 110, 75);
+        doc.text(`+Abst 2: ${pdfdata.discountabst} %`, 110, 80);
+        doc.text(`${pdfdata.discountdropdown}: $${pdfdata.trade}`, 110, 85);
+        doc.text(`Total Amount: $${pdfdata.grandtotal}`, 110, 90);
 
-        for (let insidedataindex = 0; insidedataindex < pdfdata1.length; insidedataindex++) {
-          console.log(pdfdata1.length, '7825');
-          console.log(pdfdata1[insidedataindex], '555');
 
-          const item = pdfdata1[insidedataindex];
-          console.log(item.monday, 'ffdvvcitem');
+        
+        doc.setFontSize(9).setFont(undefined, 'normal');
+    
+      
+      
+        doc.setFontSize(11).setFont(undefined, 'normal');
 
-          tablerow.push([
-            moment(item.start_date).utc().format('Do MMMM') +
-              '-' +
-              moment(item.end_date).utc().format('Do MMMM'),
-            moment(item.starttime).format('h:mma') + '-' + moment(item.endtime).format('h:mma'),
-            'ALL WEEKS',
-
-            item.monday,
-            item.tuesday,
-            item.wednesday,
-            item.thursday,
-            item.friday,
-            item.saturday,
-            item.sunday,
-            item.total,
-            item.product_type,
-            item.qty,
-            '[Package]',
-            `$${item.cost}`,
-          ]);
+        if (pdfdata.paymentdue == '') {
+          doc.text('', 5, 250);
+        } else {
+          // doc.text('Payment Schedule/Other Details:',5,245)
+  
+          doc.text(`${pdfdata.paymentdue}`, 5, 250);
         }
 
-        doc.setLineWidth(0.5);
-        doc.line(5, 203, 205, 203);
-        doc.line(5, 164, 205, 164);
-        doc.line(5, 144, 205, 144);
+  
+     
+        for (let insidedataindex = 0; insidedataindex < pdfdata1.length; insidedataindex++) {
+          console.log(pdfdata1[insidedataindex], '555');
+  
+          const item = pdfdata1[insidedataindex];
+        console.log(item, 'ffdvvcitem');
+        tablerow.push([
+          moment(item.start_date).utc().format('Do MMM') +
+            '-' +
+            moment(item.end_date).utc().format('Do MMM'),
+          moment(item.starttime).format('h:mmA') + '-' + moment(item.endtime).format('h:mmA'),
+
+          item.monday,
+          item.tuesday,
+          item.wednesday,
+          item.thursday,
+          item.friday,
+          item.saturday,
+          item.sunday,
+          item.total,
+          item.product_type,
+          item.qty,
+
+          `$${item.cost}`,
+        ]);
+      }
+
+      doc.setLineWidth(0.5);
+      doc.line(5, 63, 205, 63);
+      doc.line(5, 96, 205, 96);
+      doc.line(5, 105, 205, 105);
+      doc.line(5, 114, 205, 114);
+    
+
+      doc.line(5, 184, 205, 184);
+
+
+        
+      const setarray =[]
+      var monthlydistribuion =''
+      var arr =[]
+      var myarray =[]
+    
+      if (pdfdata3 < pdfdata4) {
+        let date = moment(pdfdata3);
+        while (date < moment(pdfdata4).add('month')) {
+        // console.log(date,"while.......")
+         arr =  myarray.push(date.format('MM'));
+         setarray.push(date.format('MM'));
+    
+         date.add(1, 'month');
+    
+       }
+     }
+        console.log(setarray,'totalmonth')
+     
+        monthlydistribuion = (pdfdata.grandtotal/myarray.length).toFixed(2)
 
         doc.setFontSize(12).setFont(undefined, 'bold');
-        doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 172);
-        console.log(pdfdata6.july, 'july');
-        doc.setFontSize(9).setFont(undefined, 'normal');
-        doc.text(`Jan `, 10, 180);
-        doc.text(`$${pdfdata6.jan}`, 37.14, 180);
-        doc.text(`Feb `, 64.28, 180);
-        doc.text(`$${pdfdata6.feb}`, 91.42, 180);
-        doc.text(`Mar `, 118.56, 180);
-        doc.text(`$${pdfdata6.mar}`, 145.7, 180);
-        doc.text(`Q1-2023`, 172.84, 180);
-        doc.text(
-          `$${Number(pdfdata6.jan) + Number(pdfdata6.feb) + Number(pdfdata6.mar)}`,
-          190,
-          180,
-        );
-        doc.text(`April `, 10, 186);
-        doc.text(`$${pdfdata6.april}`, 37.14, 186);
-        doc.text(`May `, 64.28, 186);
-        doc.text(`$${pdfdata6.may}`, 91.42, 186);
-        doc.text(`June `, 118.56, 186);
-        doc.text(`$${pdfdata6.june}`, 145.7, 186);
-        doc.text(`Q2-2023`, 172.84, 186);
-        doc.text(
-          `$${Number(pdfdata6.april) + Number(pdfdata6.may) + Number(pdfdata6.june)}`,
-          190,
-          186,
-        );
-        doc.text(`July `, 10, 192);
-        doc.text(`$${pdfdata6.july}`, 37.14, 192);
-        doc.text(`Aug `, 64.28, 192);
-        doc.text(`$${pdfdata6.aug}`, 91.42, 192);
-        doc.text(`Sept `, 118.56, 192);
-        doc.text(`$${pdfdata6.sept}`, 145.7, 192);
-        doc.text(`Q3-2023`, 172.84, 192);
-        doc.text(
-          `$${Number(pdfdata6.july) + Number(pdfdata6.aug) + Number(pdfdata6.sept)}`,
-          190,
-          192,
-        );
-        doc.text(`Oct `, 10, 198);
-        doc.text(`$${pdfdata6.oct}`, 37.14, 198);
-        doc.text(`Nov `, 64.28, 198);
-        doc.text(`$${pdfdata6.nov}`, 91.42, 198);
-        doc.text(`Dec `, 118.56, 198);
-        doc.text(`$${pdfdata6.dec}`, 145.7, 198);
-        doc.text(`Q4-2023`, 172.84, 198);
-        doc.text(
-          `$${Number(pdfdata6.oct) + Number(pdfdata6.nov) + Number(pdfdata6.dec)}`,
-          190,
-          198,
-        );
+        if (startMonth == endMonth) {
+          doc.text(``, 10, 172);
+        } else {
+           
+          if(pdfdata.monthlydistribute=="true"){
+            doc.line(5, 220, 205, 220);
+            doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 195);
+            // console.log(pdfdata6.july, 'july');
+            doc.setFontSize(10).setFont(undefined, 'normal');
+            doc.text(`Jan `, 10, 200);
+            doc.text(`$${pdfdata6.jan}`, 37.14, 200);
+            doc.text(`Feb `, 64.28, 200);
+            doc.text(`$${pdfdata6.feb}`, 91.42, 200);
+            doc.text(`Mar `, 118.56, 200);
+            doc.text(`$${pdfdata6.mar}`, 145.7, 200);
+            doc.text(`Q1-2023`, 172.84, 200);
+            doc.setFontSize(10).setFont(undefined, 'bold');
+            doc.text(
+              `$${Number(pdfdata6.jan) + Number(pdfdata6.feb) + Number(pdfdata6.mar)}`,
+              190,
+              200,
+            );
+            doc.setFontSize(10).setFont(undefined, 'normal');
+            doc.text(`April `, 10, 205);
+            doc.text(`$${pdfdata6.april}`, 37.14, 205);
+            doc.text(`May `, 64.28, 205);
+            doc.text(`$${pdfdata6.may}`, 91.42, 205);
+            doc.text(`June `, 118.56, 205);
+            doc.text(`$${pdfdata6.june}`, 145.7, 205);
+            doc.text(`Q2-2023`, 172.84, 205);
+            doc.setFontSize(10).setFont(undefined, 'bold');
+            doc.text(
+              `$${Number(pdfdata6.april) + Number(pdfdata6.may) + Number(pdfdata6.june)}`,
+              190,
+              205,
+            );
+            doc.setFontSize(10).setFont(undefined, 'normal');
+            doc.text(`July `, 10, 210);
+            doc.text(`$${pdfdata6.july}`, 37.14, 210);
+            doc.text(`Aug `, 64.28, 210);
+            doc.text(`$${pdfdata6.aug}`, 91.42, 210);
+            doc.text(`Sept `, 118.56, 210);
+            doc.text(`$${pdfdata6.sept}`, 145.7, 210);
+            doc.text(`Q3-2023`, 172.84, 210);
+            doc.setFontSize(10).setFont(undefined, 'bold');
+            doc.text(
+              `$${Number(pdfdata6.july) + Number(pdfdata6.aug) + Number(pdfdata6.sept)}`,
+              190,
+              210,
+            );
+            doc.setFontSize(10).setFont(undefined, 'normal');
+            doc.text(`Oct `, 10, 215);
+            doc.text(`$${pdfdata6.oct}`, 37.14, 215);
+            doc.text(`Nov `, 64.28, 215);
+            doc.text(`$${pdfdata6.nov}`, 91.42, 215);
+            doc.text(`Dec `, 118.56, 215);
+            doc.text(`$${pdfdata6.dec}`, 145.7, 215);
+            doc.text(`Q4-2023`, 172.84, 215);
+            doc.setFontSize(10).setFont(undefined, 'bold');
+            doc.text(
+              `$${Number(pdfdata6.oct) + Number(pdfdata6.nov) + Number(pdfdata6.dec)}`,
+              190,
+              215,
+            );
+            doc.setFontSize(8).setFont(undefined, 'bold');
+            doc.setTextColor('red');
+            doc.text(`*This ${pdfdata.discountdropdown} Amount is not apply in Monthly Breakdown`,122,223)
+            doc.setFontSize(10).setFont(undefined, 'normal');
+            doc.setTextColor('black');
+          }
+  
+          else{
 
+
+            doc.line(5, 220, 205, 220);
+            doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 195);
+            console.log(pdfdata6.july, 'july');
+            doc.setFontSize(10).setFont(undefined, 'normal');
+            doc.text(`Jan `, 10, 200);
+            doc.text(`$${myarray.includes('01')?monthlydistribuion:'0.00'}`, 37.14, 200);
+            doc.text(`Feb `, 64.28, 200);
+            doc.text(`$${myarray.includes('02')?monthlydistribuion:'0.00'}`, 91.42, 200);
+            doc.text(`Mar `, 118.56, 200);
+            doc.text(`$${myarray.includes('03')?monthlydistribuion:'0.00'}`, 145.7, 200);
+            doc.text(`Q1-2023`, 172.84, 200);
+            doc.setFontSize(10).setFont(undefined, 'bold');
+            const q1Total = (
+              (myarray.includes('01') ? parseFloat(monthlydistribuion) : 0) +
+              (myarray.includes('02') ? parseFloat(monthlydistribuion) : 0) +
+              (myarray.includes('03') ? parseFloat(monthlydistribuion) : 0)
+            ).toFixed(2);
+            doc.text(`${q1Total}`,190,200);
+            doc.setFontSize(10).setFont(undefined, 'normal');
+            doc.text(`April `, 10, 205);
+            doc.text(`$${myarray.includes('04')?monthlydistribuion:'0.00'}`, 37.14, 205);
+            doc.text(`May `, 64.28, 205);
+            doc.text(`$${myarray.includes('05')?monthlydistribuion:'0.00'}`, 91.42, 205);
+            doc.text(`June `, 118.56, 205);
+            doc.text(`$${myarray.includes('06')?monthlydistribuion:'0.00'}`, 145.7, 205);
+            doc.text(`Q2-2023`, 172.84, 205);
+            doc.setFontSize(10).setFont(undefined, 'bold');
+            const q2Total = (
+              (myarray.includes('04') ? parseFloat(monthlydistribuion) : 0) +
+              (myarray.includes('05') ? parseFloat(monthlydistribuion) : 0) +
+              (myarray.includes('06') ? parseFloat(monthlydistribuion) : 0)
+            ).toFixed(2);
+            doc.text(
+              `$${q2Total}`,
+              190,
+              205,
+            );
+            doc.setFontSize(10).setFont(undefined, 'normal');
+            doc.text(`July `, 10, 210);
+            doc.text(`$${myarray.includes('07')?monthlydistribuion:'0.00'}`, 37.14, 210);
+            doc.text(`Aug `, 64.28, 210);
+            doc.text(`$${myarray.includes('08')?monthlydistribuion:'0.00'}`, 91.42, 210);
+            doc.text(`Sept `, 118.56, 210);
+            doc.text(`$${myarray.includes('09')?monthlydistribuion:'0.00'}`, 145.7, 210);
+            doc.text(`Q3-2023`, 172.84, 210);
+            doc.setFontSize(10).setFont(undefined, 'bold');
+            const q3Total = (
+              (myarray.includes('07') ? parseFloat(monthlydistribuion) : 0) +
+              (myarray.includes('08') ? parseFloat(monthlydistribuion) : 0) +
+              (myarray.includes('09') ? parseFloat(monthlydistribuion) : 0)
+            ).toFixed(2);
+            doc.text(
+              `$${q3Total}`,
+              190,
+              210,
+            );
+            doc.setFontSize(10).setFont(undefined, 'normal');
+            doc.text(`Oct `, 10, 215);
+            doc.text(`$${myarray.includes('10')?monthlydistribuion:'0.00'}`, 37.14, 215);
+            doc.text(`Nov `, 64.28, 215);
+            doc.text(`$${myarray.includes('11')?monthlydistribuion:'0.00'}`, 91.42, 215);
+            doc.text(`Dec `, 118.56, 215);
+            doc.text(`$${myarray.includes('12')?monthlydistribuion:'0.00'}`, 145.7, 215);
+            doc.text(`Q4-2023`, 172.84, 215);
+            doc.setFontSize(10).setFont(undefined, 'bold');
+            const q4Total = (
+              (myarray.includes('04') ? parseFloat(monthlydistribuion) : 0) +
+              (myarray.includes('05') ? parseFloat(monthlydistribuion) : 0) +
+              (myarray.includes('06') ? parseFloat(monthlydistribuion) : 0)
+            ).toFixed(2);
+            doc.text(
+              `$${q4Total}`,
+              190,
+              215,
+            );
+            doc.setFontSize(10).setFont(undefined, 'normal');
+    }
+        }
         tablerow2.push([
           `$${pdfdata.cost}`,
           `$${pdfdata.trade}`,
@@ -459,154 +612,114 @@ function Contractlist(props) {
           startY: 100, // Change this to adjust the vertical position
           margin: { top: 10, right: 5, bottom: 40, left: 5 },
           tableWidth: 'auto',
+          headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
           styles: {
             overflow: 'linebreak',
-            cellWidth: 'wrap',
+            // cellWidth: 'wrap',
             cellPadding: 1,
-            fontSize: 6,
+            fontSize: 10,
+            valign: 'middle', // Vertical alignment
+            halign: 'center',
           },
-          theme: 'grid',
-        });
+        })
 
         doc.autoTable({
           head: tableData2,
           body: tablerow2,
-          startY: 150, // Change this to adjust the vertical position
+          headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+          startY: 167, // Change this to adjust the vertical position
           margin: { top: 30, right: 5, bottom: 40, left: 5 },
           tableWidth: 'auto',
           styles: {
             overflow: 'linebreak',
             cellWidth: 'wrap',
             cellPadding: 1,
-            fontSize: 8,
+            fontSize: 10,
+            valign: 'middle', // Vertical alignment
+            halign: 'center',
           },
-          theme: 'grid',
+          // theme: 'grid',
         });
 
         doc.save(`${pdfdata.name}_${pdfdata.orderid}.pdf`);
 
         doc.addPage();
 
+   
+     
+
         doc.text(`ABST# 0484956`, 8, 7);
+        doc.setFontSize(9).setFont(undefined, 'normal');
+    
+     
+      
+      
+
+
 
         doc.setFontSize(14).setFont(undefined, 'bold');
 
-        doc.text(`Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract`, 25, 13);
+        doc.text(`Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Qoutation`, 25, 13);
 
         doc.setFontSize(10).setFont(undefined, 'normal');
+        const paragraphs =[`These terms and conditions govern the quotation provided to you by Family FM Ltd. ("the Company") to the recipient ("the Customer") for the potential supply of advertising services. By accepting the quotation, the Customer agrees to be bound by the following terms and conditions`,"",
 
-        doc.text(
-          `1. Billing terms are net 30 days from date of invoice. Cancellation notice is two weeks prior to run date.The normal deadline 
-             period for radio advertising material is two (2) working days before broadcast.In exceptional cases, material may be
-             submitted on shorter deadlines however it must be negotiated with the General Manager. There will be no guarantee on
-             the flight of material submitted less than 48 weekday hours prior to run date.`,
-          6,
-          20,
-        );
+        "Quotation Validity: The quotation provided by the Company is valid for a period of [Specify the validity period, e.g., 30 days] from the date of issuance. After this period, the Company reserves the right to revise or withdraw the quotation.","",
+        
+       " Acceptance of Quotation: The Customer must provide written acceptance of the quotation within the validity period. Acceptance may be in the form of a signed document, email, or any other form of written communication.","",
+        
+        "Scope of Services: The quotation defines the services to be provided, specifications, quantities, delivery timelines, and any other relevant details. Any changes to the scope must be agreed upon in writing by both parties.","",
+        
+       " Pricing and Payment Terms: The pricing stated in the quotation is exclusive of any applicable taxes, duties, or other charges unless specified otherwise. Payment terms, including the method and schedule of payment, will be as stated in the quotation or as agreed upon separately in writing.","",
+        
+        "Delivery of services: The Company will make reasonable efforts to provide the services within the agreed-upon timeframe. Any delivery dates mentioned in the quotation are estimates and not guaranteed unless explicitly stated otherwise.","",
+        
+        "Confidentiality: The Customer agrees to treat all information provided by the Company as confidential and not to disclose it to any third parties without the prior written consent of the Company, except where required by law.","",
+        
+        "Limitation of Liability: The Company shall not be liable for any direct, indirect, incidental, consequential, or special damages arising out of or in connection with the quotation, including but not limited to loss of profits, business interruption, or loss of data.","",
+        
+        "Governing Law and Jurisdiction: This Agreement shall be governed by and construed in accordance with the laws of Antigua & Barbuda.","",
+        
+        "Entire Agreement: This Agreement constitutes the entire understanding between the parties with respect to the subject matter hereof and supersedes all prior discussions, negotiations, and agreements, whether oral or written. No variation, modification or addition to or cancellation of any provision of this Agreement shall be effective unless agreed in writing by each party. In the event that any one or more of the provision contained in this Agreement shall for any reason be held to be invalid, illegal or unenforceable in whole or in part for any reason, such invalidity, illegality or unenforceability shall not affect any other provision of this Agreement, but this Agreement shall be construed as if such invalid, illegal or unenforceable provision had never been contained herein (or in the case of invalid, illegal or unenforceable provision in part) the remainder of that provision.","",
+        
+        "By accepting the quotation, the Customer acknowledges that they have read, understood, and agree to be bound by these terms and conditions."]
+  
+  
+  
+        const lineHeight = 6; // Line height for each paragraph
+  const maxWidth = 190; // Maximum width for the text on the page
+  let yOffset = 20; // Initial y-coordinate
+  
+  paragraphs.forEach((line) => {
+    // Split the line into multiple lines to fit within the maxWidth
+    const lines = doc.splitTextToSize(line, maxWidth);
+    
+    lines.forEach((textLine) => {
+      doc.text(textLine, 10, yOffset);
+      yOffset += lineHeight;
+      
+      // Check if content exceeds page height, add a new page if needed
+      if (yOffset + lineHeight > doc.internal.pageSize.getHeight()) {
+        doc.addPage();
+        yOffset = 20;
+      }
+    });
+  });
+  
+  // console.log(ImageDataUrl,'xyz')
+  doc.addImage(ImageDataUrl,'PNG',18,250,30,30)
 
-        doc.text(
-          `2. Cancellation is subject to written notice, ten (10) working days prior to broadcast. Cancellations within ten (10) working days 
-             prior to broadcast, will incur a penalty of 10% of the published rate for spots cancelled within this period. Cancellations
-             within two (2) working days of broadcast will be charged at full rate.`,
-          6,
-          40,
-        );
-
-        doc.text(
-          `3.We reserve the right not to air any material supplied to us which in our opinion may be defamatory, objectionable to our listeners,
-             discriminatory, misleading or deceptive or would infringe any law or expose us to any liability.`,
-          6,
-          55,
-        );
-        doc.text(
-          `4. The positioning of your advertisement is at our discretion, unless stated otherwise been agreed between us in writing.`,
-          6,
-          68,
-        );
-        doc.text(
-          `5.We may act on a Booking Order if you are advertising agency acting on behalf of the advertiser. In this case, you must
-             provide a copy of these terms and conditions to the advertiser and the warranties and indemnities contained in these terms 
-             and conditions given by you will be deemed to also have been given by the advertiser. The placing of a Booking Order
-             constitutes a request by you for us to transmit an advertisement as contained in the Booking Order on these terms 
-             and conditions`,
-          6,
-          74,
-        );
-        doc.text(
-          `6.You warrant to us, our employees and agents that the advertisement is not in contravention of any law and the relevant 
-             fair trading legislation nor does it infringe the rights of any person (including without limitation, third party’s intellectual property 
-             rights).`,
-          6,
-          94,
-        );
-        doc.text(
-          `7.Your indemnity will keep us, our employees and agents indemnified against all costs, expenses, claims, demands, damages
-             and loss of any kind in connection with us accepting a Booking Order or airing your advertising material or otherwise 
-             acting upon your instructions`,
-          6,
-          110,
-        );
-        doc.text(
-          `8.Except as may be set out in these terms and conditions, we make no other warranties or representations in relation to the 
-             transmission of your advertisement.`,
-          6,
-          125,
-        );
-        doc.text(
-          `9.You agree that Family FM Ltd. will not be liable to you for loss of profit, indirect, consequential or incidental loss, damage or
-             injury which you may suffer under or in connection with your advertisement.`,
-          6,
-          135,
-        );
-        doc.text(
-          `10.Family FM Ltd. reserves the right to reject, refuse or discontinue any contract for reasons satisfactory to itself, or remove 
-             without notice, material it considers not in the public’s interest.`,
-          6,
-          145,
-        );
-        doc.text(
-          `11.Rates are charged for spots no longer than 45 seconds. Commercials of a longer length must have prior approval form the 
-             Station Manager. If this is not done (a) the advertiser will be charged at a higher rate or (b) the commercial will not 
-             be broadcast.`,
-          6,
-          155,
-        );
-        doc.setTextColor('red');
-        //  doc.setLineWdth(0.1);
-        doc.text(
-          `12.For annual contracts: Given that your annual rates are discounted, the contents of this contract can only be used for the client. 
-             The client is not allowed to transfer spots, sponsorship and/or mentions to a third party unless that third party takes out
-             a separate contract with Family FM. If the client does not comply, he/she will be charged the full amount for spots, 
-             mention etc Saved image png Client Signature`,
-          6,
-          170,
-        );
-
-        doc.setTextColor('black');
-
-        // doc.addImage( `http://localhost/Vibz_FM/uploads/${data.signature}`, 10, 190, 50, 25);
-        // }
 
         const columnWidth = 65;
         const rowHeight = 5;
 
         // doc.line(15, 215, 60, 215);
+        doc.line(11, 286, 80, 286)
 
-        doc.text(`Family FM Representation`, 15, 220);
+        doc.text(`Family FM Representation`, 23, 290);
+        doc.text(`Date:-${moment(pdfdata.createdAt).utc().format('Do MMM YYYY')}`, 25, 294)
 
-        //   doc.autoTable({
-
-        //     head: tableData,
-        //     body: tablerow,
-        //     startY: 100, // Change this to adjust the vertical position
-        //     margin: { top:50, right: 10, bottom: 10, left: 10 },
-        //     tableWidth: 'auto',
-        //     styles: {
-        //     overflow: 'linebreak', cellWidth: 'wrap', cellPadding: 1, fontSize: 6 },
-        //     theme: 'grid'
-        //   });
-        //  doc.save(`table.pdf`);
-
+  
         doc.output('dataurlnewwindow', { compress: true });
         }catch(err){
           console.log(err)
@@ -620,16 +733,11 @@ function Contractlist(props) {
     fetchData(invoiceId); // Fetch the data for the selected invoiceId
   };
 
-
-  // useEffect(() => {
-  //   // After the data is fetched and state is updated, call generatePDF
-  //   generatePDF();
-  // }, [pdfdata, pdfdata1, pdfdata6, pdfdata3, pdfdata4]);
+;
 
   return (
     <>
       <Container maxWidth="xl dashhead">
-        {/* <h3 className='mt-5 heading-nw'>Quotations List</h3> */}
 
         <div className="header-div"></div>
 
@@ -650,9 +758,10 @@ function Contractlist(props) {
             {mainloader ? (
               <RotatingLines type="Oval" strokeColor="grey" height={150} width={150} />
             ) : (
-              <Table className="ad-table " style={{}}>
+              <Table className="table-responsive">
+                  {filteredData.length===0?<h4 style={{textAlign:'center'}}>No Data Found</h4>:<>
                 <thead>
-                  <tr className="head-row">
+                  <tr className="head-row text-center">
                     <th>ID</th>
                     <th className="header-cell" onClick={() => handleSort('first_name')}>
                       <div className="header-content">
@@ -676,22 +785,27 @@ function Contractlist(props) {
                   </tr>
                 </thead>
                 <tbody>
+              
                   {filteredData.map((item, index) => {
+                    
+                  
                     return (
+                    
                       <React.Fragment key={index}>
-                        <tr onClick={() => handleRowClick(index)}>
+                        <tr onClick={() => handleRowClick(index)} className='tr-whitespace text-center'>
                           <td>{item.orderid}</td>
                           <td>{item.name}</td>
                           <td>{item.email}</td>
                           <td>{item.phone}</td>
                           <td>{item.event}</td>
                           <td>{item.sales_rep}</td>
-                          {/* <td>{moment(item.contract_date).utc().format('MM/DD/YY')}</td> */}
-                          <td>
+
+                          {/* <td>
                       <Icon style={{color:'green',fontSize: '19px'}} icon="akar-icons:edit" onClick={() =>navigate(`/dashboard/updateagreement/${item.id}`)} />
-                          </td>
+                       </td> */}
+                          
                           <td>
-                            {/* <img src={view} alt="React view"className="view-img" onClick={()=>navigate(`/admin/viewdetail/${item.id}`,{replace:true})}/> */}
+                  
                             <Icon
                               style={{ color: 'blue', fontSize: '19px', cursor: 'pointer' }}
                               icon="carbon:view"
@@ -727,9 +841,13 @@ function Contractlist(props) {
                           </div>
                         </tr>
                       </React.Fragment>
+                     
                     );
+                 
                   })}
-                </tbody>
+                                  </tbody>
+
+                     </>}
               </Table>
             )}
           </div>

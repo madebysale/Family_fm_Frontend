@@ -41,8 +41,9 @@ const AuthForgetpassword = () => {
             justifyContent="center"
             alignItems="center"
           >
-    <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '500px' }}>
-    <Box display="flex" alignItems="center" justifyContent="center">
+    <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '500px'}}>
+    <Box display="flex" alignItems="center" justifyContent="center" className="forget-img">
+
                 <Logo />
               </Box>
     <div className="auth-form-container">
@@ -58,7 +59,7 @@ const AuthForgetpassword = () => {
         onSubmit={(values) => {
             setLoading(true)
           axios
-            .post("http://localhost:8080/api/public/forgetpassword", {
+            .post("https://api.familyfm.ltd:8080/api/public/forgetpassword", {
               email: values.email,
             })
             .then((response) => {

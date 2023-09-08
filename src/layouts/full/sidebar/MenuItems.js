@@ -48,18 +48,18 @@ const Menuitems = [
     icon: IconUser,
     href: '/dashboard/salesperson',
   },
-  {
-    // id: uniqueId(),
-    title: ' Mail',
-    icon: IconMail,
-    href: '/dashboard/Mail',
-  },
-  {
-    // id: uniqueId(),
-    title: 'Clickup',
-    icon: IconCalendarEvent,
-    href: '/dashboard/Clickup',
-  },
+  // {
+  //   // id: uniqueId(),
+  //   title: ' Mail',
+  //   icon: IconMail,
+  //   href: '/dashboard/Mail',
+  // },
+  // {
+  //   // id: uniqueId(),
+  //   title: 'Clickup',
+  //   icon: IconCalendarEvent,
+  //   href: '/dashboard/Clickup',
+  // },
   // {
   //   navlabel: true,
   //   subheader: 'Auth',

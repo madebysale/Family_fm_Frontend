@@ -255,11 +255,24 @@ button.btn-1.btn.btn-primary {
    height: 50px;
   }
 
+
+ 
+  
+
   .grid-regis .logo-img{
     width: 100px;
     height: 50px;
   }
 
+  .forget-img .logo-img{
+    width: 100px;
+    height: 50px;
+  }
+
+  .reset-img .logo-img{
+    width: 100px;
+    height: 50px;
+  }
 
 
   @media (max-width: 480px) {

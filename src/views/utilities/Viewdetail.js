@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
 import Pdf from './Pdf';
 // import mylogo from "../component/fm_logo.png";
+import { loadImage } from 'canvas';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Table } from 'react-bootstrap';
 import { AiOutlineLogout } from 'react-icons/ai';
@@ -13,6 +14,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import ConfirmationModal from './ConformationModal';
 import Share from './Share';
 import { RWebShare } from 'react-web-share';
+// import { Image } from 'canvas';
 
 import { shortener } from 'c-url-shortener';
 import Getclickupdata from './Getclickupdata';
@@ -40,18 +42,12 @@ const Viewdetail = () => {
   const [show, setShow] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
- 
-
-  // console.log(startMonth)
-  // console.log(endMonth)
-
-  //  var imagepath = "http://localhost:3000/static/media/fm_logo.8ab00a202cf2f9daeaa1.png";
-  //  /New folder/vidzfmproject/uploads
+  const [imageDataUrl, setImageDataUrl] = useState('');
 
   useEffect(() => {
     axios
       .post(
-        'http://localhost:8080/api/public/agreementlist',
+        'https://api.familyfm.ltd:8080/api/public/agreementlist',
         {
           id: params.id,
         },
@@ -62,10 +58,8 @@ const Viewdetail = () => {
 
       .then((response) => {
         setDataapi(response.data.data.details);
-
         setinvoicedata(response.data.data.itemlist);
         setsignaturetlist(response.data.data.signaturelist);
-        console.log(response.data.data, 'dd');
         setmaxdate(response.data.data.maxEndDate);
         setmindate(response.data.data.minStartDate);
         setorderamount(response.data.data.orderamount);
@@ -74,20 +68,45 @@ const Viewdetail = () => {
       });
   }, [params.id]);
 
+
+
+  useEffect(() => {
+    if (dataapi.length > 0) {
+      axios
+        .post(
+          'https://api.familyfm.ltd:8080/api/public/getimage',
+          {
+            file_name: dataapi[0].signature,
+          },
+          {
+            headers: { 'x-token': localStorage.getItem('token') },
+          },
+        )
+
+        .then((response) => {
+          setImageDataUrl(response.data);
+        });
+    }
+  }, [dataapi]);
+
   ////////////////////////////////////////////////////////////////////////////
 
   const handleDeleteClick = (id) => {
     setItemId(id);
+
     setShowConfirmation(true);
   };
 
   const handleConfirm = () => {
     axios
-      .post(`http://localhost:8080/api/public/makecontract/${itemId}`, {
-        // Provide the relevant data related to the item here
-      })
+      .post(
+        `https://api.familyfm.ltd:8080/api/public/makecontract/${itemId}`,
+        {},
+        {
+          headers: { 'x-token': localStorage.getItem('token') },
+        },
+      )
       .then((response) => {
-        console.log(response.data.status, 'dddsx');
         if (response.status === 200) {
           toast.success(response.data.message);
           // After successful confirmation, navigate to the new route
@@ -99,8 +118,8 @@ const Viewdetail = () => {
       })
       .catch((error) => {
         if (error.response) {
-          console.log(error.response.status);
-          console.log(error.response.data);
+          
+       
         } else if (error.request) {
           console.log(error.request);
         } else {
@@ -117,9 +136,32 @@ const Viewdetail = () => {
     setShowConfirmation(false);
   };
 
+  const setarray = [];
+  var monthlydistribuion;
+  var arr = [];
+  var myarray = [];
+
+  if (mindate < maxdate) {
+    let date = moment(mindate);
+    while (date < moment(maxdate).add('month')) {
+      // console.log(date,"while.......")
+      arr = myarray.push(date.format('MM'));
+      setarray.push(date.format('MM'));
+
+      date.add(1, 'month');
+    }
+  }
+  console.log(setarray, 'totalmonth');
+
   const onmakecontract = (id) => {
     axios
-      .post(`http://localhost:8080/api/public/makecontract/${id}`)
+      .post(
+        `https://api.familyfm.ltd:8080/api/public/makecontract/${id}`,
+        {},
+        {
+          headers: { 'x-token': localStorage.getItem('token') },
+        },
+      )
       .then((response) => {
         console.log(response.data.status, 'dddsx');
         if (response.status == 200) {
@@ -143,7 +185,7 @@ const Viewdetail = () => {
   const clickupcreatetask = (id) => {
     console.log(id, 'function');
     axios
-      .post(`http://localhost:8080/api/public/createclickuptask/${id}`)
+      .post(`https://api.familyfm.ltd:8080/api/public/createclickuptask/${id}`)
       .then((response) => {
         console.log(response.data.status, 'dddsx');
         if (response.status == 200) {
@@ -164,62 +206,42 @@ const Viewdetail = () => {
       });
   };
 
-  useEffect(() => {
-    // Fetch data from the API and update the tasks state
-   axios.post(`http://localhost:8080/api/public/getclickuptask`) 
-      .then((response) => {
+  const myimg = loadImage('https://api.familyfm.ltd/Vibz_FM/uploads/signature-1693079730430.png');
+  console.log(myimg, 'kmm');
+  myimg
+    .then((response) => {
+      console.log(response.src, 'okk');
 
-        console.log(response.data.data.tasks,'123')
-        setData(response.data.data.tasks)
-      }
-      
-      
-    
-      
-      )
+      // do something with im
+    })
+    .catch((err) => {
+      console.log('oh no!', err);
+    });
+
+  useEffect(() => {
+    axios
+      .post(`https://api.familyfm.ltd:8080/api/public/getclickuptask`)
+      .then((response) => {
+        console.log(response.data.data.tasks, '123');
+        setData(response.data.data.tasks);
+      })
       .catch((error) => console.error('Error fetching tasks:', error));
   }, []);
 
-
-
   const handleSearch = (event) => {
     const searchTerm = event.target.value.toLowerCase();
-    const filtered = data.filter(item => item.name.toLowerCase().includes(searchTerm));
+    const filtered = data.filter((item) => item.name.toLowerCase().includes(searchTerm));
     setFilteredData(filtered);
   };
 
-  // const handleSearch = (event) => {
-  //   const searchTerm = event.target.value.toLowerCase();
-  //   const filtered = data.filter(data =>
-  //     data.id.toString().includes(searchTerm) ||
-  //     data.name.toLowerCase().includes(searchTerm)
-  //   )
-  //   setFilteredData(filtered);
-  // };
-
-  // const handleSearchChange = (event) => {
-  //   setSearchText(event.target.value);
-  // };
-
-  // // Filter tasks based on the search input
-  // const filteredTasks = tasks.filter(task =>
-  //   task.id.toString().includes(searchText) ||
-  //   task.name.toLowerCase().includes(searchText.toLowerCase())
-  // );
-
-  ////////////////////////////////////////////////////////////////
-
   return (
     <div className="main-container">
-      
       {dataapi.map((type) => {
         var startDate = new Date(type.id);
         var endDate = new Date(type.ed_date);
 
         const currentDate = moment(type.createdAt);
         const futureDate = currentDate.add(30, 'days');
-
-        // setResultDate(futureDate.format('YYYY-MM-DD'));
 
         return (
           <>
@@ -237,36 +259,39 @@ const Viewdetail = () => {
               )}
             </div>
             <>
-      <Button className='btn-exsting' variant="primary" onClick={() => setShow(true)}>exitsing task</Button>
-
-      <Modal show={show} onHide={() => setShow(false)} >
-        <Modal.Header closeButton>
-          <Modal.Title>exitsing task</Modal.Title>
-        </Modal.Header>
-        <Modal.Body style={{width:"100%"}}>
-          <Form.Control
-            type="text"
-            placeholder="Search..."
-            onChange={handleSearch}
-          />
-          <ul style={{textDecoration:"none" ,listStyle:"none",padding:"0px", margin:"0px"}}>
-            {filteredData.map((item) => (
-             < div style={{display:"flex" ,justifyContent:'space-between'}}>
-              <li key={item.id}><strong>task id</strong>-{item.id}</li>
-               <li>{item.name}</li>
-              </div>
-            ))}
-          </ul>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShow(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+              <Modal show={show} onHide={() => setShow(false)}>
+                <Modal.Header closeButton>
+                  <Modal.Title>exitsing task</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{ width: '100%' }}>
+                  <Form.Control type="text" placeholder="Search..." onChange={handleSearch} />
+                  <ul
+                    style={{
+                      textDecoration: 'none',
+                      listStyle: 'none',
+                      padding: '0px',
+                      margin: '0px',
+                    }}
+                  >
+                    {filteredData.map((item) => (
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <li key={item.id}>
+                          <strong>task id</strong>-{item.id}
+                        </li>
+                        <li>{item.name}</li>
+                      </div>
+                    ))}
+                  </ul>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={() => setShow(false)}>
+                    Close
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </>
             <div>
-              <div style={{ marginTop: '10px' }}>
+              {/* <div style={{ marginTop: '10px' }}>
                 <div>
                   <RWebShare
                     data={{
@@ -279,7 +304,7 @@ const Viewdetail = () => {
                     <button className="create-invo-1">Share 🔗</button>
                   </RWebShare>
                 </div>
-              </div>
+              </div> */}
               {/* <div>
             
                 <button className="btn create-invo"onClick={()=>clickupgettask()} >
@@ -335,6 +360,8 @@ const Viewdetail = () => {
                   minfunction: mindate,
                   orderfunction: orderamount,
                   disorderfunction: monthly,
+                  title: 'Quotation',
+                  pdfimage: imageDataUrl,
                 }}
               />
             </div>
@@ -350,12 +377,11 @@ const Viewdetail = () => {
                 </p>
                 <p>
                   {' '}
-                 Qoute Expiry Date:-
+                  Qoute Expiry Date:-
                   <span style={{ marginLeft: '12px' }}>
                     {moment(futureDate).utc().format(' Do MMMM, YYYY')}
                   </span>
                 </p>
-                
 
                 <p>
                   Contact No:- <span style={{ marginLeft: '33px' }}>{type.phone}</span>
@@ -368,11 +394,6 @@ const Viewdetail = () => {
                     {moment(mindate).format(' Do MMMM, YYYY')}
                   </span>
                 </p>
-
-                {/* <p>
-                    Product Protect:-
-                    <span style={{ marginLeft: "7px" }}>Event</span>
-                  </p> */}
               </div>
               <div className="col">
                 <p>
@@ -404,7 +425,7 @@ const Viewdetail = () => {
             </div>
 
             <div className="mt-3" style={{ borderBottom: '2px solid black' }}>
-              <Table className="">
+              <Table className="table-responsive">
                 <thead className="text-center">
                   <th></th>
 
@@ -427,7 +448,7 @@ const Viewdetail = () => {
                     <th>Sat</th>
                     <th>Sun</th>
                     <th>Total</th>
-                    <th>length</th>
+                    {/* <th>length</th> */}
                     <th>INSTRUCTIONS</th>
                   </tr>
                 </thead>
@@ -457,7 +478,7 @@ const Viewdetail = () => {
                           <td>{item.sunday}</td>
 
                           <td>{item.total}</td>
-                          <td>:30</td>
+                          {/* <td>:30</td> */}
 
                           <td>{item.product_type}</td>
                         </tr>
@@ -467,13 +488,16 @@ const Viewdetail = () => {
                 </tbody>
               </Table>
             </div>
+            {dataapi.map((item) => {
+              console.log(item.grandtotal, 'sdds');
 
-            <div className="table-container">
-              <Table className="responsive-table">
-                {dataapi.map((item) => {
-                  console.log(item.grandtotal, 'sdds');
-                  return (
-                    <>
+              monthlydistribuion = (item.grandtotal / myarray.length).toFixed(2);
+
+              console.log(monthlydistribuion, '123');
+              return (
+                <>
+                  <div className="table-container">
+                    <Table className="responsive-table">
                       <thead className="">
                         <tr className="mytable">
                           {/* <th># HR PER WK </th> */}
@@ -498,50 +522,128 @@ const Viewdetail = () => {
                           <td>${item.grandtotal}</td>
                         </tr>
                       </tbody>
-                    </>
-                  );
-                })}
-              </Table>
-            </div>
+                    </Table>
+                  </div>
 
-            {startMonth === endMonth ? (
-              ''
-            ) : (
-              <div style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>
-                {' '}
-                <p style={{ marginTop: '8px' }}> Month Projected Billing [ABST Inclusive]:</p>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'auto auto auto auto',
-                    marginTop: '30px',
-                    textAlign: 'center',
-                    gridGap: '10px',
-                  }}
-                >
-                  <div>
-                    <div>Jan: ${monthly.jan}</div>
-                    <div>Feb: ${monthly.feb}</div>
-                    <div>Mar: ${monthly.mar}</div>
-                  </div>
-                  <div>
-                    <div>April: ${monthly.april}</div>
-                    <div>May: ${monthly.may}</div>
-                    <div>June: ${monthly.june}</div>
-                  </div>
-                  <div>
-                    <div>July: ${monthly.july}</div>
-                    <div>Aug: ${monthly.aug}</div>
-                    <div>Sept: ${monthly.sept}</div>
-                  </div>
-                  <div>
-                    <div>Oct: ${monthly.oct}</div>
-                    <div>Nov: ${monthly.nov}</div>
-                    <div>Dec: ${monthly.dec}</div>
-                  </div>
-                </div>
-              </div>
-            )}
+                  {startMonth === endMonth ? (
+                    ''
+                  ) : (
+                    <>
+                      <div style={{ borderBottom: '2px solid black', paddingBottom: '5px' }}>
+                        {' '}
+                        <p style={{ marginTop: '8px' }}>
+                          {' '}
+                          Month Projected Billing [ABST Inclusive]:
+                        </p>
+                        {type.monthlydistribute == 'true' ? (
+                          <div
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: 'auto auto auto auto',
+                              marginTop: '30px',
+                              textAlign: 'center',
+                              gridGap: '10px',
+                            }}
+                          >
+                            <div>
+                              <div>Jan: {monthly.jan}</div>
+                              <div>Feb: ${monthly.feb}</div>
+                              <div>Mar: ${monthly.mar}</div>
+                            </div>
+                            <div>
+                              <div>April: ${monthly.april}</div>
+                              <div>May: ${monthly.may}</div>
+                              <div>June: ${monthly.june}</div>
+                            </div>
+                            <div>
+                              <div>July: ${monthly.july}</div>
+                              <div>Aug: ${monthly.aug}</div>
+                              <div>Sept: ${monthly.sept}</div>
+                            </div>
+                            <div>
+                              <div>Oct: ${monthly.oct}</div>
+                              <div>Nov: ${monthly.nov}</div>
+                              <div>Dec: ${monthly.dec}</div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: 'auto auto auto auto',
+                              marginTop: '30px',
+                              textAlign: 'center',
+                              gridGap: '10px',
+                            }}
+                          >
+                            <div>
+                              {/* {console.log(monthlydistribuion,'2555555')} */}
+                              <div>
+                                Jan: ${myarray.includes('01') ? monthlydistribuion : '0.00'}
+                              </div>
+                              <div>
+                                Feb: ${myarray.includes('02') ? monthlydistribuion : '0.00'}
+                              </div>
+                              <div>
+                                Mar: ${myarray.includes('03') ? monthlydistribuion : '0.00'}
+                              </div>
+                            </div>
+                            <div>
+                              <div>
+                                April: ${myarray.includes('04') ? monthlydistribuion : '0.00'}
+                              </div>
+                              <div>
+                                May: ${myarray.includes('05') ? monthlydistribuion : '0.00'}
+                              </div>
+                              <div>
+                                June: ${myarray.includes('06') ? monthlydistribuion : '0.00'}
+                              </div>
+                            </div>
+                            <div>
+                              <div>
+                                July: ${myarray.includes('07') ? monthlydistribuion : '0.00'}
+                              </div>
+                              <div>
+                                Aug: ${myarray.includes('08') ? monthlydistribuion : '0.00'}
+                              </div>
+                              <div>
+                                Sept: ${myarray.includes('09') ? monthlydistribuion : '0.00'}
+                              </div>
+                            </div>
+                            <div>
+                              <div>
+                                Oct: ${myarray.includes('10') ? monthlydistribuion : '0.00'}
+                              </div>
+                              <div>
+                                Nov: ${myarray.includes('11') ? monthlydistribuion : '0.00'}
+                              </div>
+                              <div>
+                                Dec: ${myarray.includes('12') ? monthlydistribuion : '0.00'}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      {type.monthlydistribute === 'true' ? (
+                        <span
+                          style={{
+                            marginTop: '3px',
+                            float: 'right',
+                            fontSize: '10px',
+                            color: 'red',
+                          }}
+                        >
+                          {' '}
+                          * This {item.discountdropdown} Amount is not apply in Monthly breakdown
+                        </span>
+                      ) : (
+                        <></>
+                      )}
+                    </>
+                  )}
+                </>
+              );
+            })}
 
             {/* )})} */}
 
@@ -559,112 +661,13 @@ const Viewdetail = () => {
                   </p>
                   <p>{type.paymentdue}</p>
                 </div>
-
-                {/* <div style={{ marginBottom: '10px', textAlign: 'right' }}>
-                  <p>Please make all cheques payable to Family Fm Ltd</p>
-                  <p style={{ textDecoration: 'underline', paddingBottom: '1px' }}>
-                    Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.
-                  </p>
-                </div> */}
               </div>
-
-              {/* <div className="mt-5">
-                <div style={{ textAlign: 'left', fontSize: '20px', fontWeight: '500' }}>
-                  {' '}
-                  Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract{' '}
-                </div>
-                <p>ABST# 0484956</p>
-                <p>
-                  <b>1.</b> Billing terms are net 30 days from date of invoice. Cancellation notice
-                  is two weeks prior to run date. The normal deadline period for radio advertising
-                  material is two (2) working days before broadcast. In exceptional cases, material
-                  may be submitted on shorter deadlines however it must be negotiated with the
-                  General Manager. There will be no guarantee on the flight of material submitted
-                  less than 48 weekday hours prior to run date.
-                </p>
-                <p>
-                  <b>2.</b> Cancellation is subject to written notice, ten (10) working days prior
-                  to broadcast. Cancellations within ten (10) working days prior to broadcast, will
-                  incur a penalty of 10% of the published rate for spots cancelled within this
-                  period. Cancellations within two (2) working days of broadcast will be charged at
-                  full rate.
-                </p>
-
-                <p>
-                  <b>3.</b>We reserve the right not to air any material supplied to us which in our
-                  opinion may be defamatory, objectionable to our listeners, discriminatory,
-                  misleading or deceptive or would infringe any law or expose us to any liability.
-                </p>
-
-                <p>
-                  <b>4.</b> The positioning of your advertisement is at our discretion, unless
-                  stated otherwise been agreed between us in writing.
-                </p>
-
-                <p>
-                  <b>5.</b>We may act on a Booking Order if you are advertising agency acting on
-                  behalf of the advertiser. In this case, you must provide a copy of these terms and
-                  conditions to the advertiser and the warranties and indemnities contained in these
-                  terms and conditions given by you will be deemed to also have been given by the
-                  advertiser. The placing of a Booking Order constitutes a request by you for us to
-                  transmit an advertisement as contained in the Booking Order on these terms and
-                  conditions.
-                </p>
-
-                <p>
-                  <b>6.</b>You warrant to us, our employees and agents that the advertisement is not
-                  in contravention of any law and the relevant fair trading legislation nor does it
-                  infringe the rights of any person (including without limitation, third party’s
-                  intellectual property rights).
-                </p>
-
-                <p>
-                  <b>7.</b>Your indemnity will keep us, our employees and agents indemnified against
-                  all costs, expenses, claims, demands, damages and loss of any kind in connection
-                  with us accepting a Booking Order or airing your advertising material or otherwise
-                  acting upon your instructions.
-                </p>
-
-                <p>
-                  <b>8.</b>Except as may be set out in these terms and conditions, we make no other
-                  warranties or representations in relation to the transmission of your
-                  advertisement.
-                </p>
-
-                <p>
-                  <b>9.</b>You agree that Family FM Ltd. will not be liable to you for loss of
-                  profit, indirect, consequential or incidental loss, damage or injury which you may
-                  suffer under or in connection with your advertisement.
-                </p>
-
-                <p>
-                  <b>10.</b>Family FM Ltd. reserves the right to reject, refuse or discontinue any
-                  contract for reasons satisfactory to itself, or remove without notice, material it
-                  considers not in the public’s interest.
-                </p>
-
-                <p>
-                  <b>11.</b>Rates are charged for spots no longer than 45 seconds. Commercials of a
-                  longer length must have prior approval form the Station Manager. If this is not
-                  done (a) the advertiser will be charged at a higher rate or (b) the commercial
-                  will not be broadcast.
-                </p>
-
-                <p className="term-12">
-                  <b>12.</b>For annual contracts: Given that your annual rates are discounted, the
-                  contents of this contract can only be used for the client. The client is not
-                  allowed to transfer spots, sponsorship and/or mentions to a third party unless
-                  that third party takes out a separate contract with Family FM. If the client does
-                  not comply, he/she will be charged the full amount for spots, mention etc Saved
-                  image png Client Signature
-                </p>
-              </div> */}
 
               <div className="writing-field">
                 <div>
                   <img
                     className="img-sign"
-                    src={`http://localhost/Vibz_FM/uploads/${type.signature}`}
+                    src={`https://api.familyfm.ltd/Vibz_FM/uploads/${type.signature}`}
                     alt={'signature'}
                   />
 

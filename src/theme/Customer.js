@@ -44,6 +44,8 @@ import {
 import Pdf from 'src/views/utilities/Pdf';
 import ConfirmationModal from 'src/views/utilities/ConformationModal';
 
+import './Form.css'
+
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -83,7 +85,7 @@ function Customer() {
   });
 
 
-
+   var myrole = localStorage.getItem('role')
  
 
   useEffect(() => {
@@ -94,7 +96,7 @@ function Customer() {
 
     axios
       .post(
-        'http://localhost:8080/api/public/customerlist',
+        'https://api.familyfm.ltd:8080/api/public/customerlist',
         {},
         {
           headers: {'x-token': localStorage.getItem('token') },
@@ -105,8 +107,13 @@ function Customer() {
         setData(response.data);
         setmypdf(response.data.data)
         setmainloader(true)
+        
+        if (response.data.code == 401) {
+          navigate('/login', { replace: true });
+          localStorage.removeItem('token');
+          toast.error(response.data.message.message);
+        }
        
-        // console.log(response, 'sds');
       }).catch((error)=>{
         // console.log(error.response.data.message,'errod')
         setmainloader(false);
@@ -178,7 +185,7 @@ function Customer() {
     // console.log(values,'dd4545cusmainsdd')
     axios
     .post(
-      'http://localhost:8080/api/public/createcustomer',
+      'https://api.familyfm.ltd:8080/api/public/createcustomer',
          {
           name:customer.name,
           email:customer.email,
@@ -267,7 +274,7 @@ function Customer() {
  
   const onDelete = (id) => {
     axios
-      .post(`http://localhost:8080/api/public/customerdelete/${id}`)
+      .post(`https://api.familyfm.ltd:8080/api/public/customerdelete/${id}`)
       .then((response) => {
         console.log(response.data);
         if(response.code!==200){
@@ -296,7 +303,7 @@ function Customer() {
   const handleConfirm = () => {
     if (itemIdToDelete) {
       axios
-      .post(`http://localhost:8080/api/public/customerdelete/${itemIdToDelete}`)
+      .post(`https://api.familyfm.ltd:8080/api/public/customerdelete/${itemIdToDelete}`)
   
         .then((response) => {
           console.log(response.data);
@@ -321,20 +328,21 @@ function Customer() {
 
   return (
     <>
-      <Container maxWidth="xl dashhead">
+      <Container maxWidth="xl dashhead mt-3">
     
     
-        <div className="header-div"></div>
+        {/* <div className="header-div"></div> */}
 
        
-        <Card className='mt-3 py-3 px-3'>
+        <Card className='mt-6 py-3 px-3' >
 
-          <div className="mt-3 img-con-ad">
-      <div className="btn create-invo" onClick={() => setShowModal(true)}>
+          {/* <div className=""> */}
+      {/* <button className="btn create-invo" onClick={() => setShowModal(true)}>
         Add Customer +
-      </div>
+      </button> */}
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+
+      <Modal  show={showModal} onHide={() => setShowModal(false)} style={{marginTop:"50px"}}>
         <Modal.Header closeButton>
           <Modal.Title>Add Customer</Modal.Title>
         </Modal.Header>
@@ -452,11 +460,12 @@ function Customer() {
           </Formik>
         </Modal.Body>
       </Modal>
-    </div>
+    
 
 
                   
         <div className="search-admin">
+
           <Input
             placeholder="Search"
             className="col-3 mt-2 mb-1 mx-3 input"
@@ -464,15 +473,29 @@ function Customer() {
             onChange={handleSearch}
           ></Input>
         
+                <div className=' col-6' style={{float:'right'}}>
+<div className="add-cust-btn">
+                    <button
+                      className="btn create-invo"
+                   
+                      onClick={() =>  setShowModal(true)}
+                    >
+                      Add Customer +
+                    </button>
+
+                 
+                  </div>     
+                 
+                  </div>
 
           
 {mainloader ? (
       <RotatingLines type="Oval" strokeColor="grey" height={150} width={150} />
     ) : (
 
-          <Table className="ad-table " style={{}}>
+          <Table className="ad-table table-responsive " style={{}}>
             <thead>
-              <tr className="head-row">
+              <tr className="head-row text-center">
               
                 <th>ID</th>
                 <th>Customer Name</th>
@@ -481,10 +504,12 @@ function Customer() {
                 <th>Address</th>
                 <th>Total Quotation/Contract</th>
                
+                {
+                        (myrole==3)?<></>:<th>Delete</th>
+
+                      }
+                
                
-                <th>Delete</th>
-                <th></th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -492,7 +517,7 @@ function Customer() {
                 
                 return (
                   <React.Fragment key={index}>
-                    <tr onClick={() => handleRowClick(index)}>
+                    <tr onClick={() => handleRowClick(index)} className='tr-whitespace text-center'>
                       <td>
                         {item.id}
                       </td>
@@ -505,7 +530,10 @@ function Customer() {
                      <td>{item.quotation}/{item.contract}</td>
                   
                      <td>
-                      <Icon style={{color:'red', fontSize: '19px',cursor:'pointer'}} icon="fluent:delete-32-regular" onClick={() => handleDeleteClick(item.id)} />
+                      {
+                        (myrole==3)?<></>:<Icon style={{color:'red', fontSize: '19px',cursor:'pointer'}} icon="fluent:delete-32-regular" onClick={() => handleDeleteClick(item.id)} />
+
+                      }
                       
                       </td>
                     

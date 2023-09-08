@@ -1,4 +1,4 @@
-import { Mail } from '@mui/icons-material';
+import Mail from 'src/theme/Mail';
 import React, { lazy, useState, useEffect } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 import Adminaccess from 'src/theme/Adminaccess';
@@ -24,6 +24,7 @@ import Viewdetail from 'src/views/utilities/Viewdetail';
 // import Contractlist from 'src/views/utilities/contractlist';
 // import Logres from 'src/views/authentication/Logres';
 import Loadable from '../layouts/full/shared/loadable/Loadable';
+import  Adminprofile  from 'src/theme/Adminprofile';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -65,8 +66,9 @@ export default function Router() {
         { path: 'agreementlist', element: <Contractlist /> },
         { path: 'contract', element: <Contract /> },
         { path: 'Customer', element: <Customer /> },
-        { path: 'Mail', element: <Mail /> },
-        { path: 'myclickup', element: <Clickup /> },
+        // { path: 'Mail', element: <Mail /> },
+        {path:'profile',element:<Adminprofile/>},
+        // { path: 'myclickup', element: <Clickup /> },
 
         { path: 'Viewdetail/:id', element: <Viewdetail /> },
         { path: 'contractview/:id', element: <Contractview /> },

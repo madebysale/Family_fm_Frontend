@@ -4,10 +4,10 @@
     
 }
 
-
+/* 
 .container{
     background: #9a3131 !important;;
-}
+} */
 
 
 .css-1kf0hy1-MuiContainer-root{
@@ -16,6 +16,7 @@
 .box {
     display: flex;
     justify-content: space-evenly;
+
 
 }
 .react-tabs__tab-list {
@@ -41,7 +42,4 @@
     border-color: #5d87ff!important;;
     color: white!important;;
     border-radius: 5px 5px !important;
-    
 }
-
-

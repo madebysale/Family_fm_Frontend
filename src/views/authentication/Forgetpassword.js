@@ -7,6 +7,7 @@ import PageContainer from 'src/components/container/PageContainer';
 import Logo from 'src/layouts/full/shared/logo/Logo';
 import AuthForgetpassword from './auth/Authforgetpassword';
 
+import './auth.css'
 const Login2 = () => {
   
   return (
@@ -39,7 +40,10 @@ const Login2 = () => {
           >
             <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '500px' }}>
               <Box display="flex" alignItems="center" justifyContent="center">
+                <div className='forget-img'>
                 <Logo />
+                </div>
+               
               </Box>
               <AuthForgetpassword
                 subtext={

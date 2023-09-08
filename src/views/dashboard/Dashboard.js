@@ -61,25 +61,22 @@ export default function DashboardApp() {
   //////////////////////////////////////////////////
   useEffect(() => {
     axios
-      .post('http://localhost:8080/api/public/numberofsales',{
-
-      },
+      .post('https://api.familyfm.ltd:8080/api/public/numberofsales',{},
       {
         headers: { 'x-token': localStorage.getItem('token') },
+
       },
       )
 
       .then((response) => {
 
-        if(response.data.message ==400){
-          navigate('/login', { replace: true });
-          toast.success("Asdsd", {
-            position: toast.POSITION.TOP_CENTER,
-          });
-         }
+    
         setsales(response.data.data);
 
-        console.log(response, 'sds');
+        if(response.data.code ==401){
+          navigate('/login', { replace: true });
+          localStorage.removeItem('token')
+        }
       });
   }, []);
 
@@ -91,26 +88,13 @@ export default function DashboardApp() {
 
   useEffect(() => {
     axios
-      .post('http://localhost:8080/api/public/totalcustomer',{},
-      {
-        headers: { 'x-token': localStorage.getItem('token') },
-      },)
+      .post('https://api.familyfm.ltd:8080/api/public/totalcustomer'
+     )
 
 
 
       .then((response) => {
-        if(response.data.message ==400){
-          localStorage.removeItem('token')
-
-          console.log(response.data.code,'dssdfdfs')
-          navigate('/login', { replace: true });
-          
-          showAlert()
-          // localStorage.removeItem('tempary')
-          toast.success("Asdsd", {
-            position: toast.POSITION.TOP_CENTER,
-          });
-         }
+      
        
 
 
@@ -139,11 +123,9 @@ export default function DashboardApp() {
 
     axios
       .post(
-        'http://localhost:8080/api/public/contractlist',
+        'https://api.familyfm.ltd:8080/api/public/contractlist',
         {},
-        {
-          headers: { 'x-token': localStorage.getItem('token') },
-        },
+      
       )
 
       .then((response) => {
@@ -154,21 +136,21 @@ export default function DashboardApp() {
   // -
   // ------------------------------------------------------------------------//
 
-  const showAlert = () => {
-    Swal.fire({
-      title: "Message Sent",
-      text: "Thank you for contacting us.We will get back to you asap.",
-      icon: "success",
-      confirmButtonText: "OK",
-    });
-  };
+  // const showAlert = () => {
+  //   Swal.fire({
+  //     title: "Message Sent",
+  //     text: "Thank you for contacting us.We will get back to you asap.",
+  //     icon: "success",
+  //     confirmButtonText: "OK",
+  //   });
+  // };
 
   return (
     
     <div className="dashhead">
 
       
-      <div className="container">
+      <div className="container-fluid">
       {/* <SweetAlert
         show={showAlert}
         title="API Response Success!"
@@ -176,64 +158,72 @@ export default function DashboardApp() {
       >
         The API call was successful!
       </SweetAlert> */}
-        <Row spacing={3}>
-          <Col item xs={12} sm={6} md={3}>
+        <Row >
+          <Col item xs={6} sm={6} md={3}>
             <div className="weeklysales box" onClick={() => navigate(`/dashboard/contract`)} style={{cursor:'pointer'}} >
+           
+              <div className="innerbox">
               <span className="icons">
                 <Icon icon="akar-icons:file" />
               </span>
-              <div className="innerbox">
                 {console.log(contract,'852123')}
                 <h2>{contract === null ? '0' : contract}</h2>
 
-                <h3>Contracts
+                
+              </div>
+              <h3>Contracts
                
                 </h3>
-              </div>
             </div>
           </Col>
 
-          <Col item xs={12} sm={6} md={3}>
+          <Col item xs={6} sm={6} md={3}>
             <div className="Agreements box" onClick={() => navigate(`/dashboard/agreementlist`)} style={{cursor:'pointer'}} >
+            
+              <div className="innerbox">
               <span className="icons">
                 <Icon icon="icon-park:agreement" />
               </span>
-              <div className="innerbox">
                 <h2>{agreement === null ? '0' : agreement}</h2>
 
-                <h3>Quotations</h3>
               </div>
+              
+              <h3>Quotations</h3>
             </div>
           </Col>
           {/* /////////////////////////////////////////////////////////////// */}
-          <Col item xs={12} sm={6} md={3}>
+          <Col item xs={6} sm={6} md={3}>
             <div className="sales box"onClick={() => navigate(`/dashboard/salesperson`)} style={{cursor:'pointer'}}  >
+             
+              <div className="innerbox">
               <span className="icons">
                 <Icon icon="codicon:graph" />
                 
               </span>
-              <div className="innerbox">
                 {sales.map((item) => {
                   // console.log(item, 'sales');
                   return <h2>{item.sum_of_roles}</h2>;
                 })}
-                <h3>Sales Persons</h3>
+               
               </div>
+              <h3>Sales Persons</h3>
             </div>
           </Col>
 
           {/* ///////////////////////////////////////////////////////////////// */}
 
-          <Col item xs={12} sm={6} md={3}>
+          <Col item xs={6} sm={6} md={3}>
             <div className="customer box" onClick={() => navigate(`/dashboard/Customer`)} style={{cursor:'pointer'}} >
+             
+              <div className="innerbox">
               <span className="icons">
                 <Icon icon="mingcute:user-1-line" />
               </span>
-              <div className="innerbox">
                 <h2>{customer=== null ? '0': customer}</h2>
 
-                <h3> Total Customers </h3>
+               
               </div>
+              <h3> Total Customers </h3>
             </div>
           </Col>
         </Row>

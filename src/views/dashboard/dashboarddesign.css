@@ -16,10 +16,11 @@
     padding-bottom: 40px;
     box-shadow: none;
     text-align: center;
-    
-}
+    padding:  40px 25px;
+ }
+
+
 .icons {
-    
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -118,11 +119,22 @@ svg.iconify{
     height: 55px;
     border: 1px solid #ccc;
 }
+
+.innerbox h2{
+    text-align: right;
+
+   
+}
+
+
+
 .box h3 {
     text-transform: uppercase;
     font-size: 15px;
     font-weight: 600;
     color: #051330;
+    line-height: 0px;
+    text-align: right;
 }
 .dashhead h1 {
     font-size: 26px;
@@ -221,7 +233,7 @@ a.action_btn svg {
     margin-left: 0px;
 }
 .box {
-    display: flex;
+    /* display: flex; */
     justify-content: space-evenly;
 
 }
@@ -251,6 +263,8 @@ a.action_btn svg {
     
 }
 .innerbox {
+     /* display: flex; */
+     justify-content: space-between;
     text-align: right;
 }
 /* .innerbox h2 {
@@ -258,3 +272,65 @@ a.action_btn svg {
     font-weight: 900;
 } */
  
+
+
+
+@media(max-width: 873px)
+{
+.box h3{
+    /* line-height: 12px; */
+    font-size: 11px;
+}
+
+
+
+
+
+@media(max-width :769px){
+    .weeklysales{
+        margin-bottom: 8px;
+        
+    }  
+
+    .Agreements{
+        margin-bottom: 8px;
+
+    }
+
+    .box h3{
+        font-size: 15px;
+    }
+}
+
+
+@media(max-width :575px) {
+   .sales{
+    margin-bottom: 8px;
+   } 
+    
+}
+
+
+
+@media(max-width:435px){
+    .box h3{
+        line-height: 15px;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

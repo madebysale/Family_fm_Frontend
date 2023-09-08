@@ -13,6 +13,8 @@ import { toast } from 'react-toastify';
 import { FiArrowRight } from 'react-icons/fi';
 // import { AiOutlineDelete } from 'react-icons/ai';
 
+import './dashboard.css'
+
 import { Input, Select } from 'antd';
 
 import { Link, Navigate, useNavigate } from 'react-router-dom';
@@ -40,7 +42,7 @@ function YearlyBreakup() {
   useEffect(() => {
     axios
       .post(
-        'http://localhost:8080/api/public/contractlist',
+        'https://api.familyfm.ltd:8080/api/public/list',
         {
           page: currentPage,
           limit: itemsPerPage,
@@ -89,18 +91,10 @@ function YearlyBreakup() {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    navigate('/');
-  };
 
   return (
-    <div className="container">
-      <div
-        style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridGap: '60px' }}
-      ></div>
-      <div className="header-div" style={{ marginTop: '20px' }}></div>
+    <div className='container'>
+     
 
       <div className="search-admin">
         <Input
@@ -112,7 +106,7 @@ function YearlyBreakup() {
 
         <div className="table-responsive ">
           {currentItems.length === 0?<h1>No Data Found</h1>:<>
-          <Table className="ad-table ">
+          <Table className="">
             <thead>
               <tr className="head-row">
                 <th>ID</th>

@@ -78,21 +78,25 @@ const Sidebar = (props) => {
       PaperProps={{
         sx: {
           width: sidebarWidth,
-          boxShadow: (theme) => theme.shadows[8],
+     
         },
       }}
     >
       {/* ------------------------------------------- */}
       {/* Logo */}
       {/* ------------------------------------------- */}
+    
       <Box px={2}>
+      <div className='sidebar-img'>
         <Logo />
+        </div>
       </Box>
+  
       {/* ------------------------------------------- */}
       {/* Sidebar For Mobile */}
       {/* ------------------------------------------- */}
       <SidebarItems />
-      <Upgrade />
+      {/* <Upgrade /> */}
     </Drawer>
   );
 };

@@ -76,6 +76,7 @@ const Profile = () => {
           },
         }}
       >
+        
         {/* <MenuItem>
           <ListItemIcon>
             <IconUser width={20} />
@@ -99,9 +100,18 @@ const Profile = () => {
         </MenuItem> */}
         <Box mt={1} py={1} px={2}>
         
+          <Button  variant="outlined" color="primary"  onClick={() => navigate(`/dashboard/profile`)} fullWidth>
+         Profile Setting
+          </Button>
+          
+         
+        </Box>
+        <Box mt={1} py={1} px={2}>
+        
           <Button  variant="outlined" color="primary" onClick={handleLogout} fullWidth>
             Logout
           </Button>
+          
          
         </Box>
       </Menu>

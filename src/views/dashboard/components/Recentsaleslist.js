@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import moment from 'moment';
 import { toast } from 'react-toastify';
-
+import './dashboard.css'
 
 // import mylogo from "../component/fm_logo.png";
 // import view from "../component/view.png.png";
@@ -39,61 +39,21 @@ function YearlyBreakup() {
   const [mysales, setmysales] = useState([]);
 
   useEffect(() => {
-    
-
     axios
-    .post(
-      'http://localhost:8080/api/public/adminaccess',
-      {},
-      {
-        headers: { 'x-token': localStorage.getItem('token') },
-      },
-    )
+      .post(
+        'https://api.familyfm.ltd:8080/api/public/adminaccess',
+        {},
+        {
+          headers: { 'x-token': localStorage.getItem('token') },
+        },
+      )
 
-    .then((response) => {
-      setData(response.data.data);
-    
-
-      
-    });
-   
-  
-
-   
+      .then((response) => {
+        setData(response.data.data);
+      });
   }, []);
 
-
-
-
-
  
-
-
-
-
-
-
-
-  /////////////////////////////////////////////////////////////////////
-
-
-
-
-  ///////////////////////////////////////////////////////////////////
-
-  
-
-
-
-
-
-
-
-
-
-  /////////////////////////////////////////////////////////////////////
-
-
 
   const [expandedRow, setExpandedRow] = useState(null);
 
@@ -133,78 +93,70 @@ function YearlyBreakup() {
     navigate('/');
   };
 
-
-
   return (
-    
-      <div className="container">
-        
-      <div  style={{display:"grid", gridTemplateColumns:"repeat(4, 1fr)",gridGap:"60px"}}>
+    <div className='container'>
+      {/* <div  style={{display:"grid", gridTemplateColumns:"repeat(4, 1fr)",gridGap:"60px"}}>
       
     
  
 
 
  
-   </div>
-        <div className="header-div" style={{marginTop:"20px"}}></div>
-      
-        
+   </div> */}
+      {/* <div className="header-div" style={{marginTop:"20px"}}></div> */}
 
-        <div className="search-admin">
-          <Input
-            placeholder="Search"
-            className="col-3 mt-2 mb-1 mx-3 input"
-            value={searchTerm}
-            onChange={handleSearch}
-          ></Input>
+      <div className="search-admin">
+        <Input
+          placeholder="Search"
+          className="col-3 mt-2 mb-1 mx-3 input"
+          value={searchTerm}
+          onChange={handleSearch}
+        ></Input>
 
-          <div className='table-responsive '>
-          {currentItems.length===0?<h1>No Data Found</h1>:<> 
-          <Table className="ad-table " >
-            <thead>
-              <tr className="text-center">
-                {/* <th>ID</th> */}
-                <th>First Name</th>
-                <th>Last name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                {/* <th>Sales rep</th> */}
-                {/* <th>contract Date</th> */}
+        <div className="table-responsive ">
+          {currentItems.length === 0 ? (
+            <h1>No Data Found</h1>
+          ) : (
+            <>
+              <Table>
+                <thead>
+                  <tr className="text-center">
+                    {/* <th>ID</th> */}
+                    <th>First Name</th>
+                    <th>Last name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    {/* <th>Sales rep</th> */}
+                    {/* <th>contract Date</th> */}
 
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((item, index) => {
-                console.log(item, 'sjh');
-                return (
-                  <React.Fragment key={index}>
-                    <tr className='text-center' >
-                      {/* <td className="plus-btn">{item.orderid}</td> */}
-                      <td>{item.name}</td>
-                      <td>{item.lastname}</td>
-                      <td>{item.email}</td>
-                      <td>{item.mobile}</td>
-                      {/* <td>{item.sales_rep}</td> */}
-                      {/* <td>{moment(item.contract_date).utc().format('MM/DD/YY')}</td> */}
-
-                   
-                    </tr>
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
-          </Table>
-          </>} 
-          </div>
-
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentItems.map((item, index) => {
+                    console.log(item, 'sjh');
+                    return (
+                      <React.Fragment key={index}>
+                        <tr className="text-center">
+                          {/* <td className="plus-btn">{item.orderid}</td> */}
+                          <td>{item.name}</td>
+                          <td>{item.lastname}</td>
+                          <td>{item.email}</td>
+                          <td>{item.mobile}</td>
+                          {/* <td>{item.sales_rep}</td> */}
+                          {/* <td>{moment(item.contract_date).utc().format('MM/DD/YY')}</td> */}
+                        </tr>
+                      </React.Fragment>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </>
+          )}
         </div>
-
-        
       </div>
-      
+    </div>
   );
 
   function Pagination({ itemsPerPage, totalItems, paginate }) {

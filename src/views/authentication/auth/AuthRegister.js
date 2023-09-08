@@ -181,7 +181,7 @@ const AuthRegister = ({ subtitle }) => {
             console.log(values, 'resgister');
             axios
               .post(
-                'http://localhost:8080/api/public/user',
+                'https://api.familyfm.ltd:8080/api/public/user',
                 formData,
 
                 {

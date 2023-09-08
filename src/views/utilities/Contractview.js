@@ -23,11 +23,13 @@ const Contractview = () => {
   const[orderamount,setorderamount] =useState([])
   const[disorder,setdisorder] =useState([])
   const[monthly,setmonthly] = useState([])
+  const[pdfimage,setpdfimage] =useState('')
+
   
 
   useEffect(() => {
     axios
-      .post('http://localhost:8080/api/public/agreementlist', {
+      .post('https://api.familyfm.ltd:8080/api/public/agreementlist', {
         id: params.id,
       }, {
         headers: {'x-token': localStorage.getItem('token') },
@@ -36,7 +38,7 @@ const Contractview = () => {
 
       .then((response) => {
         setDataapi(response.data.data.details);
-
+        console.log(response.data.data.details,'details')
         setinvoicedata(response.data.data.itemlist);
         console.log(response.data.data.itemlist, 'responses');
         setmaxdate(response.data.data.maxEndDate);
@@ -47,13 +49,37 @@ const Contractview = () => {
       });
   }, [params.id]);
 
+
+  console.log(dataapi,'xyz')
+  // console.log(dataapi[0].signature,'212')
+
+  useEffect(() => {
+    if(dataapi.length>0){
+    axios
+      .post(
+        'https://api.familyfm.ltd:8080/api/public/getimage',
+        {
+          file_name: dataapi[0].signature,
+        },
+      
+      )
+      .then((response) => {
+         setpdfimage(response.data)
+         console.log(response)
+      }).catch((error)=>{
+        console.log(error)
+      })
+    }
+  }, [dataapi]);
+
+
   ////////////////////////////////////////////////////////////////////////////
 
   const onmakecontract = (id) => {
     axios
-      .post(`http://localhost:8080/api/public/makecontract/${id}`)
+      .post(`https://api.familyfm.ltd:8080/api/public/makecontract/${id}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         if (response.code !== 200) {
           // setcontract(!contract)
           // getdata()
@@ -62,12 +88,12 @@ const Contractview = () => {
       })
       .catch((error) => {
         if (error.response) {
-          console.log(error.response.status);
-          console.log(error.response.data);
+          // console.log(error.response.status);
+          // console.log(error.response.data);
         } else if (error.request) {
-          console.log(error.request);
+          // console.log(error.request);
         } else {
-          console.log(error.message);
+          // console.log(error.message);
         }
       });
   };
@@ -118,24 +144,17 @@ const Contractview = () => {
             </div>
 
             <div className="invoice-heading">
-              <div>Advertising Investment Contract</div>
+              
+            <div>Advertising Investment Contract</div>
 
+                         </div>
 
-              <Pdf props={{ handleFunction: dataapi , handleFunction2:invoicedata , minfunction:mindate, maxfunction:maxdate, orderfunction:orderamount ,disorderfunction:monthly}} />
-            </div>
+                         <div className='invoice-heading-1' style={{marginLeft:"-308px"}}> 
+                         <Pdf props={{ handleFunction: dataapi , handleFunction2:invoicedata ,minfunction:mindate, maxfunction:maxdate, orderfunction:orderamount ,disorderfunction:monthly,title:"contract",pdfimage:pdfimage}} />
 
-            <div>
-            <RWebShare
-        data={{
-          text: "Like humans, flamingos make friends for life",
-          url: `http://localhost/Vibz_FM/${type.contract_pdf}`,
-          title: "Flamingos",
-        }}
-        onClick={() => console.log("shared successfully!")}
-      >
-        <button className="create-invo-12" >Share 🔗</button>
-      </RWebShare>
-      </div>
+                         </div>
+
+            
 
 
 
@@ -143,7 +162,7 @@ const Contractview = () => {
               <div className="col">
                 <p>
                     {" "}
-                    Contract Dates:-
+                    Contract Date:-
                     <span style={{ marginLeft: "12px", textAlign: "center" }}>
                       {moment(type.contractdate).utc().format(" Do MMMM, YYYY")}
                     </span>
@@ -233,7 +252,7 @@ const Contractview = () => {
                     <th>Sat</th>
                     <th>Sun</th>
                     <th>Total</th>
-                     <th>length</th>
+                     {/* <th>length</th> */}
                     <th>INSTRUCTIONS</th>
                   </tr>
                 </thead>
@@ -263,7 +282,7 @@ const Contractview = () => {
                             <td>{item.sunday}</td>
 
                             <td>{item.total}</td>
-                            <td>:30</td>
+                           
 
                            
                             <td>{item.product_type}</td>
@@ -275,9 +294,7 @@ const Contractview = () => {
 
             <div className='table-container'>
               <Table className='responsive-table' >
-
-
-              {
+            {
 dataapi.map((item) => {
     return (
       <>
@@ -477,7 +494,7 @@ dataapi.map((item) => {
 
               <div className="writing-field">
                 <div >
-                <img className="img-sign"src={`http://localhost/Vibz_FM/uploads/${type.signature}`} alt={"signature"}/>
+                <img className="img-sign"src={`https://api.familyfm.ltd/Vibz_FM/uploads/${type.signature}`} alt={"signature"}/>
 
 
                   <div className="sing-1">Family FM Representative </div>

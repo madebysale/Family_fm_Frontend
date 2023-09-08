@@ -19,7 +19,7 @@ const Invoice = (props) => {
   // const [finaldata, setfinaldata] = useState("");
   useEffect(() => {
     axios
-      .post("http://localhost:8080/api/public/invoice")
+      .post("https://api.familyfm.ltd:8080/api/public/invoice")
 
       .then((response) => {
         setapidata(response.data.data);

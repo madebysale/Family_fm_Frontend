@@ -5,8 +5,9 @@ import Modal from 'react-bootstrap/Modal';
 import SignatureCanvas from 'react-signature-canvas';
 import parsePhoneNumberFromString from 'libphonenumber-js';
 
-
 import { AiOutlineLogout } from 'react-icons/ai';
+import { Icon } from '@iconify/react';
+import { BiSearch } from "react-icons/bi";
 
 import { DatePicker, Select } from 'antd';
 import 'antd/dist/reset.css';
@@ -41,15 +42,9 @@ import Customerpopup from './Customerpopup';
 const { RangePicker } = DatePicker;
 // const {  Space, TimePicker  }
 const validationSchemaforDisabled = Yup.object({
-
-
-  
-
   termsAndConditions: Yup.bool().oneOf([true], 'accept the t&C'),
 });
-const validationSchema= Yup.object({
- 
-
+const validationSchema = Yup.object({
   Advertiser: Yup.string().required('Required'),
 
   name: Yup.string().required('Required'),
@@ -57,15 +52,8 @@ const validationSchema= Yup.object({
   address: Yup.string().required('Required'),
   company_name: Yup.string().required('Required'),
 
-
-  
-
   start_date: Yup.date(),
   end_date: Yup.date().min(Yup.ref('start_date'), "end date can't be before start date"),
-
-
-
-
 });
 
 const Foam = () => {
@@ -74,14 +62,11 @@ const Foam = () => {
   const [product_type, setproduct_type] = useState('');
   const [show, setShow] = useState(false);
 
-
-
   const [event, setevent] = useState('');
   const [rate, setrate] = useState('');
   const [discount, setdiscount] = useState('');
   const [cost, setcost] = useState('');
   const [cost_tax, setcost_tax] = useState('');
-
 
   const [discounted_cost, setdiscounted_cost] = useState('');
 
@@ -97,12 +82,13 @@ const Foam = () => {
   const [loading, setLoading] = useState(false);
   const [timeRange, setTimeRange] = useState([]);
   const [mysignerror, setmysignerror] = useState(false);
-  const [paymentdue, setpaymentdue] = useState(" ");
+  const [paymentdue, setpaymentdue] = useState(' ');
   const [errorMessage, setErrorMessage] = useState(false);
   const [errorMessage1, setErrorMessage1] = useState(false);
   const [mystatus, setmystatus] = useState(false);
   const [editfield, seteditfield] = useState(false);
-   var paymenti ="This payment of balance due will be billed over a two month period. The 1st in April 25th and the next on 15th may"
+  var paymenti =
+    'This payment of balance due will be billed over a two month period. The 1st in April 25th and the next on 15th may';
   const [searchValue, setSearchValue] = useState('');
 
   const [showInput, setShowInput] = useState(true);
@@ -112,7 +98,7 @@ const Foam = () => {
   const [selectedOption, setSelectedOption] = useState('');
   const [sales_repMessage, setsales_repMessage] = useState(false);
   const [myname, setmyname] = useState('');
-  const [mysalesrep, setmysalesrep] = useState(null);
+  const [mysalesrep, setmysalesrep] = useState('');
   const [myevent, setmyevent] = useState('');
   const [myadvertiser, setmyadvertiser] = useState('');
   const [myemail, setmyemail] = useState('');
@@ -126,7 +112,7 @@ const Foam = () => {
   const [abst, setabst] = useState('');
   const [grandtotal, setgrandtotal] = useState('');
   const [abstdiscount, setabstdiscount] = useState(0);
-  const[dateerror,setdateerror]=useState(false)
+  const [dateerror, setdateerror] = useState(false);
 
   const [weekhr, setweekhr] = useState('');
   const [tradeerr, settradeerr] = useState('');
@@ -144,23 +130,23 @@ const Foam = () => {
   const [myoct, setmyoct] = useState('');
   const [mynov, setmynov] = useState('');
   const [mydec, setmydec] = useState('');
-  const[test,settest]=useState()
+  const [test, settest] = useState();
   const [activeRowIndex, setActiveRowIndex] = useState(null);
   const [modalVisibility, setModalVisibility] = useState({});
   // const [searchvalerr,setsearchvalerr] = useState(false)
-  const [paymenterr,setpaymenterr] = useState(false)
+  const [paymenterr, setpaymenterr] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const[custname,setcustname]=useState('')
-  const[custemail,setcustemail]=useState('')
-  const[custmobile,setcustmobile]=useState('')
-  const[custadvetiser,setcustadvetiser]=useState('')
-  const[tandc,settandc]=useState('')
-  const[mydropdown,setmydropdown]= useState('Trade')
-  const[nameerror,setnameerror] = useState(false)
-  const[eventerror,seteventerror] = useState(false)
+  const [custname, setcustname] = useState('');
+  const [custemail, setcustemail] = useState('');
+  const [custmobile, setcustmobile] = useState('');
+  const [custadvetiser, setcustadvetiser] = useState('');
+  const [tandc, settandc] = useState('');
+  const [mydropdown, setmydropdown] = useState('Trade');
+  const [nameerror, setnameerror] = useState(false);
+  const [eventerror, seteventerror] = useState(false);
+  const [selectedOption1, setSelectedOption1] = useState('true');
   const[salesreperor,setsalesreperror]=useState(false)
-
 
   // const [inputValues, setInputValues] = useState({
   //   sales_rep:"",
@@ -177,7 +163,7 @@ const Foam = () => {
       runDates: '',
       perWeeks: '',
       rate: '',
-     discount:0.00,
+      discount: 0.0,
       cost: '',
       cost_tax: '',
       discounted_cost: '',
@@ -200,132 +186,107 @@ const Foam = () => {
       june: 0,
       july: 0,
       aug: 0,
-      sept:0,
+      sept: 0,
       oct: 0,
       nov: 0,
       dec: 0,
-      mystartdate:'',
-      myenddate:"",
+      mystartdate: '',
+      myenddate: '',
     },
   ]);
 
   const total = fields.reduce((accumulator, item) => accumulator + (parseFloat(item.cost) || 0), 0);
   // console.log(total, 'total');
-  const total01 = fields.reduce((accumulator, item) => accumulator + (parseFloat(item.jan) || 0), 0);
+  const total01 = fields.reduce(
+    (accumulator, item) => accumulator + (parseFloat(item.jan) || 0),
+    0,
+  );
   // console.log(total01, 'january');
 
+  const handledropdown = (event) => {
+    setmydropdown(event.target.value);
+  };
 
-
-
-
-
-
-
-
-  const handledropdown =(event)=>{
-    setmydropdown(event.target.value)
-  }
-
-
-console.log(mydropdown,'dsdfdfs')
+  // console.log(mydropdown,'dsdfdfs')
 
   const openModal = () => {
     setShowModal(true);
- 
   };
 
   const closeModal = () => {
     setShowModal(false);
-  
   };
 
-  const handleAddCustomer = (customer, resetForm ) => {
+  const handleAddCustomer = (customer, resetForm) => {
     // Perform actions to add customer using values
     const phoneNumber = parsePhoneNumberFromString(customer.mobile);
 
-    console.log(customer.mobile,'dssdsds520');
-    console.log(customer,'dssdsds520');
+    console.log(customer.mobile, 'dssdsds520');
+    console.log(customer, 'dssdsds520');
     if (!phoneNumber || !phoneNumber.isValid()) {
       // Handle invalid phone number
       console.log('Invalid phone number:', customer.mobile);
       return;
     }
-  
+
     const formattedPhoneNumber = phoneNumber.formatInternational();
-  
 
-    axios.post(
-      'http://localhost:8080/api/public/createcustomer',
-         {
-          name:customer.name,
-          email:customer.email,
-          mobile:formattedPhoneNumber,
-          address:customer.address,
-          company_name:customer.company_name
-         },
+    axios
+      .post('https://api.familyfm.ltd:8080/api/public/createcustomer', {
+        name: customer.name,
+        email: customer.email,
+        mobile: formattedPhoneNumber,
+        address: customer.address,
+        company_name: customer.company_name,
+      })
+      .then((resp) => {
+        if (resp.data.code === 400) {
+          // setTimeout(() => setLoading(false), 1000);
 
+          toast.error(resp.data.message, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
 
-    
-    )
-    .then((resp) => {
-      
-      if (resp.data.code === 400) {
-        // setTimeout(() => setLoading(false), 1000);
-   
-        toast.error(resp.data.message, {
+        if (resp.data.code === 200) {
+          setmycustomerid(resp.data.data.id);
+          setmyname(resp.data.data.name);
+          setmyphone(resp.data.data.mobile);
+          console.log(resp.data.data.mobile, 'fd');
+          console.log(resp.data.data.email, 'fdemail');
+          setmyemail(resp.data.data.email);
+          setmyadvertiser(resp.data.data.company_name);
+
+          console.log(resp.data.data.mobile, 'data');
+          toast.success(resp.data.message, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
+      })
+      .catch((err) => {
+        // setLoading(false);
+
+        // console.log(err.response, 'err-message');
+
+        toast.error(err.message, {
           position: toast.POSITION.TOP_CENTER,
         });
-      }
-  
-
-
-     
-       if (resp.data.code === 200) {
-         setmycustomerid(resp.data.data.id)
-        setmyname(resp.data.data.name)
-        setmyphone(resp.data.data.mobile)
-        console.log(resp.data.data.mobile,'fd')
-        console.log(resp.data.data.email,'fdemail')
-        setmyemail(resp.data.data.email)
-        setmyadvertiser(resp.data.data.company_name)
-        
-        console.log(resp.data.data.mobile,'data')
-        toast.success(resp.data.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
-       
-      
-       
-      }
-    })
-    .catch((err) => {
-      // setLoading(false);
-
-      // console.log(err.response, 'err-message');
-
-      toast.error(err.message, {
-        position: toast.POSITION.TOP_CENTER,
       });
-    });
 
     resetForm();
 
-   
-    closeModal()
+    closeModal();
   };
-
 
   const handleSearch = async () => {
     try {
       setIsDisabled(true);
-      const condition = {};
+      // const condition = searchValue;
 
-      if (searchValue) {
-        condition[searchValue.includes('@') ? 'email' : 'mobile'] = searchValue;
-      }
+  
 
       await axios
-        .post('http://localhost:8080/api/public/checkcustomer', condition, {
+        .post('https://api.familyfm.ltd:8080/api/public/checkcustomer', {searchValue}, {
           headers: { 'x-token': localStorage.getItem('token') },
         })
 
@@ -333,21 +294,19 @@ console.log(mydropdown,'dsdfdfs')
           toast.error(response.data.message, {
             position: toast.POSITION.TOP_CENTER,
           });
-        
+
           setmyname(response.data.name);
-         
+
           setmyemail(response.data.email);
           setmyphone(response.data.mobile);
-          console.log(response.data.mobile,'fd2')
-          console.log(response.data.email,'fdemai2')
+          console.log(response.data.mobile, 'fd2');
+          console.log(response.data.email, 'fdemai2');
           setmyadvertiser(response.data.company_name);
           setIsDisabled(true);
           setmycustomerid(response.data.id);
-          console.log(response.data.id,'1235');
+          console.log(response.data.id, '1235');
         })
-        .catch((error) => {
-       
-        });
+        .catch((error) => {});
     } catch (err) {
       // console.log(err);
     }
@@ -357,13 +316,13 @@ console.log(mydropdown,'dsdfdfs')
     const fetchOptions = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:8080/api/public/salesdropdown',
+          'https://api.familyfm.ltd:8080/api/public/salesdropdown',
           {},
           {
             headers: { 'x-token': localStorage.getItem('token') },
           },
         );
-    
+
         setmyOptions(response.data);
       } catch (error) {
         console.error(error);
@@ -441,29 +400,6 @@ console.log(mydropdown,'dsdfdfs')
 
   //////////////////////////////////////////////////////////
 
-
-
-
- 
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const enableform = () => {
     setmyname('');
     setmysalesrep('');
@@ -484,11 +420,10 @@ console.log(mydropdown,'dsdfdfs')
 
     setusertype(event.target.value);
   };
-  // const handlemyradiochange = (event) => {
-  //   setShowInput(event.target.value === 'myaddcust');
 
-  //   // setusertype(event.target.value);
-  // };
+  const handleOptionChange = (event) => {
+    setSelectedOption1(event.target.value);
+  };
 
   const signRef = useRef();
   const handleClear = () => {
@@ -514,29 +449,19 @@ console.log(mydropdown,'dsdfdfs')
     }
   };
 
+  const handleClose = (index) => {
+    setModalVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [index]: false,
+    }));
+  };
 
-  
-
- const handleClose =(index)=>{
-  setModalVisibility((prevVisibility) => ({
-    ...prevVisibility,
-    [index]: false,
-  }));
-};
-
- 
-  
- 
- const handleShow =(index)=>{
-  setModalVisibility((prevVisibility) => ({
-    ...prevVisibility,
-    [index]: true,
-  }));
-
-
- }
-
-
+  const handleShow = (index) => {
+    setModalVisibility((prevVisibility) => ({
+      ...prevVisibility,
+      [index]: true,
+    }));
+  };
 
   const taxcost = () => {
     var tax = (calrate * 15) / 100 - discount + '';
@@ -564,145 +489,11 @@ console.log(mydropdown,'dsdfdfs')
     return calrate;
   };
 
-  
-  //   const startdate = '2022-07-20';
-  //   const enddate = '2022-08-15';
-
-  //   const startDate = moment(startdate, 'YYYY-MM-DD');
-  //   const endDate = moment(enddate, 'YYYY-MM-DD');
-
-  //   const startYear = startDate.year();
-  //   const startMonth = startDate.month();
-  //   const endYear = endDate.year();
-  //   const endMonth = endDate.month();
-
-  //   let currentDate = startDate.clone();
-  //   let monthData = [];
-
-  //   while (currentDate <= endDate) {
-  //     const year = currentDate.year();
-  //     const month = currentDate.month();
-
-  //    const daysInMonth = currentDate.daysInMonth();
-  //     let weekdayCounts = {
-  //       Monday: 0,
-  //       Tuesday: 0,
-  //       Wednesday: 0,
-  //       Thursday: 0,
-  //       Friday: 0,
-  //       Saturday: 0,
-  //       Sunday: 0,
-  //     };
-  //    for (let day = 1; day <= daysInMonth; day++) {
-
-  //         currentDate.date(day);
-  //         const weekday = currentDate.format('dddd');
-
-  //         weekdayCounts[weekday]++;
-  //       }
-
-  //       monthData.push({ year, month, weekdayCounts });
-
-  //     currentDate = currentDate.clone().add(1, 'month').date(1);
-  //   }
-
-  //   console.log('Month-wise data:', monthData);
-  // };
-
-  function handle123(i,startdate,enddate) {
+  function handle123(i, startdate, enddate) {
     // console.log(startdate,'ss')
 
     const values = [...fields];
 
- 
-    // values[i][fieldname] = event;
-  
-    // console.log(values[i], 'ii');
-
-    // console.log(event.target.getAttribute('name'),'sssss')
-
-    // if (event.target && event.target.name === 'runDates') {
-    //   console.log( event.target.name,'ssasas')
-    //   if (event.length === 0) {
-    //     console.log('requires');
-    //   } else {
-    //     console.log('not');
-    //   }
-  
-    //   if (values !== null) {
-    //     setDates(
-    //       values.map((item) => {
-    //         return item;
-    //       }),
-    //     );
-  
-    //     const startdate = event[0].$d;
-    //     const enddate = event[1].$d;
-  
-    //     setstartdate(startdate);
-    //     setenddate(enddate);
-  
-    //     const valuess = [...fields];
-    //     valuess[i]['runDates'] = {
-    //       startdate: startdate,
-    //       enddate: enddate,
-    //     };
-    //     setFields(valuess);
-  
-    //     console.log(event);
-    //   }
-    // }
-  
-   
-
-
-
-
-
-
-        //  onChange={(values, event) => {
-        //                                   if (event.length === 0) {
-        //                                     console.log('requires');
-        //                                   } else {
-        //                                     console.log('not');
-        //                                   }
-
-        //                                   if (values !== null) {
-        //                                     setDates(
-        //                                       values.map((item) => {
-        //                                         return item;
-        //                                       }),
-        //                                     );
-        //                                    setstartdate(event[0].$d);
-        //                                     setenddate(event[1].$d);
-
-        //                                     const valuess = [...fields];
-        //                                     valuess[index]['runDates'] = {
-        //                                       startdate: values[0].$d,
-        //                                       enddate: values[1].$d,
-        //                                     };
-        //                                     setFields(valuess);
-
-        //                                     setstartdate(values[0].$d);
-        //                                     setenddate(values[1].$d);
-
-        //                                     console.log(values);
-        //                                   }
-        //                                 }}
-
-   
-  
-
-   
-
-
-
-
-    
-    // console.log(startdate,'dssdds123')
-    // console.log(enddate,'dssdds123')
-    
-    
     let start = moment(startdate, 'YYYY-MM-DD'); //Pick 0.01 format
     let end = moment(enddate, 'YYYY-MM-DD'); //right now (or define an end date yourself)
     let weekdayMonCounter = 0;
@@ -744,43 +535,36 @@ console.log(mydropdown,'dsdfdfs')
     let montharray = [];
     var totalcost;
 
-    // console.log(startDate, 'start123');
-    // console.log(endDate, 'end');
-        // console.log(startDate,'startdate132')
     if (startDate < endDate) {
-       let date = moment(startDate).startOf('month');
-       while (date < moment(endDate).endOf('month')) {
+      let date = moment(startDate).startOf('month');
+      while (date < moment(endDate).endOf('month')) {
         // console.log(date,"while.......")
         betweenMonths.push(date.format('MM'));
-        montharray.push(date.format('YYYY-MM'));
+        montharray.push(date.format('MM'));
 
         date.add(1, 'month');
       }
     }
 
+    values[i]['jan'] = 0.0;
+    values[i]['feb'] = 0.0;
+    values[i]['mar'] = 0.0;
 
-    values[i]['jan']= 0.00
-    values[i]['feb']= 0.00
-    values[i]['mar']= 0.00
+    values[i]['april'] = 0.0;
+    values[i]['may'] = 0.0;
+    values[i]['sept'] = 0.0;
+    values[i]['oct'] = 0.0;
+    values[i]['nov'] = 0.0;
+    values[i]['dec'] = 0.0;
 
-    values[i]['april']=0.00
-    values[i]['may']= 0.00
-    values[i]['sept']=0.00
-    values[i]['oct']= 0.00
-    values[i]['nov']= 0.00
-    values[i]['dec']= 0.00
-
-    values[i]['jun']= 0.00
-    values[i]['july']= 0.00
-    values[i]['aug']= 0.00
+    values[i]['jun'] = 0.0;
+    values[i]['july'] = 0.0;
+    values[i]['aug'] = 0.0;
 
     for (let j = 0; j < betweenMonths.length; j++) {
-
       // console.log("for loop.......")
 
       if (j == 0) {
-
-     
         let eendDate = moment(startDate).endOf('month');
 
         let startdateofmonth = moment(eendDate).format('YYYY-MM-DD');
@@ -824,7 +608,7 @@ console.log(mydropdown,'dsdfdfs')
             Number(values[i]['friday']) * weekdayFriCounter1 +
             Number(values[i]['saturday']) * weekdaySatCounter1 +
             Number(values[i]['sunday']) * weekdaySunCounter1) *
-          fields[i].rate
+          fields[i].rate;
       } else if (j == betweenMonths.length - 1) {
         let eendDate = moment(endDate).startOf('month');
 
@@ -874,7 +658,7 @@ console.log(mydropdown,'dsdfdfs')
         let eendDate = moment(betweenMonths[j].concat('-01')).endOf('month');
 
         let startdateofmonth = moment(eendDate).format('YYYY-MM-DD');
-        let mystartDate = moment(betweenMonths[j].concat('-01')).format('YYYY-MM-DD')
+        let mystartDate = moment(betweenMonths[j].concat('-01')).format('YYYY-MM-DD');
 
         let weekdayMonCounter1 = 0;
         let weekdayTueCounter1 = 0;
@@ -921,63 +705,62 @@ console.log(mydropdown,'dsdfdfs')
       }
       var myresult = Number(betweenMonths[j]);
       // console.log(betweenMonths[j], 'ds');
-      switch (myresult) {
-        case 1:
-          values[i]['jan']=Number(totalcost)
-          console.log(totalcost,"jan")
-          break;
-        case 2:
-          values[i]['feb']=Number(totalcost)
-          console.log(totalcost,'feb')
-          break;
-        case 3:
-          values[i]['mar']=Number(totalcost)
-          console.log(totalcost,'m')
+      // switch (myresult) {
+      //   case 1:
+      //     values[i]['jan']=Number(totalcost)
+      //     console.log(totalcost,"jan")
+      //     break;
+      //   case 2:
+      //     values[i]['feb']=Number(totalcost)
+      //     console.log(totalcost,'feb')
+      //     break;
+      //   case 3:
+      //     values[i]['mar']=Number(totalcost)
+      //     console.log(totalcost,'m')
 
-          break;
-        case 4:
-          values[i]['april']=Number(totalcost)
-          console.log(totalcost,'a')
-          break;
-        case 5:
-          values[i]['may']=Number(totalcost)
-          console.log(totalcost,'j')
-          break;
-        case 6:
-          values[i]['june']=Number(totalcost)
-          console.log(totalcost,'auf')
-          break;
-        case 7:
-          values[i]['july']=Number(totalcost)
-          console.log(totalcost,'sdf')
-          break;
-        case 8:
-          values[i]['aug']=Number(totalcost)
-          console.log(totalcost,'s')
-          break;
-        case 9:
-          values[i]['sept']=Number(totalcost)
-          console.log(totalcost,'sep')
-          break;
-        case 10:
-          values[i]['oct']=Number(totalcost)
-          console.log(totalcost,'oct')
-          break;
-        case 11:
-          values[i]['nov']=Number(totalcost)
-          console.log(totalcost,'nov')
-          break;
-        case 12:
-          values[i]['dec']=Number(totalcost)
-          console.log(totalcost,'DDD')
-          break;
+      //     break;
+      //   case 4:
+      //     values[i]['april']=Number(totalcost)
+      //     console.log(totalcost,'a')
+      //     break;
+      //   case 5:
+      //     values[i]['may']=Number(totalcost)
+      //     console.log(totalcost,'j')
+      //     break;
+      //   case 6:
+      //     values[i]['june']=Number(totalcost)
+      //     console.log(totalcost,'auf')
+      //     break;
+      //   case 7:
+      //     values[i]['july']=Number(totalcost)
+      //     console.log(totalcost,'sdf')
+      //     break;
+      //   case 8:
+      //     values[i]['aug']=Number(totalcost)
+      //     console.log(totalcost,'s')
+      //     break;
+      //   case 9:
+      //     values[i]['sept']=Number(totalcost)
+      //     console.log(totalcost,'sep')
+      //     break;
+      //   case 10:
+      //     values[i]['oct']=Number(totalcost)
+      //     console.log(totalcost,'oct')
+      //     break;
+      //   case 11:
+      //     values[i]['nov']=Number(totalcost)
+      //     console.log(totalcost,'nov')
+      //     break;
+      //   case 12:
+      //     values[i]['dec']=Number(totalcost)
+      //     console.log(totalcost,'DDD')
+      //     break;
 
-        default:
-          // console.log('none value selected');
-      }
+      //   default:
+      //     // console.log('none value selected');
+      // }
     }
 
-  
     values[i]['total'] =
       Number(values[i]['monday']) +
       Number(values[i]['tuesday']) +
@@ -1007,63 +790,6 @@ console.log(mydropdown,'dsdfdfs')
 
     setFields(values);
 
-    // let startYear = startDate.year();
-    // let startMonth = startDate.month();
-    // let endYear = endDate.year();
-    // let endMonth = endDate.month();
-
-    //     const startDate = moment(startdate, 'YYYY-MM-DD'); // Replace with your start date
-    // const endDate = moment(enddate, 'YYYY-MM-DD'); // Replace with your end date
-
-    // const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-    // let currentDay = moment(startDate);
-    // let daysArray = [];
-    // let daysObject = {};
-
-    // for (let i = 0; i < 7; i++) {
-    //   const dayName = dayNames[currentDay.day()];
-    //   let value = 0;
-
-    //   if (currentDay.isBetween(startDate, endDate, null, '[]') || currentDay.isSame(startDate) || currentDay.isSame(endDate)) {
-    //     value = 1;
-    //   }
-
-    //   daysArray.push({ day: dayName, value: value });
-    //   daysObject[dayName] = value;
-
-    //   currentDay.add(1, 'day'); // Move to the next day
-    // }
-
-    // console.log('Days Array:', daysArray);
-    // console.log('Days Object:', daysObject);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // const startDate = moment(); // Replace with your start date
-    // const endDate = new Date('2022-08-15'); // Replace with your end date
-    // const startDate = moment(startdate, 'YYYY-MM-DD'); //Pick 0.01 format
-    // const endDate = moment(enddate, 'YYYY-MM-DD');
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // var gettotalsecond =  ((Number(values[i]['monday'])* daysObject['Monday']) +
-    // (Number(values[i]['tuesday'])*daysObject['Tuesday'] )+
-    // (Number(values[i]['wednesday']) *daysObject['Wednesday'])+
-    // ( Number(values[i]['thursday'])*daysObject['Thursday'] )+
-    // (Number(values[i]['friday']) *daysObject['Friday']) +
-    // (Number(values[i]['saturday'])*daysObject['Saturday'] )+
-    // (Number(values[i]['sunday']))*daysObject['Sunday'] )*30
-
-    // var hours = Math.floor(gettotalsecond / 3600);
-    // var min = Math.floor((gettotalsecond % 3600) / 60);
-    // var sec = gettotalsecond%60
-
-    // setweekhr(
-    //   hours + ":" +min + ":" + sec
-    // )
-
-    // console.log(Number(values[i]['tuesday']), 'tuesday');
-
     fields[i].cost = (
       (Number(values[i]['monday']) * weekdayMonCounter +
         Number(values[i]['tuesday']) * weekdayTueCounter +
@@ -1088,104 +814,39 @@ console.log(mydropdown,'dsdfdfs')
     }
   }
 
-
-
-
   function handleChange(i, event, fieldname) {
     const values = [...fields];
     values[i][event.target.name] = event.target.value;
 
-
-    // console.log(values,'eventbgnm,nm,')
- 
-    // values[i][fieldname] = event;
-  
-    // console.log(values[i], 'ii');
-
-    // console.log(event.target.getAttribute('name'),'sssss')
-
-    // if (event.target && event.target.name === 'runDates') {
-    //   console.log( event.target.name,'ssasas')
-    //   if (event.length === 0) {
-    //     console.log('requires');
-    //   } else {
-    //     console.log('not');
     //   }
-  
+
     //   if (values !== null) {
     //     setDates(
     //       values.map((item) => {
     //         return item;
     //       }),
     //     );
-  
+
     //     const startdate = event[0].$d;
     //     const enddate = event[1].$d;
-  
+
     //     setstartdate(startdate);
     //     setenddate(enddate);
-  
+
     //     const valuess = [...fields];
     //     valuess[i]['runDates'] = {
     //       startdate: startdate,
     //       enddate: enddate,
     //     };
     //     setFields(valuess);
-  
+
     //     console.log(event);
     //   }
     // }
-  
-   
 
-
-
-
-
-
-        //  onChange={(values, event) => {
-        //                                   if (event.length === 0) {
-        //                                     console.log('requires');
-        //                                   } else {
-        //                                     console.log('not');
-        //                                   }
-
-        //                                   if (values !== null) {
-        //                                     setDates(
-        //                                       values.map((item) => {
-        //                                         return item;
-        //                                       }),
-        //                                     );
-        //                                    setstartdate(event[0].$d);
-        //                                     setenddate(event[1].$d);
-
-        //                                     const valuess = [...fields];
-        //                                     valuess[index]['runDates'] = {
-        //                                       startdate: values[0].$d,
-        //                                       enddate: values[1].$d,
-        //                                     };
-        //                                     setFields(valuess);
-
-        //                                     setstartdate(values[0].$d);
-        //                                     setenddate(values[1].$d);
-
-        //                                     console.log(values);
-        //                                   }
-        //                                 }}
-
-   
-  
-
-   
-
-
-
-
-    
     // console.log(startdate,'dssdds')
     // console.log(endate,'dssdds')
-    
-    
+
     let start = moment(startdate, 'YYYY-MM-DD'); //Pick 0.01 format
     let end = moment(enddate, 'YYYY-MM-DD'); //right now (or define an end date yourself)
     let weekdayMonCounter = 0;
@@ -1227,9 +888,6 @@ console.log(mydropdown,'dsdfdfs')
     let montharray = [];
     var totalcost;
 
-    // console.log(startDate, 'start123');
-    // console.log(endDate, 'end');
-
     if (startDate < endDate) {
       let date = moment(startDate).startOf('month');
 
@@ -1255,7 +913,7 @@ console.log(mydropdown,'dsdfdfs')
         let weekdaySatCounter1 = 0;
         let weekdaySunCounter1 = 0;
 
-        let currentDate = moment(startDate); // Create a separate variable to iterate over the dates
+        let currentDate = moment(startDate);
         let enddingdate = moment(startdateofmonth);
 
         while (currentDate <= enddingdate) {
@@ -1336,7 +994,7 @@ console.log(mydropdown,'dsdfdfs')
         let eendDate = moment(betweenMonths[j].concat('-01')).endOf('month');
 
         let startdateofmonth = moment(eendDate).format('YYYY-MM-DD');
-        let mystartDate = moment(betweenMonths[j].concat('-01')).format('YYYY-MM-DD')
+        let mystartDate = moment(betweenMonths[j].concat('-01')).format('YYYY-MM-DD');
 
         let weekdayMonCounter1 = 0;
         let weekdayTueCounter1 = 0;
@@ -1385,53 +1043,53 @@ console.log(mydropdown,'dsdfdfs')
       console.log(betweenMonths[j], 'ds');
       switch (myresult) {
         case 1:
-          values[i]['jan']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['jan'] = Number(totalcost);
+          console.log(totalcost, 'jan');
           break;
         case 2:
-          values[i]['feb']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['feb'] = Number(totalcost);
+          console.log(totalcost, 'feb');
           break;
         case 3:
-          values[i]['mar']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['mar'] = Number(totalcost);
+          console.log(totalcost, 'mar');
 
           break;
         case 4:
-          values[i]['april']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['april'] = Number(totalcost);
+          console.log(totalcost, 'april');
           break;
         case 5:
-          values[i]['may']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['may'] = Number(totalcost);
+          console.log(totalcost, 'may');
           break;
         case 6:
-          values[i]['june']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['june'] = Number(totalcost);
+          console.log(totalcost, 'june');
           break;
         case 7:
-          values[i]['july']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['july'] = Number(totalcost);
+          console.log(totalcost, 'july');
           break;
         case 8:
-          values[i]['aug']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['aug'] = Number(totalcost);
+          console.log(totalcost, 'aug');
           break;
         case 9:
-          values[i]['sept']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['sept'] = Number(totalcost);
+          console.log(totalcost, 'sept');
           break;
         case 10:
-          values[i]['oct']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['oct'] = Number(totalcost);
+          console.log(totalcost, 'oct');
           break;
         case 11:
-          values[i]['nov']=Number(totalcost)
-          console.log(totalcost)
+          values[i]['nov'] = Number(totalcost);
+          console.log(totalcost, 'nov');
           break;
         case 12:
-          values[i]['dec']=Number(totalcost)
-          
+          values[i]['dec'] = Number(totalcost);
+          console.log(totalcost, 'dec');
           break;
 
         default:
@@ -1439,7 +1097,6 @@ console.log(mydropdown,'dsdfdfs')
       }
     }
 
-  
     values[i]['total'] =
       Number(values[i]['monday']) +
       Number(values[i]['tuesday']) +
@@ -1469,63 +1126,6 @@ console.log(mydropdown,'dsdfdfs')
 
     setFields(values);
 
-    // let startYear = startDate.year();
-    // let startMonth = startDate.month();
-    // let endYear = endDate.year();
-    // let endMonth = endDate.month();
-
-    //     const startDate = moment(startdate, 'YYYY-MM-DD'); // Replace with your start date
-    // const endDate = moment(enddate, 'YYYY-MM-DD'); // Replace with your end date
-
-    // const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-    // let currentDay = moment(startDate);
-    // let daysArray = [];
-    // let daysObject = {};
-
-    // for (let i = 0; i < 7; i++) {
-    //   const dayName = dayNames[currentDay.day()];
-    //   let value = 0;
-
-    //   if (currentDay.isBetween(startDate, endDate, null, '[]') || currentDay.isSame(startDate) || currentDay.isSame(endDate)) {
-    //     value = 1;
-    //   }
-
-    //   daysArray.push({ day: dayName, value: value });
-    //   daysObject[dayName] = value;
-
-    //   currentDay.add(1, 'day'); // Move to the next day
-    // }
-
-    // console.log('Days Array:', daysArray);
-    // console.log('Days Object:', daysObject);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // const startDate = moment(); // Replace with your start date
-    // const endDate = new Date('2022-08-15'); // Replace with your end date
-    // const startDate = moment(startdate, 'YYYY-MM-DD'); //Pick 0.01 format
-    // const endDate = moment(enddate, 'YYYY-MM-DD');
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // var gettotalsecond =  ((Number(values[i]['monday'])* daysObject['Monday']) +
-    // (Number(values[i]['tuesday'])*daysObject['Tuesday'] )+
-    // (Number(values[i]['wednesday']) *daysObject['Wednesday'])+
-    // ( Number(values[i]['thursday'])*daysObject['Thursday'] )+
-    // (Number(values[i]['friday']) *daysObject['Friday']) +
-    // (Number(values[i]['saturday'])*daysObject['Saturday'] )+
-    // (Number(values[i]['sunday']))*daysObject['Sunday'] )*30
-
-    // var hours = Math.floor(gettotalsecond / 3600);
-    // var min = Math.floor((gettotalsecond % 3600) / 60);
-    // var sec = gettotalsecond%60
-
-    // setweekhr(
-    //   hours + ":" +min + ":" + sec
-    // )
-
-    // console.log(Number(values[i]['tuesday']), 'tuesday');
-
     fields[i].cost = (
       (Number(values[i]['monday']) * weekdayMonCounter +
         Number(values[i]['tuesday']) * weekdayTueCounter +
@@ -1549,8 +1149,6 @@ console.log(mydropdown,'dsdfdfs')
       setproduct_type(fields[i].product_type);
     }
   }
-
-  // console.log(startdate, enddate, 'startdate');
 
   function handleAdd() {
     const newrow = {
@@ -1580,7 +1178,7 @@ console.log(mydropdown,'dsdfdfs')
       june: 0,
       july: 0,
       aug: 0,
-      sept:0,
+      sept: 0,
       oct: 0,
       nov: 0,
       dec: 0,
@@ -1606,33 +1204,19 @@ console.log(mydropdown,'dsdfdfs')
   const handlePaymentDue = (event) => {
     const value = event.target.value;
     setpaymentdue(value);
-  
-    // setpaymenterr(value.trim() === "");
-  
   };
-
-
- 
-
-   
- 
 
   let totaldiscount = total - trade;
 
-
-
   let myvalue = ((totaldiscount * abstdiscount) / 100).toFixed(2);
 
-  let grand = Number(totaldiscount)+Number(myvalue)
-  
-
+  let grand = Number(totaldiscount) + Number(myvalue);
 
   return (
     <>
       <Container>
         <Formik
           initialValues={{
-            // sales_rep: '',
             Advertiser: '',
             name: '',
             event: '',
@@ -1649,33 +1233,26 @@ console.log(mydropdown,'dsdfdfs')
           onSubmit={(values) => {
             setLoading(true);
 
-          
-          
-            if(myname === '' || myphone===''|| myemail=== '' || myadvertiser=== '') {
+            if (myname === '' || myphone === '' || (myemail === '') | (myadvertiser === '')) {
               setnameerror(true);
-              console.log(setnameerror(true))
-              
+              console.log(setnameerror(true));
+
               setTimeout(() => setLoading(false), 2000);
-            } 
+            } else if (myevent == '') {
+              seteventerror(true);
+              setTimeout(() => setLoading(false), 2000);
+            }
 
             else if(!mysalesrep){
               setsalesreperror(true)
             }
-
-
-            else if(myevent == ""){
-                  seteventerror(true)
-                  setTimeout(() => setLoading(false), 2000);
-            }
-
-
-            else  if(startdate=="" && enddate ==""){
-              setdateerror(true)
-                 setTimeout(() => setLoading(false), 2000);
-            }
             
             
-            else {
+            
+            else if (startdate == '' && enddate == '') {
+              setdateerror(true);
+              setTimeout(() => setLoading(false), 2000);
+            } else {
               setnameerror(false);
               seteventerror(false);
               setdateerror(false);
@@ -1683,7 +1260,7 @@ console.log(mydropdown,'dsdfdfs')
 
               setLoading(true);
               var payload = {};
-              console.log(mydropdown,'4562')
+              console.log(mydropdown, '4562');
 
               if (usertype === 'selectCustomer') {
                 payload = {
@@ -1704,8 +1281,8 @@ console.log(mydropdown,'dsdfdfs')
                   discountabst: abstdiscount,
                   abst: Number(myvalue),
                   grandtotal: grand,
-                  discountdropdown:mydropdown,
-                
+                  discountdropdown: mydropdown,
+                  monthlydistribute: selectedOption1,
 
                   fields: [
                     fields.map((item, index) => ({
@@ -1728,15 +1305,15 @@ console.log(mydropdown,'dsdfdfs')
                       total: fields[index].total,
                       starttime: moment(fields[index].runTimes.starttime, 'HH-MM'),
                       endtime: moment(fields[index].runTimes.endtime, 'HH-MM'),
-                      jan:fields[index].jan,
+                      jan: fields[index].jan,
                       feb: fields[index].feb,
-                      mar:fields[index].mar,
-                      april:fields[index].april,
-                      may:fields[index].may,
+                      mar: fields[index].mar,
+                      april: fields[index].april,
+                      may: fields[index].may,
                       june: fields[index].june,
                       july: fields[index].july,
                       aug: fields[index].aug,
-                      sept:fields[index].sept,
+                      sept: fields[index].sept,
                       oct: fields[index].oct,
                       nov: fields[index].nov,
                       dec: fields[index].dec,
@@ -1761,8 +1338,8 @@ console.log(mydropdown,'dsdfdfs')
                   discountabst: abstdiscount,
                   abst: Number(myvalue),
                   grandtotal: grand,
-                  customerid:mycustomerid,
-                  discountdropdown:mydropdown,
+                  customerid: mycustomerid,
+                  discountdropdown: mydropdown,
 
                   fields: [
                     fields.map((item, index) => ({
@@ -1786,15 +1363,15 @@ console.log(mydropdown,'dsdfdfs')
                       total: fields[index].total,
                       starttime: moment(fields[index].runTimes.starttime, 'HH-MM'),
                       endtime: moment(fields[index].runTimes.endtime, 'HH-MM'),
-                      jan:fields[index].jan,
+                      jan: fields[index].jan,
                       feb: fields[index].feb,
-                      mar:fields[index].mar,
-                      april:fields[index].april,
-                      may:fields[index].may,
+                      mar: fields[index].mar,
+                      april: fields[index].april,
+                      may: fields[index].may,
                       june: fields[index].june,
                       july: fields[index].july,
                       aug: fields[index].aug,
-                      sept:fields[index].sept,
+                      sept: fields[index].sept,
                       oct: fields[index].oct,
                       nov: fields[index].nov,
                       dec: fields[index].dec,
@@ -1804,7 +1381,7 @@ console.log(mydropdown,'dsdfdfs')
               }
               axios
                 .post(
-                  'http://localhost:8080/api/public/getdata',
+                  'https://api.familyfm.ltd:8080/api/public/getdata',
                   payload,
 
                   {
@@ -1819,7 +1396,6 @@ console.log(mydropdown,'dsdfdfs')
                     });
                   }
 
-                  // console.log(resp.data.message, 'hjjhjhj');
                   if (resp.data.code == 200) {
                     toast.success(resp.data.message, {
                       position: toast.POSITION.TOP_CENTER,
@@ -1827,251 +1403,158 @@ console.log(mydropdown,'dsdfdfs')
 
                     navigate('/dashboard/agreementlist', { replace: true });
                   }
+
+                    else if(resp.data.code == 401){
+                      console.log(resp.data.code)
+                      setTimeout(() => setLoading(false), 1000);
+                      toast.error('You do not have Permission to make Qoutation', {
+                        position: toast.POSITION.TOP_CENTER,
+                      });
+
+                    }
+
+
+
                 })
                 .catch((err) => {
                   setLoading(false);
 
-                  // console.log(err.response, 'err-message');
+                  
+
+              
 
                   toast.error(err.message, {
                     position: toast.POSITION.TOP_CENTER,
                   });
                 });
-
-              
-
-               
-               
-
             }
           }}
         >
           {({ errors, touched, values, handleSubmit, isSubmitting }) => (
             <Form className="form-con form-inline" onSubmit={handleSubmit}>
-              <Card className="mb-3 px-3 py-3">
-                {/* <h3 className="mb-3 heading-nw"> Customer Info</h3> */}
-               <div className='row'> 
-                <div className=" col-4">
-                  <div className="mb-2">
-                    <label>
-                      {/* <input
+              <div className='row form-top'>
+              <div className='col-6'>
+                  <div className='select-option-radio ' >
+                    <label style={{  }}>
+                      <input
+                          style={{ }}
+                          
                         type="radio"
-                        name="radio"
-                        value="selectCustomer"
-                        checked={showInput}
-                        onClick={disableform}
-                        onChange={handleRadioChange}
-                      /> */}
-                      {/* <span style={{ marginLeft: '4px' }}>Select Customer With Email/Phone</span> */}
-                      {showInput && (
-                        <form onSubmit={handleSubmit}>
-                          <p style={{ marginTop: '5px',marginBottom:'15px' }}>Search Customer with Email/Phone</p>
-                          <div style={{ display: 'flex' }}>
-                            <div>
-                              <Field
-                                className="form-control"
-                                type="text"
-                                name="emailsearch"
-                                value={searchValue}
-                                onChange={(event) => setSearchValue(event.target.value)}
-                                style={{ width: '110%', marginTop: '-17px' }}
-                              />
-                            </div>
-                           
+                        value="true"
+                        checked={selectedOption1 === 'true'}
+                        onChange={handleOptionChange}
+                      />
+                     <span style={{fontWeight:'900'}}>Agency </span> 
+                    </label>
+                       {/* <br/> */}
+                    <label>
+                      <input 
+                       style={{ }}
+                      className='radio-container'
+                        type="radio"
+                        value="false"
+                        checked={selectedOption1 === 'false'}
+                        onChange={handleOptionChange}
+                      />
+                       <span style={{fontWeight:'900'}}> General</span>
+                    </label>
 
-                            <Button
-                              // type='submit'
-                              // disable={isDisabled}
-                              onClick={() => handleSearch()}
-                              style={{ marginLeft: '30px', marginTop: '-16px', fontWeight:'800' }}
-                            >
-                              Search
-                            </Button>
+                    {/* <p>Selected option: {selectedOption1}</p> */}
+                  </div>
+                  </div>
+                  <div className=' col-6'>
+                  <div className="add-cust-btn">
+                    <button
+                      className="btn create-invo"
+                   
+                      onClick={() => openModal()}
+                    >
+                      Add Customer +
+                    </button>
+
+                    <Customerpopup
+                   
+                      key="customer-popup-1"
+                      showModal={showModal}
+                      closeModal={closeModal}
+                      handleAddCustomer={handleAddCustomer}
+              
+                    />
+                  </div>
+                  </div>
+              </div>
+              <Card className="md-4 mt-4 px-3 py-3">
+          
+                    <div className="label-box-form mb-4">
+                      <div className='row '>
+                        
+                      <div className='col-12'>
+
+                      
+                        {/* <span style={{ marginLeft: '4px' }}>Select Customer With Email/Phone</span> */}
+                        {showInput && (
+                          <form onSubmit={handleSubmit}>
+                            <p style={{  }}>
+                              Search Customer
+                            </p>
+                            <div className='labal-content-form' style={{ }}>
+                        
+                                <Field
+                                  className="form-control"
+                                  type="text"
+                                  name="emailsearch"
+                                  value={searchValue}
+                                  onChange={(event) => setSearchValue(event.target.value)}
+                                  style={{ }}
+                                />
+                         
+
+                              <Button
+                                onClick={() => handleSearch()}
+                                style={{
+                              
+                                }}
+                              >
+                               <BiSearch/>
+                              </Button>
+                            </div>
+                          </form>
+                        )}
+                      </div>
+                      </div>
+                    </div>
+                   
+                  {/* </div> */}
+                  
+                {/* </div> */}
 
                
-                          </div>
 
-
-
-
-                                          
-                        </form>
-                      )}
-                    </label>
-                  </div>
-                  <div style={{ alignItems: 'center' }}>
-                    <label>
-                      {/* <input
-                        type="radio"
-                        name="radio"
-                        value="addNew"
-                        onClick={enableform}
-                        checked={!showInput}
-                        onChange={handleRadioChange}
-                      /> */}
-                      {/* <span style={{ marginLeft: '4px' }}>Add New Customer</span> */}
-                    </label>
-                  </div>
-                </div>
-   <div className='add-cust-btn col-8'>
- <div className="btn create-invo" style={{marginTop:'30px'}}  onClick={()=>openModal()}>
-        Add Customer +
-      </div>
-
-<Customerpopup
-       key="customer-popup-1" 
-       showModal ={showModal}
-        closeModal={closeModal}
-        handleAddCustomer={handleAddCustomer}
-        // onClick={()=>openModal()}
-      />
-      </div>
-
-                </div>
-                
-                {/*
-                <div >
-      <div className="btn create-invo" onClick={() => setShowModal(true)}>
-        Add Customer +
-      </div>
-
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Customer</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Formik
-            initialValues={{
-              name: '',
-              email: '',
-              mobile: '',
-              address: '',
-              company_name: '',
-             
-            }}
-            validationSchema={validationSchema}
-            onSubmit={handleAddCustomer}
-          >
-            {({ handleSubmit, touched, errors }) => (
-              <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="name">
-                  <Form.Label>Name</Form.Label>
-                  <Field
-                    type="text"
-                    name="name"
-                    className={`form-control ${
-                      touched.name && errors.name ? 'is-invalid' : ''
-                    }`}
-                  />
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="invalid-feedback"
-                  />
-                </Form.Group>
-                <Form.Group controlId="name">
-                  <Form.Label>Email</Form.Label>
-                  <Field
-                    type="text"
-                    name="email"
-                    className={`form-control ${
-                      touched.email && errors.email ? 'is-invalid' : ''
-                    }`}
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="invalid-feedback"
-                  />
-                </Form.Group>
-                <Form.Group controlId="mobile">
-                  <Form.Label>mobile</Form.Label>
-                  <Field
-                    type="text"
-                    name="mobile"
-                    className={`form-control ${
-                      touched.mobile && errors.mobile ? 'is-invalid' : ''
-                    }`}
-                  />
-                  <ErrorMessage
-                    name="mobile"
-                    component="div"
-                    className="invalid-feedback"
-                  />
-                </Form.Group>
-                <Form.Group controlId="address">
-                  <Form.Label>Address</Form.Label>
-                  <Field
-                    type="text"
-                    name="address"
-                    className={`form-control ${
-                      touched.address && errors.address ? 'is-invalid' : ''
-                    }`}
-                  />
-                  <ErrorMessage
-                    name="address"
-                    component="div"
-                    className="invalid-feedback"
-                  />
-                </Form.Group>
-                <Form.Group controlId="company_name">
-                  <Form.Label>company name</Form.Label>
-                  <Field
-                    type="text"
-                    name="company_name"
-                    className={`form-control ${
-                      touched.company_name && errors.company_name ? 'is-invalid' : ''
-                    }`}
-                  />
-                  <ErrorMessage
-                    name="company_name"
-                    component="div"
-                    className="invalid-feedback"
-                  />
-                </Form.Group>
-
-              
-
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={() => setShowModal(false)}>
-                    Cancel
-                  </Button>
-                  <Button variant="primary" type="submit">
-                    Add Customer
-                  </Button>
-                </Modal.Footer>
-              </Form>
-            )}
-          </Formik>
-        </Modal.Body>
-      </Modal>
-    </div>  */}
-   
                 <div className="form ">
                   <div className="row">
                     <Col item xs={12} sm={6} md={4}>
                       <div className="form-group">
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div cl style={{ display: 'flex', justifyContent: 'space-between' }}>
                           <label htmlFor="name" className="label-con">
                             Name
                           </label>
                           {usertype === 'selectCustomer' ? (
-                              <>
-                             {nameerror ? (
-                        <>
-                          <span className="requirederor" style={{ color: 'red' }}>
-                            required !
-                          </span>
-                        </>
-                      ) : (
-                        <></>
-                      )}
+                            <>
+                              {nameerror ? (
+                                <>
+                                  <span className="requirederor" style={{ color: 'red' }}>
+                                    required !
+                                  </span>
+                                </>
+                              ) : (
+                                <></>
+                              )}
                             </>
                           ) : (
-                          ''
+                            ''
                           )}
                         </div>
-                      
+
                         <div className="input-er-con">
                           {myname ? (
                             <Field
@@ -2083,7 +1566,7 @@ console.log(mydropdown,'dsdfdfs')
                               disabled={isDisabled}
                               onChange={(e) => setmyname(e.target.value)}
                             />
-                          ) : ( 
+                          ) : (
                             <Field
                               name="name"
                               type="text"
@@ -2092,9 +1575,8 @@ console.log(mydropdown,'dsdfdfs')
                               value={custname}
                               disabled={isDisabled}
                               onChange={(e) => setcustname(e.target.value)}
-                             
                             />
-                         )} 
+                          )}
                         </div>
                       </div>
                     </Col>
@@ -2104,24 +1586,26 @@ console.log(mydropdown,'dsdfdfs')
                           <label htmlFor="phone" className="label-con">
                             Phone
                           </label>
-                          {usertype === 'selectCustomer' ?      <>
-                             {nameerror ? (
-                        <>
-                          <span className="requirederor" style={{ color: 'red' }}>
-                            required !
-                          </span>
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                            </> : (
+                          {usertype === 'selectCustomer' ? (
+                            <>
+                              {nameerror ? (
+                                <>
+                                  <span className="requirederor" style={{ color: 'red' }}>
+                                    required !
+                                  </span>
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </>
+                          ) : (
                             ''
-                          )} 
+                          )}
                         </div>
                         <div className="input-er-con">
                           {myphone ? (
                             <Field
-                               name="phone"
+                              name="phone"
                               min={0}
                               type="tel"
                               className="form-control"
@@ -2153,19 +1637,19 @@ console.log(mydropdown,'dsdfdfs')
                             Email
                           </label>
                           {usertype === 'selectCustomer' ? (
-                                 <>
-                                 {nameerror ? (
                             <>
-                              <span className="requirederor" style={{ color: 'red' }}>
-                                required !
-                              </span>
+                              {nameerror ? (
+                                <>
+                                  <span className="requirederor" style={{ color: 'red' }}>
+                                    required !
+                                  </span>
+                                </>
+                              ) : (
+                                <></>
+                              )}
                             </>
                           ) : (
-                            <></>
-                          )}
-                                </>
-                          ) : (
-                         ''
+                            ''
                           )}
                         </div>
                         <div className="input-er-con">
@@ -2201,19 +1685,19 @@ console.log(mydropdown,'dsdfdfs')
                             Event
                           </label>
                           {usertype === 'selectCustomer' ? (
-                                 <>
-                                 {eventerror ? (
                             <>
-                              <span className="requirederor" style={{ color: 'red' }}>
-                                required !
-                              </span>
+                              {eventerror ? (
+                                <>
+                                  <span className="requirederor" style={{ color: 'red' }}>
+                                    required !
+                                  </span>
+                                </>
+                              ) : (
+                                <></>
+                              )}
                             </>
                           ) : (
-                            <></>
-                          )}
-                                </>
-                          ) : (
-                         ''
+                            ''
                           )}
                         </div>
                         <div className="input-er-con">
@@ -2224,7 +1708,6 @@ console.log(mydropdown,'dsdfdfs')
                               className="form-control"
                               placeholder="Event"
                               value={myevent}
-                              // disabled={isDisabled}
                               onChange={(e) => setmyevent(e.target.value)}
                             />
                           ) : (
@@ -2233,9 +1716,6 @@ console.log(mydropdown,'dsdfdfs')
                               type="text"
                               className="form-control"
                               placeholder="Event"
-                              // value={myevent}
-                              // disabled={isDisabled}
-                              // onChange={(e) => setmyevent(e.target.value)}
                             />
                           )}
                         </div>
@@ -2247,34 +1727,6 @@ console.log(mydropdown,'dsdfdfs')
                           <label htmlFor="sales_rep" className="label-con">
                             Sales Rep
                           </label>
-                          {/* {errors.sales_rep && touched.sales_rep ? (
-                      <div className="error-message">{errors.sales_rep}</div>
-                    ) : null} */}
-                          {/* {(!sales_repMessage)?<><div className="requirederor" style={{color:"red"}}>sales rep is required !</div></>:<></>} */}
-                        </div>
-                        <div className="input-er-con">
-                          {/* <Field
-                      name="sales_rep"
-                      type="text"
-                      className="form-control"
-                      placeholder="Sales Rep"
-                      value={values.sales_rep}
-                    /> */}
-
-                          <select
-                            className="dropdown"
-                            value={mysalesrep}
-                            // disabled={isDisabled}
-                            onChange={(e) => setmysalesrep(e.target.value)}
-                            //  onChange={handleOptionChange}
-                          >
-                            <option value="">Select an option</option>
-                            {myoptions.map((option) => (
-                              <option key={option.id} defaultValue={mysalesrep}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
                           {salesreperor ? (
                             <>
                               <span className="requirederor" style={{ color: 'red' }}>
@@ -2285,8 +1737,29 @@ console.log(mydropdown,'dsdfdfs')
                             <></>
                           )}
                         </div>
+                        <div className="input-er-con">
+                          <select
+                            className=""
+                            value={mysalesrep}
+                           
+                            onChange={(e) => setmysalesrep(e.target.value)}
+                        
+                          >
+                            <option value="">Select an option</option>
+                            {myoptions.map((option) => (
+                              <option key={option.id} defaultValue={mysalesrep}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+
+                         
+                        </div>
                       </div>
-                    </Col>
+                    </Col> 
+
+
+
                     <Col item xs={12} sm={6} md={4}>
                       <div className="form-group">
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -2294,21 +1767,20 @@ console.log(mydropdown,'dsdfdfs')
                             Advertiser
                           </label>
                           {usertype === 'selectCustomer' ? (
-                                 <>
-                                 {nameerror ? (
                             <>
-                              <span className="requirederor" style={{ color: 'red' }}>
-                                required !
-                              </span>
+                              {nameerror ? (
+                                <>
+                                  <span className="requirederor" style={{ color: 'red' }}>
+                                    required !
+                                  </span>
+                                </>
+                              ) : (
+                                <></>
+                              )}
                             </>
                           ) : (
-                            <></>
+                            ''
                           )}
-                                </>
-                          ) : (
-                         ''
-                          )}
-                        
                         </div>
 
                         <div className="input-er-con">
@@ -2340,40 +1812,12 @@ console.log(mydropdown,'dsdfdfs')
                 </div>
               </Card>
 
-
-
-
-
               <Card className="mb-3 px-3 py-3">
                 <h3 className="mb-3 heading-nw"> Product Details</h3>
                 {/* /////////////////////////////////////////////////////////////////////// */}
 
                 <>
-                  {/* <button className="button-b" style={{ padding: '8px 16px',
-                  border: 'none',
-                  borderRadius: '4px',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  color: '#fff',
-                  backgroundColor: "mystatus" ? '#2ecc71' : '#e74c3c',
-                  cursor: 'pointer'
-                }}
-                 >
-      </button> */}
-
-                  {/* <div
-                style={{
-                  fontWeight: "500",
-                  fontSize: "20px",
-                  background:"orangered",
-                  color:"white",
-                  borderRadius:'10px',
-                  marginRight:'50px',
-                  paddingLeft:'10px',
-                }}
-              >
-                Item :-
-              </div> */}
+               
 
                   <div className="container">
                     <Button
@@ -2386,7 +1830,7 @@ console.log(mydropdown,'dsdfdfs')
                     </Button>
                     <div className="">
                       <div className="table-responsive " id="style-2">
-                        <Table className="" style={{alignItems:'right'}}>
+                        <Table className="" style={{ alignItems: 'right' }}>
                           <thead className="tr-row">
                             <tr className="text-center">
                               <th>Product Type</th>
@@ -2400,12 +1844,9 @@ console.log(mydropdown,'dsdfdfs')
                             </tr>
                           </thead>
                           <tbody>
-                            {fields.map((field, index) =>
-                             
-                             (
-                            
+                            {fields.map((field, index) => (
                               <tr key={index}>
-                                 {/* {console.log(index,'ddsdgv')} */}
+                                {/* {console.log(index,'ddsdgv')} */}
                                 <td>
                                   <div className="form-group" style={{ width: '' }}>
                                     <select
@@ -2417,12 +1858,17 @@ console.log(mydropdown,'dsdfdfs')
                                       onChange={(event) => handleChange(index, event)}
                                     >
                                       <option value="">Select product type</option>
-                                      <option selected value="spots">
+                                      <option selected value="Spots">
                                         Spots
                                       </option>
                                       <option value="Mentions">Mentions</option>
-                                      <option value="Half Hours">Half Hours</option>
-                                      <option value="outside Broadcast">Outside Broadcast</option>
+                                      <option value="1/2 Hr Sponsorship">1/2 Hr Sponsorship</option>
+                                      <option value="Outside Broadcast">Outside Broadcast</option>
+                                      <option value="Carnival Package">Carnival Package</option>
+                                      <option value="New Year Package">New Year Package</option>
+                                      <option value="Digital Signage">Digital Signage</option>
+                                      <option value="Vibz FM Promotions">Vibz FM Promotions</option>
+                                         <option value="Song Release">Song Release</option>
                                     </select>
                                     {!errorMessage1 ? (
                                       <>
@@ -2446,24 +1892,21 @@ console.log(mydropdown,'dsdfdfs')
                                         name="runDates"
                                         // onChange={(event) => handleChange(index, event,)}
                                         onChange={(values, event) => {
-
                                           // console.log(event)
                                           if (event.length === 0) {
                                             // console.log('requires');
                                           } else {
                                             // console.log('not');
-                                            
                                           }
 
                                           if (values !== null) {
-                                            handle123(index,values[0].$d,values[1].$d)
+                                            handle123(index, values[0].$d, values[1].$d);
                                             setDates(
                                               values.map((item) => {
-                                             
                                                 return item;
                                               }),
                                             );
-                                           setstartdate(event[0].$d);
+                                            setstartdate(event[0].$d);
                                             setenddate(event[1].$d);
 
                                             const valuess = [...fields];
@@ -2476,44 +1919,30 @@ console.log(mydropdown,'dsdfdfs')
 
                                             setstartdate(values[0].$d);
                                             setenddate(values[1].$d);
-                                            // handle123(index,values[0].$d,values[1].$d)
-                                            // console.log(startdate);
-                                          }
-                                          else{
-
+                                      
+                                          } else {
                                             // myfunction()
-                                       
-                                        handle123(index,'','')
-                                        setstartdate('')
-                                        setenddate('')
-                                        const valuess = [...fields];
-                                        valuess[index]['runDates'] = {
-                                          startdate: '',
-                                          enddate: '',
-                                        };
-                                            
+
+                                            handle123(index, '', '');
+                                            setstartdate('');
+                                            setenddate('');
+                                            const valuess = [...fields];
+                                            valuess[index]['runDates'] = {
+                                              startdate: '',
+                                              enddate: '',
+                                            };
                                           }
                                         }}
                                       />
 
-                                      {/* </div> */}
-                                      {/* {dates && dates.length < 2 ? (
-                                        <span
-                                          style={{ textAlign: 'center' }}
-                                          className="error-message"
-                                        >
-                                          Please select date range
-                                        </span>
-                                      ) : null} */}
-                                        {dateerror ? (
-                        <>
-                          <span className="requirederor" style={{ color: 'red' }}>
-                          Please select date range
-                          </span>
-                        </>
-                      ) : (
-                        null
-                      )}
+                                   
+                                      {dateerror ? (
+                                        <>
+                                          <span className="requirederor" style={{ color: 'red' }}>
+                                            Please select date range
+                                          </span>
+                                        </>
+                                      ) : null}
                                     </div>
                                   </div>
                                 </td>
@@ -2534,9 +1963,7 @@ console.log(mydropdown,'dsdfdfs')
                                           }
 
                                           if (values !== null) {
-                                            // console.log(values.length);
-                                            // console.log(event.length, 'event');
-
+                                  
                                             setTimeRange(
                                               values.map((item) => {
                                                 return item;
@@ -2582,18 +2009,21 @@ console.log(mydropdown,'dsdfdfs')
                                     // style={{ width: "10px"  }}
                                   >
                                     <Form.Control
-                                      onClick={()=>handleShow(index)}
+                                      onClick={() => handleShow(index)}
                                       className="popup-btn"
                                       type="total"
                                       // name={`total${index}`}
                                       value={field.total}
                                       placeholder="Select Days"
                                       style={{ width: '100%' }}
-                                    
                                     />
-                                    {/* </button> */}
-
-                                    <Modal className="pop-btn"   show={modalVisibility[index]} key={`modal-${index}`} onHide={() => handleClose(index)}>
+                                    <Modal
+                                      className="pop-btn"
+                                      style={{marginTop:"50px"}}
+                                      show={modalVisibility[index]}
+                                      key={`modal-${index}`}
+                                      onHide={() => handleClose(index)}
+                                    >
                                       {/* {console.log(`modal-${index}`,'modal index')} */}
                                       <Modal.Header closeButton>
                                         <Modal.Title>select Days</Modal.Title>
@@ -2610,6 +2040,7 @@ console.log(mydropdown,'dsdfdfs')
                                               Monday
                                             </Form.Label>
                                             <Form.Control
+                                            style={{height:'40px'}}
                                               className="popup-control"
                                               type="number"
                                               min={0}
@@ -2628,6 +2059,7 @@ console.log(mydropdown,'dsdfdfs')
                                             <div className="label-con1">2</div>
                                             <Form.Label className="label-con1">Tuesday</Form.Label>
                                             <Form.Control
+                                              style={{height:'40px'}}
                                               className="popup-control"
                                               type="number"
                                               min={0}
@@ -2647,6 +2079,7 @@ console.log(mydropdown,'dsdfdfs')
                                               Wednesday
                                             </Form.Label>
                                             <Form.Control
+                                              style={{height:'40px'}}
                                               className="popup-control"
                                               type="number"
                                               min={0}
@@ -2664,6 +2097,7 @@ console.log(mydropdown,'dsdfdfs')
                                             <div className="label-con1">4</div>
                                             <Form.Label className="label-con1">Thursday</Form.Label>
                                             <Form.Control
+                                              style={{height:'40px'}}
                                               type="number"
                                               min={0}
                                               className="popup-control"
@@ -2681,6 +2115,7 @@ console.log(mydropdown,'dsdfdfs')
                                             <div className="label-con1">5</div>
                                             <Form.Label className="label-con1">Friday</Form.Label>
                                             <Form.Control
+                                              style={{height:'40px'}}
                                               className="popup-control"
                                               type="number"
                                               min={0}
@@ -2698,6 +2133,7 @@ console.log(mydropdown,'dsdfdfs')
                                             <div className="label-con1">6</div>
                                             <Form.Label className="label-con1">Saturday</Form.Label>
                                             <Form.Control
+                                              style={{height:'40px'}}
                                               className="popup-control"
                                               type="number"
                                               min={0}
@@ -2714,6 +2150,7 @@ console.log(mydropdown,'dsdfdfs')
                                             <div className="label-con1">7</div>
                                             <Form.Label className="label-con1">Sunday</Form.Label>
                                             <Form.Control
+                                              style={{height:'40px'}}
                                               className="popup-control"
                                               type="number"
                                               min={0}
@@ -2730,6 +2167,7 @@ console.log(mydropdown,'dsdfdfs')
                                             <div className="label-con1">8</div>
                                             <Form.Label className="label-con1">Total</Form.Label>
                                             <Form.Control
+                                              style={{height:'40px'}}
                                               className="popup-control"
                                               type="total"
                                               name="total"
@@ -2742,7 +2180,10 @@ console.log(mydropdown,'dsdfdfs')
                                         </Form>
                                       </Modal.Body>
                                       <Modal.Footer>
-                                        <Button variant="secondary"  onClick={() => handleClose(index)}>
+                                        <Button
+                                          variant="secondary"
+                                          onClick={() => handleClose(index)}
+                                        >
                                           Close
                                         </Button>
                                         {/* <Button variant="primary"  onClick={() => handleClose()}>
@@ -2845,7 +2286,10 @@ console.log(mydropdown,'dsdfdfs')
                             ))}
                           </tbody>
                         </Table>
+                        </div>
 
+
+                        
                         <div style={{ float: 'right' }}>
                           <div>
                             <span className="totalcosttext">cost:</span>
@@ -2859,26 +2303,23 @@ console.log(mydropdown,'dsdfdfs')
                             />
                           </div>
                           <div>
-                          <select
-                          className="discountdropdown" 
-                                      // value={product_type}
-                                      // defaultValue="spots"
-                                      name="discount_type"
-                                      id="discount_type"
-                                      // className="dropdown"
-                                      onChange={(event) => handledropdown(event)}
-                                      
-
-                                    >
-                                      {/* <option value="">Select discount type</option> */}
-                                      <option selected value="Trade">
-                                        Trade
-                                      </option>
-                                      <option value="Sponsorship">Sponsorship</option>
-                                      <option value="Discount">Discount</option>
-                                      <option value="Charity">Charity</option>
-                                    </select>
-                                  
+                            <select
+                              className="discountdropdown"
+                              // value={product_type}
+                              // defaultValue="spots"
+                              name="discount_type"
+                              id="discount_type"
+                              // className="dropdown"
+                              onChange={(event) => handledropdown(event)}
+                            >
+                              {/* <option value="">Select discount type</option> */}
+                              <option selected value="Trade">
+                                Trade
+                              </option>
+                              <option value="Sponsorship">Sponsorship</option>
+                              <option value="Discount">Discount</option>
+                              <option value="Charity">Charity</option>
+                            </select>
 
                             <input
                               className="totalcost2"
@@ -2917,7 +2358,7 @@ console.log(mydropdown,'dsdfdfs')
                             />
                           </div>
                         </div>
-                      </div>
+                  
 
                       {/* lllllllllllllllllll//////////////////llllllllllllllllllllllll//////llllllllllllllllllllll////////////////////llllllllllllllllllllllchatgort */}
 
@@ -2933,19 +2374,18 @@ console.log(mydropdown,'dsdfdfs')
                 <h3 className="mb-3 heading-nw"> </h3>
                 <div className="signaturearea">
                   {/* {editfield ? ( */}
-                    <>
-                      {' '}
-                      <div>
-                        
-                        <p style={{color:'red'}}>Additional Details*</p>
-                        <textarea
-                          type="text"
-                          className='payment_input'
-                          style={{ width: '950px' , }}
-                          value={paymentdue}
-                          onChange={handlePaymentDue}
-                        />
-                        {/* <Button
+                  <>
+                    {' '}
+                    <div>
+                      <p style={{ color: 'red' }}>Additional Details*</p>
+                      <textarea
+                        type="text"
+                        className="payment_input"
+                        style={{ width: '100%' }}
+                        value={paymentdue}
+                        onChange={handlePaymentDue}
+                      />
+                      {/* <Button
                           style={{ marginLeft: '15px' }}
                           onClick={() => {
                             seteditfield(false);
@@ -2953,12 +2393,12 @@ console.log(mydropdown,'dsdfdfs')
                         >
                           Done
                         </Button> */}
-                      </div>
-                    </>
-                
-                    <>
-                      {/* <span>{paymentdue}</span> */}
-                      {/* <Button
+                    </div>
+                  </>
+
+                  <>
+                    {/* <span>{paymentdue}</span> */}
+                    {/* <Button
                         style={{ marginLeft: '15px' }}
                         onClick={() => {
                           seteditfield(true);
@@ -2966,8 +2406,7 @@ console.log(mydropdown,'dsdfdfs')
                       >
                         Edit
                       </Button> */}
-                    </>
-               
+                  </>
 
                   {/* {paymenterr ? (
                     <>

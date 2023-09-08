@@ -321,16 +321,30 @@ margin-top: 7px;
 
 }
 
+/* .authorization-card{
+  width: 900px !important;
+  margin: 30px auto;
+  height: 90% !important;
+} */
+
 
 .clickup-img .logo-img {
+  width: 277px;
+  margin: 0 auto;
+  text-align: center;
+ 
+}
 
+.clickup-heading{
+
+}
+
+
+.forget-img .logo-img{
   width: 100px;
 }
 
-.clickup-div{
-  text-align: center;
-  margin-top: 100px;
-}
+
 
   .btn-clickup {
     padding: 10px 20px;
@@ -343,31 +357,28 @@ margin-top: 7px;
   }
 /* //////////////////////////////////////////////////////////////// */
 /* Styles for the container */
-.clickup-div {
+.authorization-card {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  background-color: #f2f2f2;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 100vh;
 }
 
-/* Styles for the logo image (assuming it's an SVG) */
+.clickup-div {
+  background: #fff;
+  padding: 86px;
+  box-shadow: 1px 1px 10px 2px #ccc;
+  border-radius: 7px;
+  text-align: center;
+}
+
 .clickup-img {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 10px;
-  /* Add your image styling here */
+  margin-bottom: 34px;
 }
 
-/* Styles for the text */
-.clickup-div div {
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
+
+.tr-whitespace td{
+  white-space: nowrap;
 }
 
 /* Styles for the submit button */
@@ -375,6 +386,7 @@ margin-top: 7px;
   padding: 10px 20px;
   font-size: 16px;
   color: #fff;
+  margin-top: 10px;
   background-color: #007bff;
   border: none;
   border-radius: 5px;
@@ -532,7 +544,7 @@ only screen and (max-width: 760px),
   width: 100px;
 }
 
-  .table-responsive {
+  /* .table-responsive {
   border-collapse: collapse;
   overflow-x: auto;
   display: block;
@@ -540,7 +552,7 @@ only screen and (max-width: 760px),
   width: fit-content;
   max-width: 100%;
   font-size: 12px;
-}
+} */
 
 .error-message{
   font-size: 12px;
@@ -718,7 +730,12 @@ white-space: nowrap;
 }
 .form-group select, :where(.css-dev-only-do-not-override-yp8pcc).ant-picker-range {
 line-height: 2.5 !important;
-height: 58px;
+/* heigt: 58px; */
+width: 100%;
+border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 7px;
+
 }
 input.popup-btn.form-control {
 width: 121px !important;

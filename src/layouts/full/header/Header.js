@@ -26,8 +26,9 @@ const Header = (props) => {
         return 'Customer List';
       case '/dashboard/salesperson':
         return 'Sales Representative List';
-      case '/dashboard/Clickup':
-        return 'Clickup';
+      
+      case '/dashboard/profile':
+        return 'Profile Update';
       default:
         return '';
     }

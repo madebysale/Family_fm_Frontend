@@ -61,7 +61,7 @@ function Contract() {
 
     axios
       .post(
-        'http://localhost:8080/api/public/contractlist',
+        'https://api.familyfm.ltd:8080/api/public/contractlist',
         {
           page:currentPage,
           limit:itemsPerPage,
@@ -76,8 +76,14 @@ function Contract() {
         settotalrow(response.data.totalRows)
         setmypdf(response.data.data)
         setmainloader(true)
-       
-        console.log(response, 'sds');
+        if(response.status.code==401){
+          navigate("/login", { replace:true});
+          localStorage.removeItem('token');
+
+          toast.error(response.data.message.message);
+
+        }
+   
       }).catch((error)=>{
 
         if(error.response.status==500){
@@ -136,7 +142,7 @@ function Contract() {
 
   const onDelete = (id) => {
     axios
-      .post(`http://localhost:8080/api/public/delete/${id}`)
+      .post(`https://api.familyfm.ltd:8080/api/public/delete/${id}`)
       .then((response) => {
         console.log(response.data);
         if(response.code!==200){
@@ -198,7 +204,7 @@ function Contract() {
   const handleConfirm = () => {
     if (itemIdToDelete) {
       axios
-        .post(`http://localhost:8080/api/public/delete/${itemIdToDelete}`)
+        .post(`https://api.familyfm.ltd:8080/api/public/delete/${itemIdToDelete}`)
   
         .then((response) => {
           console.log(response.data);
@@ -252,23 +258,25 @@ function Contract() {
     ) : (
 
           <Table className="ad-table " style={{}}>
+                     {filteredData.length==0?<h4 style={{textAlign:'center'}}>No Data Found</h4>:<>
             <thead>
-              <tr className="head-row">
+              <tr className="head-row text-center">
               
                 <th>ID</th>
                 <th
-  className="header-cell"
-  onClick={() => handleSort('first_name')}
+  // className="header-cell"
+  // onClick={() => handleSort('first_name')}
 >
-  <div className="header-content">
-    <span>Name</span>
+  Name
+  {/* <div className="header-content">
+    <th>Name</th>
     {sortColumn === 'first_name' && (
       <Icon
         icon={sortOrder === 'asc' ? 'carbon:arrow-up' : 'carbon:arrow-down'}
         className="sort-icon"
       />
     )}
-  </div>
+  </div> */}
 </th>
 
                 <th>Email</th>
@@ -281,12 +289,14 @@ function Contract() {
                 <th></th>
               </tr>
             </thead>
-            <tbody>
+        
+     
               {filteredData.map((item, index) => {
                 console.log(item.role, 's');
                 return (
+                  <tbody>
                   <React.Fragment key={index}>
-                    <tr onClick={() => handleRowClick(index)}>
+                    <tr onClick={() => handleRowClick(index)} className='text-center'>
                       <td>
                         {item.orderid}
                       </td>
@@ -315,9 +325,12 @@ function Contract() {
               
                     </tr>
                   </React.Fragment>
+                  </tbody>
                 );
               })}
-            </tbody>
+    
+        
+                      </>}
           </Table>
 
             )}

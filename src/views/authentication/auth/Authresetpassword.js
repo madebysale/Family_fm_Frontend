@@ -42,7 +42,7 @@ const Authresetpassword = () => {
             alignItems="center"
           >
     <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '500px' }}>
-    <Box display="flex" alignItems="center" justifyContent="center">
+    <Box display="flex" alignItems="center" justifyContent="center" className="reset-img">
                 <Logo />
               </Box>
               <div className="auth-form-container">
@@ -64,7 +64,7 @@ const Authresetpassword = () => {
         onSubmit={(values) => {
             setLoading(true)
         axios
-        .post("http://localhost:8080/api/public/resetpassword", {
+        .post("https://api.familyfm.ltd:8080/api/public/resetpassword", {
          
           email: values.email,
           password: values.password,
@@ -73,7 +73,7 @@ const Authresetpassword = () => {
       
         })
         .then((response) => {
-          // setSubmitting(false);
+         
 
          
           console.log(response.data.token)

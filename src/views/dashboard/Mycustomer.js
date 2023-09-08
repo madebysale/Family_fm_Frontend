@@ -54,7 +54,7 @@ function Mycustomer() {
 
     axios
       .post(
-        'http://localhost:8080/api/public/customerlist',
+        'https://api.familyfm.ltd:8080/api/public/customerlist',
         {},
         {
           headers: {'x-token': localStorage.getItem('token') },
@@ -115,7 +115,7 @@ function Mycustomer() {
  
   const onDelete = (id) => {
     axios
-      .post(`http://localhost:8080/api/public/customerdelete/${id}`)
+      .post(`https://api.familyfm.ltd:8080/api/public/customerdelete/${id}`)
       .then((response) => {
         console.log(response.data);
         if(response.code!==200){
@@ -137,18 +137,17 @@ function Mycustomer() {
   };
 
   return (
-    <>
+    
    
+      <div className='container'>
     
-    
-        <div className="header-div"></div>
+        {/* <div className="header-div"> */}
 
        
-        <Card className='mt-3 py-3 px-3'>
+        {/* <Card className='mt-3 py-3 px-3'> */}
 
-        <div className="mt-3 logout">
             
-                    </div>
+                
                   
         <div className="search-admin">
           <Input
@@ -159,9 +158,10 @@ function Mycustomer() {
           ></Input>
 
           
-
+<div className='table-responsive'>
 {currentItems.length===0?<h1>No Data Found</h1>:<> 
-          <Table className="ad-table " style={{}}>
+
+          <Table className="">
             <thead>
               <tr className="head-row">
               
@@ -202,9 +202,14 @@ function Mycustomer() {
               })}
             </tbody>
           </Table>
+        
        </>}
+       
         </div>
-
+        </div>
+        
+        {/* </div> */}
+      
         {/* <Pagination
            style={{alignItems:'center'}} 
            itemsPerPage={itemsPerPage}
@@ -212,9 +217,9 @@ function Mycustomer() {
            paginate={paginate}
           
         /> */}
-        </Card>
+        {/* </Card> */}
     
-    </>
+    </div>
   );
 
   function Pagination({ itemsPerPage, totalItems, paginate }) {

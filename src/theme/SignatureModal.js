@@ -12,8 +12,9 @@ const SignatureModal = ({ showModal, closeModal, item }) => {
         <Modal.Title>View Signature</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {console.log(item,'axhss')}
         <img
-          src={`https://localhost/Vibz_FM/uploads/${item}`}
+          src={`https://api.familyfm.ltd/Vibz_FM/uploads/${item}`}
           style={{ width: "100%", height: "auto", maxWidth: "300px" }}
           alt="Image"
         />
